@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burak Demiröz | Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .name {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            color: #a1a1aa;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 400;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #a1a1aa;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .social-icon:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .section {
+            margin-bottom: 48px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            font-size: 1.3rem;
+            color: #667eea;
+            opacity: 0.8;
+        }
+
+        .topic-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .topic-list li {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .topic-list li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .topic-list li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .topic-list li:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(102, 126, 234, 0.2);
+            transform: translateX(4px);
+        }
+
+        .topic-list li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: #d4d4d8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .topic-list li:hover a {
+            color: #ffffff;
+        }
+
+        .topic-icon {
+            font-size: 1.1rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .topic-list li:hover .topic-icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .watermark {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            color: rgba(255, 255, 255, 0.05);
+            font-size: 2rem;
+            font-weight: 800;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-6px); 
+            }
+        }
+
+        .social-icon:nth-child(1) { animation-delay: 0.1s; }
+        .social-icon:nth-child(2) { animation-delay: 0.2s; }
+        .social-icon:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            .header {
+                margin-bottom: 60px;
+            }
+
+            .section {
+                padding: 32px 24px;
+                margin-bottom: 32px;
+            }
+
+            .topic-list {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .social-links {
+                gap: 12px;
+            }
+
+            .social-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section {
+                padding: 24px 20px;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Focus states for accessibility */
+        .social-icon:focus,
+        .topic-list li a:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="name">Burak Demiröz</h1>
+            <p class="subtitle">Notlarım</p>
+            <div class="social-links">
+                <a href="https://github.com/Burak1320demiroz" target="_blank" class="social-icon" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/burak-demiroz/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://medium.com/@burakdemirozis16" target="_blank" class="social-icon" aria-label="Medium">
+                    <i class="fab fa-medium"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-shield-alt"></i>
+                Siber Güvenlik Mühendisliği
+            </h2>
+            <ul class="topic-list">
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/web_security" target="_blank">
+                        <i class="fas fa-globe topic-icon"></i>
+                        Web Application Security
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/mobile_security" target="_blank">
+                        <i class="fas fa-mobile-alt topic-icon"></i>
+                        Mobile Application Security
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cryptography" target="_blank">
+                        <i class="fas fa-key topic-icon"></i>
+                        Cryptography
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/tools" target="_blank">
+                        <i class="fas fa-tools topic-icon"></i>
+                        Tools
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cisco_ccna" target="_blank">
+                        <i class="fas fa-network-wired topic-icon"></i>
+                        Cisco CCNA
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/kali_linux" target="_blank">
+                        <i class="fab fa-linux topic-icon"></i>
+                        Linux - Kali Linux
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/docker" target="_blank">
+                        <i class="fab fa-docker topic-icon"></i>
+                        Docker
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/ctf_lab" target="_blank">
+                        <i class="fas fa-bug topic-icon"></i>
+                        PortSwigger Labs
+                    </a>
+                </li>
+                <li>
+                    <a href="ctf.html" target="_blank">
+                        <i class="fas fa-flag topic-icon"></i>
+                        CTF
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fab fa-python"></i>
+                Python Development and Artificial Intelligence ((Yakında...))
+            </h2>
+            <ul class="topic-list">
+                <li>
+                    <a href="python-notlar.html" target="_blank">
+                        <i class="fab fa-python topic-icon"></i>
+                        Python Notlarım
+                    </a>
+                </li>
+                <li>
+                    <a href="python-projeler.html" target="_blank">
+                        <i class="fab fa-python topic-icon"></i>
+                        Python Projelerim
+                    </a>
+                </li>
+                <li>
+                    <a href="ai-notlar.html" target="_blank">
+                        <i class="fas fa-robot topic-icon"></i>
+                        Artificial Intelligence Notlarım
+                    </a>
+                </li>
+                <li>
+                    <a href="ai-projeler.html" target="_blank">
+                        <i class="fas fa-robot topic-icon"></i>
+                        Artificial Intelligence Projelerim
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-code"></i>
+                Web App development (Yakında...)
+            </h2>
+            <ul class="topic-list">
+                <li>
+                    <a href="nodejs-notlar.html" target="_blank">
+                        <i class="fab fa-node-js topic-icon"></i>
+                        Node.js Notlarım
+                    </a>
+                </li>
+                <li>
+                    <a href="nodejs-projeler.html" target="_blank">
+                        <i class="fab fa-node-js topic-icon"></i>
+                        Node.js Projelerim
+                    </a>
+                </li>
+                <li>
+                    <a href="html-notlar.html" target="_blank">
+                        <i class="fab fa-html5 topic-icon"></i>
+                        HTML Notlarım
+                    </a>
+                </li>
+                <li>
+                    <a href="css-notlar.html" target="_blank">
+                        <i class="fab fa-css3-alt topic-icon"></i>
+                        CSS Notlarım
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript-notlar.html" target="_blank">
+                        <i class="fab fa-js topic-icon"></i>
+                        JavaScript Notlarım
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-mobile-alt"></i>
+                Mobile App Development (Yakında...)
+            </h2>
+            <ul class="topic-list">
+                <li>
+                    <a href="root.html" target="_blank">
+                        <i class="fab fa-react topic-icon"></i>
+                        Root nasıl atılır?
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-square-root-alt"></i>
+                Math (Yakında...)
+            </h2>
+            <div class="subsection">
+                <ul class="topic-list">
+                    <li><a href="soyut_matematik.html" target="_blank"><i class="fas fa-infinity topic-icon"></i> Soyut Matematik</a></li>
+                    <li><a href="lineer_cebir.html" target="_blank"><i class="fas fa-stream topic-icon"></i> Lineer Cebir</a></li>
+                    <li><a href="analiz.html" target="_blank"><i class="fas fa-chart-line topic-icon"></i> Analiz</a></li>
+                    <li><a href="diferansiyel_denklemler.html" target="_blank"><i class="fas fa-wave-square topic-icon"></i> Diferansiyel Denklemler</a></li>
+                    <li><a href="analitik_geometri.html" target="_blank"><i class="fas fa-drafting-compass topic-icon"></i> Analitik Geometri</a></li>
+                    <li><a href="kompleks_analiz.html" target="_blank"><i class="fas fa-circle-notch topic-icon"></i> Kompleks Analiz</a></li>
+                    <li><a href="galois_teorisi.html" target="_blank"><i class="fas fa-key topic-icon"></i> Galois Teorisi</a></li>
+                    <li><a href="diferansiyel_geometri.html" target="_blank"><i class="fas fa-project-diagram topic-icon"></i> Diferansiyel Geometri</a></li>
+                    <li><a href="riemann_geometri.html" target="_blank"><i class="fas fa-globe topic-icon"></i> Riemann Geometri</a></li>
+                    <li><a href="soyut_cebir.html" target="_blank"><i class="fas fa-th topic-icon"></i> Soyut Cebir</a></li>
+                    <li><a href="sayilar_teorisi.html" target="_blank"><i class="fas fa-hashtag topic-icon"></i> Sayılar Teorisi</a></li>
+                    <li><a href="metrik_uzaylar.html" target="_blank"><i class="fas fa-ruler-combined topic-icon"></i> Metrik Uzaylar</a></li>
+                    <li><a href="olasilik.html" target="_blank"><i class="fas fa-percentage topic-icon"></i> Olasılık</a></li>
+                    <li><a href="istatistik.html" target="_blank"><i class="fas fa-chart-bar topic-icon"></i> İstatistik</a></li>
+                    <li><a href="lineer_programlama.html" target="_blank"><i class="fas fa-network-wired topic-icon"></i> Lineer Programlama</a></li>
+                    <li><a href="graf_teorisi.html" target="_blank"><i class="fas fa-project-diagram topic-icon"></i> Graf Teorisi</a></li>
+                    <li><a href="algoritma_gelistirme.html" target="_blank"><i class="fas fa-cogs topic-icon"></i> Algoritma Geliştirme</a></li>
+                    <li><a href="kismi_turevli_denklemler.html" target="_blank"><i class="fas fa-equals topic-icon"></i> Kısmi Türevli Diferansiyel Denklemler</a></li>
+                    <li><a href="maple.html" target="_blank"><i class="fas fa-leaf topic-icon"></i> Maple</a></li>
+                    <li><a href="matlab.html" target="_blank"><i class="fas fa-laptop-code topic-icon"></i> Matlab</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        
+        <div class="watermark">BD</div>
+    </div>
+    
+    <script>
+        // Add floating animation to social icons after page load
+        window.addEventListener('load', () => {
+            const socialIcons = document.querySelectorAll('.social-icon');
+            socialIcons.forEach((icon, index) => {
+                setTimeout(() => {
+                    icon.style.animation = `float 4s ease-in-out infinite ${index * 0.5}s`;
+                }, 500);
+            });
+        });
+
+        // Add subtle mouse tracking effect
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.querySelector('.cursor');
+            if (!cursor) {
+                const newCursor = document.createElement('div');
+                newCursor.className = 'cursor';
+                newCursor.style.cssText = `
+                    position: fixed;
+                    width: 20px;
+                    height: 20px;
+                    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                    transition: transform 0.1s ease;
+                    mix-blend-mode: screen;
+                `;
+                document.body.appendChild(newCursor);
+            }
+            
+            const cursorElement = document.querySelector('.cursor');
+            cursorElement.style.left = e.clientX - 10 + 'px';
+            cursorElement.style.top = e.clientY - 10 + 'px';
+        });
+
+        // Add keyboard navigation support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                document.body.classList.add('keyboard-navigation');
+            }
+        });
+
+        document.addEventListener('mousedown', () => {
+            document.body.classList.remove('keyboard-navigation');
+        });
+    </script>
+</body>
+</html>
