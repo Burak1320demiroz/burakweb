@@ -6,7 +6,7 @@
     <meta name="description" content="Burak Demiröz - Siber Güvenlik, Python, AI ve Web Geliştirme alanlarında projeler ve notlar">
     <meta name="keywords" content="Burak Demiröz, Siber Güvenlik, Python, Yapay Zeka, Web Geliştirme, Portfolio">
     <meta name="author" content="Burak Demiröz">
-    <meta property="og:title" content="Burak Demiröz | Portfolio">
+    <meta property="og:title" content="Burak Demiröz">
     <meta property="og:description" content="Siber Güvenlik, Python, AI ve Web Geliştirme projelerim">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://burakdemiroz.com">
@@ -239,10 +239,7 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
             border-color: rgba(102, 126, 234, 0.3);
         }
-        
-        /* ===== Navigation ===== */
-        /* Navigation bölümü kaldırıldı */
-        
+
         /* ===== Sections ===== */
         section {
             margin-bottom: var(--space-xl);
@@ -565,34 +562,42 @@
         <!-- Header Section -->
         <header role="banner">
             <h1 class="name">Burak Demiröz</h1>
-            <p class="subtitle">Notlarım ve Projelerim</p>
-            
+
             <!-- Social Links -->
             <div class="social-links" role="navigation" aria-label="Sosyal medya bağlantıları">
                 <a href="https://github.com/Burak1320demiroz" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="social-icon" 
-                   aria-label="GitHub Profili">
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="social-icon" 
+                data-tooltip="GitHub">
                     <i class="fab fa-github"></i>
                 </a>
                 <a href="https://www.linkedin.com/in/burak-demiroz/" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="social-icon" 
-                   aria-label="LinkedIn Profili">
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="social-icon" 
+                data-tooltip="LinkedIn">
                     <i class="fab fa-linkedin"></i>
                 </a>
                 <a href="https://medium.com/@burakdemirozis16" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="social-icon" 
-                   aria-label="Medium Profili">
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="social-icon" 
+                data-tooltip="Medium">
                     <i class="fab fa-medium"></i>
                 </a>
+                <a href="https://huggingface.co/Burak1320demiroz" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="social-icon" 
+                data-tooltip="Hugging Face">
+                    <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" 
+                        alt="Hugging Face" 
+                        style="width:22px; height:22px;">
+                </a>
                 <a href="resume.html" 
-                   class="social-icon" 
-                   aria-label="CV / Resume">
+                class="social-icon" 
+                data-tooltip="CV / Resume">
                     <i class="fas fa-file-alt"></i>
                 </a>
             </div>
@@ -817,6 +822,52 @@
                             <span>ROS Noetic</span>
                         </a>
                     </li>
+                </ul>
+            </section>
+
+            <section id="cpp" aria-labelledby="cpp-title">
+                <h2 class="section-title" id="cpp-title">
+                    <i class="fas fa-code"></i>
+                    C, C# ve C++ Development Projects
+                </h2>
+                <ul class="topic-grid" role="list">
+                    
+                    <!-- C -->
+                    <li class="topic-item">
+                        <a href="..." 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="topic-link">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" 
+                                alt="C Logo" class="topic-icon" width="20" height="20">
+                            <span>C</span>
+                        </a>
+                    </li>
+
+                    <!-- C# -->
+                    <li class="topic-item">
+                        <a href="..." 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="topic-link">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" 
+                                alt="C# Logo" class="topic-icon" width="20" height="20">
+                            <span>C#</span>
+                        </a>
+                    </li>
+
+                    <!-- C++ -->
+                    <li class="topic-item">
+                        <a href="..." 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="topic-link">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" 
+                                alt="C++ Logo" class="topic-icon" width="20" height="20">
+                            <span>C++</span>
+                        </a>
+                    </li>
+
                 </ul>
             </section>
             
@@ -1235,21 +1286,6 @@
             window.addEventListener('load', loadIcons);
         }
         
-        // ===== Add Hover Effect Sound (optional - uncomment if desired) =====
-        /*
-        const addHoverSound = () => {
-            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFApGnt/yvmwhBjiS1/LNeSsFJHfG8N2RQAoUXrTp66hVFA==');
-            audio.volume = 0.1;
-            
-            document.querySelectorAll('.topic-item, .social-icon').forEach(item => {
-                item.addEventListener('mouseenter', () => {
-                    audio.currentTime = 0;
-                    audio.play().catch(() => {});
-                });
-            });
-        };
-        */
-        
         // ===== Preload critical resources =====
         const preloadResources = () => {
             const links = [
@@ -1269,16 +1305,6 @@
         } else {
             preloadResources();
         }
-        
-        // ===== Service Worker for offline support (optional) =====
-        /*
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(() => {});
-        }
-        */
-        
-        // ===== Analytics or Performance Monitoring =====
-        // Add your analytics code here if needed
         
         console.log('%c🚀 Portfolio loaded successfully!', 'color: #667eea; font-size: 16px; font-weight: bold;');
     </script>
