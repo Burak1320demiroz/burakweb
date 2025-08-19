@@ -12,78 +12,53 @@
     <meta property="og:url" content="https://burakdemiroz.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" content="#00d4ff">
     
     <title>Burak Demiröz | Portfolio</title>
     
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Icons - Lazy load with async -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* ===== CSS Variables for Theming ===== */
+        /* ===== CSS Variables ===== */
         :root {
-            /* Light Theme Colors */
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --bg-card: rgba(0, 0, 0, 0.02);
-            --bg-card-hover: rgba(0, 0, 0, 0.04);
-            --border-color: rgba(0, 0, 0, 0.08);
-            --border-hover: rgba(0, 0, 0, 0.12);
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --text-tertiary: #9ca3af;
+            /* Grok Theme Colors */
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: rgba(255, 255, 255, 0.02);
+            --bg-card-hover: rgba(255, 255, 255, 0.04);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-hover: #00d4ff;
             
-            /* Accent Colors */
-            --accent-primary: #667eea;
-            --accent-secondary: #764ba2;
-            --accent-tertiary: #f093fb;
-            --accent-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.4);
             
-            /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            /* Accent Colors - Grok Cyan */
+            --accent-primary: #00d4ff;
+            --accent-secondary: #00a8cc;
+            --accent-glow: rgba(0, 212, 255, 0.4);
+            --accent-dim: rgba(0, 212, 255, 0.1);
+            
+            /* Neon Effects */
+            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --neon-text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            
+            /* Grid Pattern */
+            --grid-color: rgba(0, 212, 255, 0.03);
             
             /* Transitions */
             --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
             --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
             --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* Spacing */
-            --space-xs: 0.5rem;
-            --space-sm: 1rem;
-            --space-md: 1.5rem;
-            --space-lg: 2rem;
-            --space-xl: 3rem;
-            --space-2xl: 4rem;
         }
         
-        /* Dark Theme */
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: rgba(255, 255, 255, 0.02);
-            --bg-card-hover: rgba(255, 255, 255, 0.04);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.12);
-            --text-primary: #ffffff;
-            --text-secondary: #d4d4d8;
-            --text-tertiary: #a1a1aa;
-        }
-        
-        /* ===== Reset & Base Styles ===== */
-        *,
-        *::before,
-        *::after {
+        /* ===== Reset & Base ===== */
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -96,16 +71,16 @@
         }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
-            transition: background-color var(--transition-base), color var(--transition-base);
+            position: relative;
         }
         
-        /* Background gradient effect */
+        /* ===== Animated Background ===== */
         body::before {
             content: '';
             position: fixed;
@@ -113,105 +88,135 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.05) 0%, transparent 50%);
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.01) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
             pointer-events: none;
-            z-index: -1;
-            opacity: 0.7;
+            z-index: 1;
         }
         
-        /* ===== Layout Components ===== */
+        /* Glow orb effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* ===== Container ===== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 60px 24px;
             position: relative;
+            z-index: 2;
         }
         
-        /* ===== Header Section ===== */
+        /* ===== Header ===== */
         header {
             text-align: center;
-            margin-bottom: var(--space-2xl);
-            animation: fadeInUp 1s ease-out;
+            margin-bottom: 80px;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: inline-block;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--bg-primary);
+            box-shadow: var(--neon-shadow);
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
         }
         
         .name {
             font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--space-sm);
+            font-weight: 700;
             letter-spacing: -0.02em;
-            line-height: 1.1;
-            animation: shimmer 3s ease-in-out infinite;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .name::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            animation: slide 3s infinite;
         }
         
         .subtitle {
             color: var(--text-secondary);
-            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-            font-weight: 400;
-            margin-bottom: var(--space-lg);
-            opacity: 0.9;
-        }
-        
-        /* ===== Theme Toggle Button ===== */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all var(--transition-base);
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-        
-        .theme-toggle:hover {
-            transform: scale(1.1) rotate(180deg);
-            background: var(--bg-card-hover);
-            border-color: var(--accent-primary);
-        }
-        
-        .theme-toggle i {
             font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .subtitle::before {
+            content: '> ';
             color: var(--accent-primary);
-            transition: transform var(--transition-base);
         }
         
         /* ===== Social Links ===== */
         .social-links {
             display: flex;
             justify-content: center;
-            gap: var(--space-sm);
+            gap: 15px;
             flex-wrap: wrap;
         }
         
         .social-icon {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-tertiary);
-            font-size: 1.2rem;
+            color: var(--text-secondary);
             text-decoration: none;
+            font-size: 20px;
             transition: all var(--transition-base);
-            backdrop-filter: blur(10px);
             position: relative;
+            background: var(--bg-card);
             overflow: hidden;
         }
         
@@ -222,80 +227,93 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(102, 126, 234, 0.1);
+            background: var(--accent-dim);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            transition: width var(--transition-base), height var(--transition-base);
+            transition: all var(--transition-base);
         }
         
         .social-icon:hover::before {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 100%;
         }
         
         .social-icon:hover {
             color: var(--accent-primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-
-        /* ===== Sections ===== */
-        section {
-            margin-bottom: var(--space-xl);
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: var(--space-lg);
-            backdrop-filter: blur(20px);
-            transition: all var(--transition-base);
-            opacity: 0;
-            transform: translateY(20px);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px var(--accent-glow);
         }
         
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
+        /* ===== Sections ===== */
+        section {
+            margin-bottom: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+        
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            animation: scan 3s infinite;
         }
         
         section:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--border-hover);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
+            border-color: rgba(0, 212, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
         }
         
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: var(--space-lg);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: 12px;
+            color: var(--text-primary);
+            position: relative;
         }
         
         .section-title i {
-            font-size: 1.3rem;
             color: var(--accent-primary);
-            opacity: 0.8;
+            font-size: 1.2rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-color), transparent);
+            margin-left: 20px;
         }
         
         /* ===== Topic Grid ===== */
         .topic-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--space-sm);
+            gap: 15px;
             list-style: none;
         }
         
         .topic-item {
-            background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.01);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 8px;
             transition: all var(--transition-base);
-            overflow: hidden;
             position: relative;
+            overflow: hidden;
         }
         
         .topic-item::before {
@@ -305,7 +323,7 @@
             left: 0;
             width: 3px;
             height: 100%;
-            background: var(--accent-gradient);
+            background: var(--accent-primary);
             transform: scaleY(0);
             transform-origin: bottom;
             transition: transform var(--transition-base);
@@ -316,22 +334,22 @@
         }
         
         .topic-item:hover {
-            background: var(--bg-card-hover);
-            border-color: rgba(102, 126, 234, 0.2);
-            transform: translateX(4px);
-            box-shadow: var(--shadow-md);
+            background: rgba(0, 212, 255, 0.05);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateX(5px);
         }
         
         .topic-link {
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
-            padding: var(--space-sm) var(--space-md);
+            gap: 12px;
+            padding: 15px 20px;
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.95rem;
             transition: color var(--transition-fast);
+            font-family: 'JetBrains Mono', monospace;
         }
         
         .topic-item:hover .topic-link {
@@ -339,40 +357,84 @@
         }
         
         .topic-icon {
-            font-size: 1.1rem;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 18px;
+            color: var(--accent-primary);
             opacity: 0.7;
             transition: all var(--transition-base);
         }
         
         .topic-item:hover .topic-icon {
             opacity: 1;
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px var(--accent-glow));
+        }
+        
+        /* ===== Terminal Effect ===== */
+        .terminal-cursor::after {
+            content: '_';
+            animation: blink 1s infinite;
             color: var(--accent-primary);
         }
         
         /* ===== Footer ===== */
         footer {
             text-align: center;
-            padding: var(--space-xl) 0;
+            padding: 60px 0 40px;
             color: var(--text-tertiary);
             font-size: 0.9rem;
             border-top: 1px solid var(--border-color);
-            margin-top: var(--space-2xl);
+            margin-top: 80px;
+            position: relative;
         }
         
-        /* ===== Loading Skeleton ===== */
-        .skeleton {
-            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 1px;
+            background: var(--accent-primary);
+            box-shadow: var(--neon-shadow);
         }
         
         /* ===== Animations ===== */
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -384,31 +446,22 @@
             }
         }
         
-        @keyframes shimmer {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+        /* ===== Loading Animation ===== */
+        .loading {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
         }
         
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
+        .loading:nth-child(1) { animation-delay: 0.1s; }
+        .loading:nth-child(2) { animation-delay: 0.2s; }
+        .loading:nth-child(3) { animation-delay: 0.3s; }
+        .loading:nth-child(4) { animation-delay: 0.4s; }
+        .loading:nth-child(5) { animation-delay: 0.5s; }
+        .loading:nth-child(6) { animation-delay: 0.6s; }
+        .loading:nth-child(7) { animation-delay: 0.7s; }
+        .loading:nth-child(8) { animation-delay: 0.8s; }
         
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-        }
-        
-        /* ===== Scrollbar Styling ===== */
+        /* ===== Scrollbar ===== */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -421,77 +474,69 @@
         ::-webkit-scrollbar-thumb {
             background: var(--accent-primary);
             border-radius: 4px;
-            opacity: 0.5;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            opacity: 0.8;
+            background: var(--accent-secondary);
+            box-shadow: var(--neon-shadow);
         }
         
-        /* ===== Utility Classes ===== */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
+        /* ===== Focus States ===== */
+        :focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
         }
         
-        .fade-in {
-            animation: fadeInUp var(--transition-slow) ease-out;
-        }
-        
-        /* ===== Responsive Design ===== */
+        /* ===== Responsive ===== */
         @media (max-width: 768px) {
             .container {
                 padding: 40px 20px;
             }
             
             header {
-                margin-bottom: var(--space-xl);
+                margin-bottom: 60px;
             }
             
             section {
-                padding: var(--space-md);
-                margin-bottom: var(--space-lg);
+                padding: 25px 20px;
+                margin-bottom: 30px;
             }
             
             .topic-grid {
                 grid-template-columns: 1fr;
-                gap: var(--space-xs);
+                gap: 10px;
             }
             
-            .theme-toggle {
-                width: 44px;
-                height: 44px;
+            .section-title::after {
+                display: none;
             }
         }
         
         @media (max-width: 480px) {
-            section {
-                padding: var(--space-md) var(--space-sm);
+            .name {
+                font-size: 2rem;
             }
             
-            .section-title {
-                font-size: 1.3rem;
-            }
-            
-            .social-links {
-                gap: var(--space-xs);
+            .subtitle {
+                font-size: 1rem;
             }
             
             .social-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 1.1rem;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            section {
+                padding: 20px 15px;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
             }
         }
         
-        /* ===== Accessibility ===== */
+        /* ===== Reduced Motion ===== */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -499,178 +544,87 @@
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
-        
-        /* Focus states for keyboard navigation */
-        :focus-visible {
-            outline: 2px solid var(--accent-primary);
-            outline-offset: 2px;
-        }
-        
-        /* Skip to content link */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--accent-primary);
-            color: white;
-            padding: var(--space-xs) var(--space-sm);
-            border-radius: 0 0 8px 0;
-            text-decoration: none;
-            font-weight: 600;
-            z-index: 1001;
-            transition: top var(--transition-fast);
-        }
-        
-        .skip-link:focus {
-            top: 0;
-        }
-        
-        /* Print styles */
-        @media print {
-            body {
-                background: white;
-                color: black;
-            }
-            
-            .theme-toggle,
-            .social-links {
-                display: none;
-            }
-            
-            section {
-                page-break-inside: avoid;
-                border: 1px solid #ddd;
-                margin-bottom: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Skip to main content for accessibility -->
-    <a href="#main" class="skip-link">Ana içeriğe geç</a>
-    
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" aria-label="Tema değiştir" title="Koyu/Açık tema">
-        <i class="fas fa-moon" id="theme-icon"></i>
-    </button>
-    
-    <!-- Main Container -->
     <div class="container">
-        <!-- Header Section -->
-        <header role="banner">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <div class="logo">BD</div>
+            </div>
             <h1 class="name">Burak Demiröz</h1>
-
+            <p class="subtitle terminal-cursor">I am Jr. AI Specialist</p>
+            
             <!-- Social Links -->
-            <div class="social-links" role="navigation" aria-label="Sosyal medya bağlantıları">
-                <a href="https://github.com/Burak1320demiroz" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                class="social-icon" 
-                data-tooltip="GitHub">
+            <div class="social-links">
+                <a href="https://github.com/Burak1320demiroz" target="_blank" rel="noopener noreferrer" class="social-icon">
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/burak-demiroz/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                class="social-icon" 
-                data-tooltip="LinkedIn">
+                <a href="https://www.linkedin.com/in/burak-demiroz/" target="_blank" rel="noopener noreferrer" class="social-icon">
                     <i class="fab fa-linkedin"></i>
                 </a>
-                <a href="https://medium.com/@burakdemirozis16" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                class="social-icon" 
-                data-tooltip="Medium">
+                <a href="https://medium.com/@burakdemirozis16" target="_blank" rel="noopener noreferrer" class="social-icon">
                     <i class="fab fa-medium"></i>
                 </a>
-                <a href="https://huggingface.co/Burak1320demiroz" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                class="social-icon" 
-                data-tooltip="Hugging Face">
-                    <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" 
-                        alt="Hugging Face" 
-                        style="width:22px; height:22px;">
+                <a href="https://huggingface.co/Burak1320demiroz" target="_blank" rel="noopener noreferrer" class="social-icon">
+                    <i class="fas fa-robot"></i>
                 </a>
-                <a href="resume.html" 
-                class="social-icon" 
-                data-tooltip="CV / Resume">
+                <a href="resume.html" class="social-icon">
                     <i class="fas fa-file-alt"></i>
                 </a>
             </div>
         </header>
         
         <!-- Main Content -->
-        <main id="main" role="main">
+        <main>
             <!-- Cyber Security Section -->
-            <section id="cyber-security" aria-labelledby="cyber-title">
-                <h2 class="section-title" id="cyber-title">
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fas fa-shield-alt"></i>
                     Siber Güvenlik Mühendisliği
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/web_security" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/web_security" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-globe topic-icon"></i>
                             <span>Web Application Security</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/mobile_security" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/mobile_security" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-mobile-alt topic-icon"></i>
                             <span>Mobile Application Security</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cryptography" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cryptography" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-key topic-icon"></i>
                             <span>Cryptography</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/tools" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/tools" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-tools topic-icon"></i>
                             <span>Tools</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cisco_ccna" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cisco_ccna" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-network-wired topic-icon"></i>
                             <span>Cisco CCNA</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/docker" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/docker" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fab fa-docker topic-icon"></i>
                             <span>Docker</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/ctf_lab" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/ctf_lab" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-bug topic-icon"></i>
                             <span>PortSwigger Labs</span>
                         </a>
@@ -679,71 +633,50 @@
             </section>
             
             <!-- Python Section -->
-            <section id="python" aria-labelledby="python-title">
-                <h2 class="section-title" id="python-title">
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fab fa-python"></i>
                     Python Development Projects
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/data_structures" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/data_structures" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-book topic-icon"></i>
                             <span>Data Structures</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/types_of_algorithms" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/types_of_algorithms" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-cogs topic-icon"></i>
                             <span>Types of Algorithms</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/basic_commands_in_python" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/basic_commands_in_python" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-terminal topic-icon"></i>
                             <span>Basic Commands in Python</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/advanced_projects" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/advanced_projects" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-rocket topic-icon"></i>
                             <span>Advanced Projects</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/mid_level_project" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/mid_level_project" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-laptop-code topic-icon"></i>
                             <span>Mid-Level Projects</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/basic_projects" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/basic_projects" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-code topic-icon"></i>
                             <span>Basic Projects</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/games" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/games" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-gamepad topic-icon"></i>
                             <span>Python Games</span>
                         </a>
@@ -752,53 +685,38 @@
             </section>
             
             <!-- AI Section -->
-            <section id="ai" aria-labelledby="ai-title">
-                <h2 class="section-title" id="ai-title">
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fas fa-robot"></i>
                     Artificial Intelligence Development Projects
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/notes" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/notes" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-book topic-icon"></i>
                             <span>Notes</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/deep_learning" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/deep_learning" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-brain topic-icon"></i>
                             <span>Deep Learning</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/machine_learning" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/machine_learning" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-chart-line topic-icon"></i>
                             <span>Machine Learning</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/image_processing" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/image_processing" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-image topic-icon"></i>
                             <span>Image Processing</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/llm_development" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/llm_development" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-comments topic-icon"></i>
                             <span>LLM Development</span>
                         </a>
@@ -807,17 +725,14 @@
             </section>
 
             <!-- Autonomous Systems Section -->
-            <section id="ai" aria-labelledby="ai-title">
-                <h2 class="section-title" id="ai-title">
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fas fa-robot"></i>
                     Autonomous Systems Development Projects
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/ros_noetic" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/ros_noetic" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-robot topic-icon"></i>
                             <span>ROS Noetic</span>
                         </a>
@@ -825,73 +740,49 @@
                 </ul>
             </section>
 
-            <section id="cpp" aria-labelledby="cpp-title">
-                <h2 class="section-title" id="cpp-title">
+            <!-- C, C#, C++ Section -->
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fas fa-code"></i>
                     C, C# ve C++ Development Projects
                 </h2>
-                <ul class="topic-grid" role="list">
-                    
-                    <!-- C -->
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="..." 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="topic-link">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" 
-                                alt="C Logo" class="topic-icon" width="20" height="20">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="topic-link">
+                            <i class="fas fa-copyright topic-icon"></i>
                             <span>C</span>
                         </a>
                     </li>
-
-                    <!-- C# -->
                     <li class="topic-item">
-                        <a href="..." 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="topic-link">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" 
-                                alt="C# Logo" class="topic-icon" width="20" height="20">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="topic-link">
+                            <i class="fas fa-hashtag topic-icon"></i>
                             <span>C#</span>
                         </a>
                     </li>
-
-                    <!-- C++ -->
                     <li class="topic-item">
-                        <a href="..." 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="topic-link">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" 
-                                alt="C++ Logo" class="topic-icon" width="20" height="20">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="topic-link">
+                            <i class="fas fa-plus topic-icon"></i>
                             <span>C++</span>
                         </a>
                     </li>
-
                 </ul>
             </section>
             
             <!-- Web Development Section -->
-            <section id="web" aria-labelledby="web-title">
-                <h2 class="section-title" id="web-title">
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fas fa-code"></i>
                     Web App Development
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/notes" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/notes" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fab fa-node-js topic-icon"></i>
                             <span>Node.js Notlarım</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/node.js" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/node.js" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fab fa-node-js topic-icon"></i>
                             <span>Node.js Projelerim</span>
                         </a>
@@ -900,35 +791,26 @@
             </section>
             
             <!-- CTF Projects Section -->
-            <section id="ctf" aria-labelledby="ctf-title">
-                <h2 class="section-title" id="ctf-title">
-                    <i class="fas fa-project-diagram"></i>
+            <section class="loading">
+                <h2 class="section-title">
+                    <i class="fas fa-flag"></i>
                     CTF Projects
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/demiroz_bank.git" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/demiroz_bank.git" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-university topic-icon"></i>
                             <span>Demiröz Bank (CTF)</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/LLM_lokmanhekim.git" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/LLM_lokmanhekim.git" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-robot topic-icon"></i>
                             <span>Lokman Hekim (CTF)</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/cve-2025-2082.git" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/cve-2025-2082.git" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-car topic-icon"></i>
                             <span>CVE-2025-2082 (Tesla CTF)</span>
                         </a>
@@ -937,17 +819,14 @@
             </section>
             
             <!-- Mobile Development Section -->
-            <section id="mobile" aria-labelledby="mobile-title">
-                <h2 class="section-title" id="mobile-title">
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fas fa-mobile-alt"></i>
                     Mobile App Development
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/mobile_app_development/tree/master/root_nasıl_atılır" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/mobile_app_development/tree/master/root_nasıl_atılır" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fab fa-android topic-icon"></i>
                             <span>Root Nasıl Atılır?</span>
                         </a>
@@ -956,251 +835,170 @@
             </section>
             
             <!-- Mathematics Section -->
-            <section id="math" aria-labelledby="math-title">
-                <h2 class="section-title" id="math-title">
+            <section class="loading">
+                <h2 class="section-title">
                     <i class="fas fa-square-root-alt"></i>
                     Matematik
                 </h2>
-                <ul class="topic-grid" role="list">
+                <ul class="topic-grid">
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/soyut_matematik" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/soyut_matematik" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-infinity topic-icon"></i>
                             <span>Soyut Matematik</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/lineer_cebir" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/lineer_cebir" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-stream topic-icon"></i>
                             <span>Lineer Cebir</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/analiz" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/analiz" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-chart-line topic-icon"></i>
                             <span>Analiz</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/diferansiyel_denklemler" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/diferansiyel_denklemler" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-wave-square topic-icon"></i>
                             <span>Diferansiyel Denklemler</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/analitik_geometri" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/analitik_geometri" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-drafting-compass topic-icon"></i>
                             <span>Analitik Geometri</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/komplex_analiz" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/komplex_analiz" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-circle-notch topic-icon"></i>
                             <span>Kompleks Analiz</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/galois_teorisi" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/galois_teorisi" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-key topic-icon"></i>
                             <span>Galois Teorisi</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/diferansiyel_geometri" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/diferansiyel_geometri" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-project-diagram topic-icon"></i>
                             <span>Diferansiyel Geometri</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/riemann_geometri" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/riemann_geometri" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-globe topic-icon"></i>
                             <span>Riemann Geometri</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/soyut_cebir" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/soyut_cebir" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-th topic-icon"></i>
                             <span>Soyut Cebir</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/sayilar_teorisi" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/sayilar_teorisi" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-hashtag topic-icon"></i>
                             <span>Sayılar Teorisi</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/metrik_uzaylar" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/metrik_uzaylar" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-ruler-combined topic-icon"></i>
                             <span>Metrik Uzaylar</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/olasilik" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/olasilik" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-percentage topic-icon"></i>
                             <span>Olasılık</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/istatistik" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/istatistik" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-chart-bar topic-icon"></i>
                             <span>İstatistik</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/lineer_programlama" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/lineer_programlama" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-network-wired topic-icon"></i>
                             <span>Lineer Programlama</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/graf_teorisi" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/graf_teorisi" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-project-diagram topic-icon"></i>
                             <span>Graf Teorisi</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/kısmi_diferansiyel_denklemler" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/kısmi_diferansiyel_denklemler" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-equals topic-icon"></i>
                             <span>Kısmi Türevli Diferansiyel Denklemler</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/maple" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/maple" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-leaf topic-icon"></i>
                             <span>Maple</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matlab" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matlab" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-laptop-code topic-icon"></i>
                             <span>Matlab</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/fraktal_geometri" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/fraktal_geometri" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-code-branch topic-icon"></i>
                             <span>Fraktal Geometri</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/aksiyomatik_geometri" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/aksiyomatik_geometri" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-cogs topic-icon"></i>
                             <span>Aksiyomatik Geometri</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/fonksiyonel_analiz" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
-                            <i class="fas fa-cogs topic-icon"></i>
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/fonksiyonel_analiz" target="_blank" rel="noopener noreferrer" class="topic-link">
+                            <i class="fas fa-function topic-icon"></i>
                             <span>Fonksiyonel Analiz</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/kriptografi" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
-                            <i class="fas fa-shield-alt topic-icon"></i>
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/kriptografi" target="_blank" rel="noopener noreferrer" class="topic-link">
+                            <i class="fas fa-lock topic-icon"></i>
                             <span>Kriptografi</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matematik_hileleri" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matematik_hileleri" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-lightbulb topic-icon"></i>
                             <span>Matematik Hileleri</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matematiksel_fizik" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
-                            <i class="fas fa-flask topic-icon"></i>
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matematiksel_fizik" target="_blank" rel="noopener noreferrer" class="topic-link">
+                            <i class="fas fa-atom topic-icon"></i>
                             <span>Matematiksel Fizik</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matematiksel_finans" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/matematiksel_finans" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-dollar-sign topic-icon"></i>
                             <span>Matematiksel Finans</span>
                         </a>
                     </li>
                     <li class="topic-item">
-                        <a href="https://github.com/Burak1320demiroz/math/tree/master/topoloji" 
-                           target="_blank" 
-                           rel="noopener noreferrer" 
-                           class="topic-link">
+                        <a href="https://github.com/Burak1320demiroz/math/tree/master/topoloji" target="_blank" rel="noopener noreferrer" class="topic-link">
                             <i class="fas fa-shapes topic-icon"></i>
                             <span>Topoloji</span>
                         </a>
@@ -1210,103 +1008,61 @@
         </main>
         
         <!-- Footer -->
-        <footer role="contentinfo">
-            <p>&copy; 2025 Burak Demiröz. Tüm hakları saklıdır.</p>
-            <p>Built with <span style="color: var(--accent-primary);">♥</span> using modern web technologies</p>
+        <footer>
+            <p>&copy; 2025 Burak Demiröz. All rights reserved.</p>
+            <p style="color: var(--accent-primary); margin-top: 10px;">
+                <i class="fas fa-terminal"></i> Built with cutting-edge technology
+            </p>
         </footer>
     </div>
     
     <!-- JavaScript -->
     <script>
-        // ===== Theme Management =====
-        const themeToggle = document.querySelector('.theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-        
-        // Get saved theme or use system preference
-        const getSavedTheme = () => localStorage.getItem('theme') || (prefersDark.matches ? 'dark' : 'light');
-        
-        // Apply theme
-        const applyTheme = (theme) => {
-            document.documentElement.setAttribute('data-theme', theme);
-            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('theme', theme);
-        };
-        
-        // Initialize theme
-        applyTheme(getSavedTheme());
-        
-        // Theme toggle handler
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            applyTheme(newTheme);
-        });
-        
-        // Listen for system theme changes
-        prefersDark.addEventListener('change', (e) => {
-            if (!localStorage.getItem('theme')) {
-                applyTheme(e.matches ? 'dark' : 'light');
-            }
-        });
-        
-        // ===== Intersection Observer for Animations =====
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    // Optional: stop observing after animation
-                    // observer.unobserve(entry.target);
-                }
+        // Add fade-in animation to sections when page loads
+        window.addEventListener('load', () => {
+            const sections = document.querySelectorAll('.loading');
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.style.animationPlayState = 'running';
+                }, index * 100);
             });
-        }, observerOptions);
-        
-        // Observe all sections
-        document.querySelectorAll('section').forEach(section => {
-            observer.observe(section);
         });
         
-        // ===== Performance: Lazy Load Icons =====
-        const loadIcons = () => {
-            const iconLink = document.querySelector('link[href*="font-awesome"]');
-            if (iconLink && iconLink.media === 'print') {
-                iconLink.media = 'all';
-            }
-        };
-        
-        // Load icons after page load
-        if (document.readyState === 'complete') {
-            loadIcons();
-        } else {
-            window.addEventListener('load', loadIcons);
+        // Add glitch effect on hover for the logo
+        const logo = document.querySelector('.logo');
+        if (logo) {
+            logo.addEventListener('mouseenter', () => {
+                logo.style.animation = 'glitch 0.3s ease-in-out';
+                setTimeout(() => {
+                    logo.style.animation = 'float 3s ease-in-out infinite';
+                }, 300);
+            });
         }
         
-        // ===== Preload critical resources =====
-        const preloadResources = () => {
-            const links = [
-                { rel: 'preload', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap', as: 'style' }
-            ];
+        // Terminal cursor effect
+        const terminal = document.querySelector('.terminal-cursor');
+        if (terminal) {
+            const text = terminal.textContent;
+            terminal.textContent = '';
+            let index = 0;
             
-            links.forEach(link => {
-                const linkEl = document.createElement('link');
-                Object.assign(linkEl, link);
-                document.head.appendChild(linkEl);
-            });
-        };
-        
-        // ===== Initialize everything when DOM is ready =====
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', preloadResources);
-        } else {
-            preloadResources();
+            function typeWriter() {
+                if (index < text.length) {
+                    terminal.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+            
+            setTimeout(typeWriter, 500);
         }
         
-        console.log('%c🚀 Portfolio loaded successfully!', 'color: #667eea; font-size: 16px; font-weight: bold;');
+        // Console Easter Egg
+        console.log('%c🚀 Welcome to Burak Demiröz Portfolio', 'color: #00d4ff; font-size: 20px; font-weight: bold;');
+        console.log('%c> System initialized...', 'color: #00d4ff; font-family: monospace;');
+        console.log('%c> Loading cybersecurity modules...', 'color: #00d4ff; font-family: monospace;');
+        console.log('%c> AI systems online...', 'color: #00d4ff; font-family: monospace;');
+        console.log('%c> Ready.', 'color: #00ff00; font-family: monospace;');
     </script>
 </body>
 </html>
