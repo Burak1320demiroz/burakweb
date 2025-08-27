@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python | Burak Demiröz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(0, 212, 255, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #00d4ff;
+            --skin-color-hover: #00a8cc;
+            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-python {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 212, 255, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-python {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .function { color: #50fa7b; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        
+        /* Output Blocks */
+        .output-block {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+        }
+        
+        .output-block::before {
+            content: '> Output:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fab fa-python"></i>
+                <span>Python</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#python-nedir" class="active">Python Nedir?</a></li>
+            <li><a href="#ilk-kod">İlk Kod</a></li>
+            <li><a href="#degiskenler">Değişkenler ve Veri Tipleri</a></li>
+            <li><a href="#kosullar">Koşullu İfadeler</a></li>
+            <li><a href="#donguler">Döngüler</a></li>
+            <li><a href="#fonksiyonlar">Fonksiyonlar</a></li>
+            <li><a href="#siniflar">Sınıflar ve OOP</a></li>
+            <li><a href="#numpy">NumPy</a></li>
+            <li><a href="#pandas">Pandas</a></li>
+            <li><a href="#matplotlib">Matplotlib</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fab fa-python"></i>
+                    Python
+                </h1>
+                <div class="hero-code">
+                    print("Merhaba, Python!")
+                </div>
+            </section>
+
+            <!-- Python Nedir Section -->
+            <section id="python-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Python Nedir, Neden Tercih Edilir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Python</strong>, Guido van Rossum tarafından 90'lı yılların başında geliştirilen yüksek seviyeli ve genel amaçlı bir programlama dilidir. Sade ve okunması kolay bir sözdizime sahip olduğu için yeni başlayanlar tarafından tercih edilir.
+                    </p>
+                    <p>
+                        Python yorumlayıcı bir dil olduğundan (compiled olmaksızın) doğrudan kod çalıştırılabilir, bu da geliştirme sürecini hızlandırır. Ayrıca Python, C ve C++ gibi dillere göre derleme aşaması olmadığı için hızlıca sonuç almayı sağlar.
+                    </p>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Pro İpucu:</strong> Python kodunuzu yazmadan önce <span class="kbd">python --version</span> komutuyla hangi sürümü kullandığınızı kontrol edin. Python 3.x serisi önerilir.
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Python'un Avantajları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Açık kaynak ve ücretsiz</li>
+                                <li>• Büyük geliştirici topluluğu</li>
+                                <li>• Çapraz platform uyumluluğu</li>
+                                <li>• Zengin standart kütüphane</li>
+                                <li>• Veri bilimi, AI/ML, web geliştirme desteği</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">Tarihçe</span>
+                        </div>
+                        <div class="note-card-content">
+                            Python'un adı, Monty Python's Flying Circus adlı İngiliz komedi grubundan gelir. Guido van Rossum bu ismi seçerken eğlenceli ve kısa bir isim istemiştir.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Google, Facebook, NASA ve CERN gibi büyük kuruluşlar projelerinde Python'u tercih etmektedir. Python'un temiz girintili (indentli) sözdizimi sayesinde kod okunabilirliği artmıştır.
+                    </p>
+                </div>
+            </section>
+
+            <!-- İlk Kod Section -->
+            <section id="ilk-kod" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i>
+                    İlk Kod: Merhaba Dünya
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Python'da ilk kod olarak ekrana bir metin yazdırma örneği genellikle "Merhaba Dünya" ile başlar. Bunu yapmak için <strong>print()</strong> fonksiyonunu kullanırız:
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="function">print</span>(<span class="string">"Merhaba Dünya"</span>)</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        Merhaba Dünya
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-terminal note-card-icon"></i>
+                            <span class="note-card-title">Çalıştırma İpucu</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bu kodu çalıştırmak için: <span class="kbd">python dosya_adi.py</span> veya Python IDLE'da <span class="kbd">F5</span> tuşuna basın.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        <strong>print()</strong> fonksiyonu içine yazdığınız ifadeyi ekrana bastırır. Burada "Merhaba Dünya" bir metin (string) olduğu için çift tırnak içinde yazıldı. Bu basit örnek, Python'da kod yazmanın ne kadar hızlı ve kolay olduğunu gösterir.
+                    </p>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Python 2'de <code>print "Merhaba"</code> şeklinde yazılırken, Python 3'te mutlaka parantez kullanılmalıdır: <code>print("Merhaba")</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Değişkenler Section -->
+            <section id="degiskenler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-database"></i>
+                    Değişkenler ve Veri Tipleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Python'da değişkenler, verileri bellekte saklamak için kullandığımız isimlendirilmiş konumlardır. Python dinamik tipli bir dil olduğu için değişken tanımlarken veri tipini önceden belirtmenize gerek yoktur.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code>x = <span class="number">5</span>                <span class="comment"># integer</span>
+y = <span class="number">3.14</span>             <span class="comment"># float</span>
+isim = <span class="string">"Ayşe"</span>        <span class="comment"># string</span>
+aktif = <span class="keyword">True</span>         <span class="comment"># boolean</span></code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Pro İpucu:</strong> Değişken isimlerinde Türkçe karakter kullanmaktan kaçının. <code>isim</code> yerine <code>name</code>, <code>yaş</code> yerine <code>age</code> kullanın. Bu uluslararası projelerde uyumluluk sağlar.
+                        </div>
+                    </div>
+                    
+                    <p><strong>Python'da Yaygın Veri Tipleri:</strong></p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <ul>
+                                <li><strong>int:</strong> Tam sayılar (5, -3, 0)</li>
+                                <li><strong>float:</strong> Ondalıklı sayılar (3.14, -0.001)</li>
+                                <li><strong>str:</strong> Metin/string ("Merhaba", 'Python')</li>
+                                <li><strong>bool:</strong> Mantıksal değerler (True, False)</li>
+                                <li><strong>list:</strong> Sıralı diziler ([1, 2, 3])</li>
+                                <li><strong>tuple:</strong> Değiştirilemez diziler ((10, 20))</li>
+                                <li><strong>dict:</strong> Anahtar-değer çiftleri ({"ad": "Ali"})</li>
+                                <li><strong>set:</strong> Benzersiz öğeler ({1, 2, 3})</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Değişken İsimlendirme Kuralları</span>
+                        </div>
+                        <div class="note-card-content">
+                            • Harfle veya _ ile başlamalı (sayı ile başlayamaz)<br>
+                            • Sadece harf, sayı ve _ içerebilir<br>
+                            • Büyük-küçük harf duyarlı (age ≠ Age)<br>
+                            • Python anahtar kelimeleri kullanılamaz (if, for, class vb.)
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code>z = <span class="number">10</span>              <span class="comment"># z şu anda int</span>
+<span class="function">print</span>(<span class="function">type</span>(z))    <span class="comment"># &lt;class 'int'&gt;</span>
+
+z = <span class="string">"Merhaba"</span>
+<span class="function">print</span>(<span class="function">type</span>(z))    <span class="comment"># &lt;class 'str'&gt;</span></code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Koşullu İfadeler Section -->
+            <section id="kosullar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-code-branch"></i>
+                    Koşullu İfadeler (if-else)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Python'da koşullu ifadeler, belirli bir şartın sağlanıp sağlanmamasına bağlı olarak farklı kod bloklarının çalışmasını sağlar. Temel olarak <strong>if</strong> ve <strong>else</strong> blokları kullanılır.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code>sayi = <span class="number">5</span>
+
+<span class="keyword">if</span> sayi > <span class="number">0</span>:
+    <span class="function">print</span>(<span class="string">"Sayı pozitif"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"Sayı sıfır veya negatif"</span>)</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Girinti (Indentation) Önemli!</strong> Python'da kod blokları süslü parantez {} yerine girinti ile belirlenir. Standart olarak 4 boşluk kullanılır.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Birden çok durumu kontrol etmek için <strong>elif</strong> (else if) kullanılabilir:
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code>sayi = <span class="number">0</span>
+
+<span class="keyword">if</span> sayi > <span class="number">0</span>:
+    <span class="function">print</span>(<span class="string">"Pozitif"</span>)
+<span class="keyword">elif</span> sayi == <span class="number">0</span>:
+    <span class="function">print</span>(<span class="string">"Sıfır"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">"Negatif"</span>)</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        Sıfır
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-equals note-card-icon"></i>
+                            <span class="note-card-title">Karşılaştırma Operatörleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>==</code> eşittir, <code>!=</code> eşit değil, <code>&gt;</code> büyük, <code>&lt;</code> küçük, <code>&gt;=</code> büyük eşit, <code>&lt;=</code> küçük eşit<br>
+                            <code>and</code>, <code>or</code>, <code>not</code> mantıksal operatörler
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Döngüler Section -->
+            <section id="donguler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-sync"></i>
+                    Döngüler (for, while)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Döngüler, bir işlemi birden çok kez tekrar etmek için kullanılır. Python'da en yaygın döngüler <strong>for</strong> ve <strong>while</strong> döngüleridir.
+                    </p>
+                    
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">For Döngüsü:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">3</span>):
+    <span class="function">print</span>(i)</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        0
+                        1
+                        2
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Pro İpucu:</strong> <code>range(start, stop, step)</code> fonksiyonu ile daha esnek döngüler oluşturabilirsiniz:<br>
+                            <code>range(1, 10, 2)</code> → 1, 3, 5, 7, 9
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-list note-card-icon"></i>
+                            <span class="note-card-title">Liste Üzerinde Döngü</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>for item in [1, 2, 3, 4]: print(item)</code><br>
+                            <code>for char in "Python": print(char)</code> - String karakterleri üzerinde
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">While Döngüsü:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code>n = <span class="number">3</span>
+<span class="keyword">while</span> n > <span class="number">0</span>:
+    <span class="function">print</span>(n)
+    n -= <span class="number">1</span></code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        3
+                        2
+                        1
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Sonsuz Döngü Riskı!</strong> While döngülerinde koşulun bir noktada False olacağından emin olun. Aksi takdirde program sonsuza kadar çalışır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fonksiyonlar Section -->
+            <section id="fonksiyonlar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cube"></i>
+                    Fonksiyonlar (def)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Fonksiyonlar, belirli bir işi yapan kod bloklarıdır. Python'da fonksiyon tanımlamak için <strong>def</strong> anahtar kelimesi kullanılır. Fonksiyonlar, tekrarlanan kodu bir arada tutarak yeniden kullanılmasını sağlar.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">def</span> <span class="function">selam_ver</span>(isim):
+    <span class="function">print</span>(<span class="string">"Merhaba"</span>, isim)
+
+<span class="function">selam_ver</span>(<span class="string">"Ahmet"</span>)</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        Merhaba Ahmet
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-cog note-card-icon"></i>
+                            <span class="note-card-title">Fonksiyon Parametreleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Varsayılan parametre:</strong> <code>def selam(isim="Misafir"): ...</code><br>
+                            <strong>Çoklu parametre:</strong> <code>def topla(a, b, c): ...</code><br>
+                            <strong>Sınırsız parametre:</strong> <code>def topla(*args): ...</code>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Fonksiyonlar değer döndürebilir (<strong>return</strong> ile):
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">def</span> <span class="function">topla</span>(a, b):
+    <span class="keyword">return</span> a + b
+
+sonuc = <span class="function">topla</span>(<span class="number">4</span>, <span class="number">5</span>)
+<span class="function">print</span>(sonuc)</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        9
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Pro İpucu:</strong> Fonksiyonlarınıza docstring ekleyin:<br>
+                            <code>"""Bu fonksiyon iki sayıyı toplar."""</code> - Üçlü tırnak içinde açıklama
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sınıflar Section -->
+            <section id="siniflar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-object-group"></i>
+                    Sınıflar (class) ve OOP Giriş
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Python'da sınıflar (class), nesne yönelimli programlamanın temel yapı taşlarıdır. Sınıflar, ortak özelliklere ve işlevlere sahip nesneler oluşturmak için şablon görevi görür.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">class</span> <span class="function">Araba</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, renk, hiz):
+        self.renk = renk
+        self.hiz = hiz
+
+    <span class="keyword">def</span> <span class="function">bilgileri_goster</span>(self):
+        <span class="function">print</span>(<span class="string">f"Renk: {self.renk}, Hız: {self.hiz}"</span>)
+
+<span class="comment"># Araba sınıfından bir nesne oluşturalım</span>
+araba1 = <span class="function">Araba</span>(<span class="string">"Kırmızı"</span>, <span class="number">120</span>)
+araba1.<span class="function">bilgileri_goster</span>()</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        Renk: Kırmızı, Hız: 120
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>OOP Temel Kavramları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Sınıf (Class):</strong> Nesne şablonu</li>
+                                <li><strong>Nesne (Object):</strong> Sınıftan oluşturulan örnek</li>
+                                <li><strong>Özellik (Attribute):</strong> Nesnenin veri alanları</li>
+                                <li><strong>Metod (Method):</strong> Nesnenin fonksiyonları</li>
+                                <li><strong>__init__:</strong> Yapıcı metod (constructor)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-user-secret note-card-icon"></i>
+                            <span class="note-card-title">self Parametresi</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>self</code> parametresi, nesnenin kendisine referans verir. Her metotta ilk parametre olarak yer alır ama çağırırken gönderilmez.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Sınıflar sayesinde benzer özelliklere sahip nesneleri kolayca tanımlayıp bir arada tutabilir ve daha karmaşık projelerde kodun organizasyonunu güçlendirebilirsiniz.
+                    </p>
+                </div>
+            </section>
+
+            <!-- NumPy Section -->
+            <section id="numpy" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    NumPy ile Temel Dizi İşlemleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>NumPy</strong>, "Numerical Python" anlamına gelen ve sayısal hesaplamalar için geliştirilmiş güçlü bir kütüphanedir. NumPy, ndarray adı verilen çok boyutlu diziler ve bu diziler üzerinde etkili hesaplama yapmanızı sağlayan fonksiyonlar sunar.
+                    </p>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Kurulum:</strong> <span class="kbd">pip install numpy</span> komutuyla kurabilirsiniz.
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># Tek boyutlu dizi</span>
+a = np.<span class="function">array</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>])
+<span class="function">print</span>(a)
+<span class="function">print</span>(a.shape)     <span class="comment"># Dizinin boyutu</span>
+<span class="function">print</span>(a.dtype)     <span class="comment"># Veri tipi</span></code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        [1 2 3 4 5]
+                        (5,)
+                        int64
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-rocket note-card-icon"></i>
+                            <span class="note-card-title">NumPy vs Python Listesi</span>
+                        </div>
+                        <div class="note-card-content">
+                            NumPy dizileri Python listelerine göre çok daha hızlıdır çünkü C dilinde yazılmıştır ve bellek kullanımı daha verimlidir.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        <strong>İki boyutlu dizi (matris) örneği:</strong>
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code>b = np.<span class="function">array</span>([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],
+              [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])
+<span class="function">print</span>(b.shape)      <span class="comment"># (2, 3)</span>
+<span class="function">print</span>(b[<span class="number">1</span>,<span class="number">2</span>])      <span class="comment"># 6</span></code></pre>
+                    </div>
+                    
+                    <p>
+                        <strong>NumPy ile matematiksel işlemler:</strong>
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code>c = np.<span class="function">array</span>([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>])
+<span class="function">print</span>(a + c)         <span class="comment"># Eleman bazında toplama</span>
+<span class="function">print</span>(a * <span class="number">2</span>)         <span class="comment"># Skaler çarpma</span>
+<span class="function">print</span>(np.<span class="function">sum</span>(a))     <span class="comment"># Toplam</span>
+<span class="function">print</span>(np.<span class="function">mean</span>(a))    <span class="comment"># Ortalama</span></code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        [11 22 33 44 55]
+                        [ 2  4  6  8 10]
+                        15
+                        3.0
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Yararlı NumPy Fonksiyonları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><code>np.zeros(5)</code> - Sıfırlardan oluşan dizi</li>
+                                <li><code>np.ones(3)</code> - Birlerden oluşan dizi</li>
+                                <li><code>np.arange(0, 10, 2)</code> - Aralıkla dizi</li>
+                                <li><code>np.random.rand(3, 3)</code> - Rastgele sayılar</li>
+                                <li><code>np.max(a)</code>, <code>np.min(a)</code> - Min/Max</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pandas Section -->
+            <section id="pandas" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-table"></i>
+                    Pandas ile Veri Analizi Temelleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Pandas</strong>, Python'da veri analizi ve manipülasyonu için geliştirilmiş güçlü bir kütüphanedir. Pandas, iki ana veri yapısı sunar: <strong>Series</strong> (tek boyutlu) ve <strong>DataFrame</strong> (iki boyutlu tablo).
+                    </p>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Kurulum:</strong> <span class="kbd">pip install pandas</span> - NumPy'ı otomatik olarak kurar.
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># DataFrame oluşturma</span>
+df = pd.<span class="function">DataFrame</span>({
+    <span class="string">"isim"</span>: [<span class="string">"Ali"</span>, <span class="string">"Ayşe"</span>, <span class="string">"Fatma"</span>],
+    <span class="string">"yas"</span>: [<span class="number">25</span>, <span class="number">30</span>, <span class="number">22</span>],
+    <span class="string">"maas"</span>: [<span class="number">5000</span>, <span class="number">6000</span>, <span class="number">5500</span>]
+})
+<span class="function">print</span>(df)</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                            isim  yas  maas
+                        0    Ali   25  5000
+                        1   Ayşe   30  6000
+                        2  Fatma   22  5500
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-file-csv note-card-icon"></i>
+                            <span class="note-card-title">Dosyadan Veri Okuma</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>df = pd.read_csv('dosya.csv')</code> - CSV dosyası<br>
+                            <code>df = pd.read_excel('dosya.xlsx')</code> - Excel dosyası<br>
+                            <code>df = pd.read_json('dosya.json')</code> - JSON dosyası
+                        </div>
+                    </div>
+                    
+                    <p>
+                        <strong>Pandas ile temel işlemler:</strong>
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Belirli sütunu seçme</span>
+<span class="function">print</span>(df[<span class="string">"yas"</span>])
+
+<span class="comment"># Filtreleme</span>
+<span class="function">print</span>(df[df[<span class="string">"yas"</span>] > <span class="number">25</span>])
+
+<span class="comment"># Ortalama hesaplama</span>
+ortalama_yas = df[<span class="string">"yas"</span>].<span class="function">mean</span>()
+<span class="function">print</span>(<span class="string">f"Ortalama yaş: {ortalama_yas}"</span>)</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel Pandas İşlemleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><code>df.head()</code> - İlk 5 satır</li>
+                                <li><code>df.info()</code> - Veri hakkında bilgi</li>
+                                <li><code>df.describe()</code> - İstatistiksel özet</li>
+                                <li><code>df.groupby('sütun')</code> - Gruplandırma</li>
+                                <li><code>df.sort_values('sütun')</code> - Sıralama</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Pandas, CSV, Excel gibi dosyalardan veri okumayı ve yazmayı da kolaylaştırır (<strong>pd.read_csv</strong>, <strong>pd.to_excel</strong>).
+                    </p>
+                </div>
+            </section>
+
+            <!-- Matplotlib Section -->
+            <section id="matplotlib" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Matplotlib ile Veri Görselleştirme
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Matplotlib</strong>, Python'da veri görselleştirme için kullanılan kapsamlı bir kütüphanedir. Statik grafikler, animasyonlar ve etkileşimli görseller oluşturmanıza olanak tanır.
+                    </p>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Kurulum:</strong> <span class="kbd">pip install matplotlib</span>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Çizgi grafiği örneği</span>
+x = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]
+y = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">15</span>, <span class="number">30</span>]
+
+plt.<span class="function">plot</span>(x, y, marker=<span class="string">'o'</span>)
+plt.<span class="function">title</span>(<span class="string">"Basit Çizgi Grafiği"</span>)
+plt.<span class="function">xlabel</span>(<span class="string">"X Ekseni"</span>)
+plt.<span class="function">ylabel</span>(<span class="string">"Y Ekseni"</span>)
+plt.<span class="function">grid</span>(<span class="keyword">True</span>)
+plt.<span class="function">show</span>()</code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-palette note-card-icon"></i>
+                            <span class="note-card-title">Grafik Özelleştirme</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>color='red'</code>, <code>linewidth=2</code>, <code>linestyle='--'</code><br>
+                            <code>marker='o'</code>, <code>markersize=8</code>, <code>alpha=0.7</code> (şeffaflık)
+                        </div>
+                    </div>
+                    
+                    <p>
+                        <strong>Çubuk grafiği örneği:</strong>
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code>kategoriler = [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>]
+degerler = [<span class="number">23</span>, <span class="number">17</span>, <span class="number">35</span>, <span class="number">29</span>]
+
+plt.<span class="function">bar</span>(kategoriler, degerler, color=<span class="string">'skyblue'</span>)
+plt.<span class="function">title</span>(<span class="string">"Çubuk Grafiği Örneği"</span>)
+plt.<span class="function">xlabel</span>(<span class="string">"Kategori"</span>)
+plt.<span class="function">ylabel</span>(<span class="string">"Değer"</span>)
+plt.<span class="function">show</span>()</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Jupyter Notebook İpucu:</strong> Jupyter'da grafikleri görmek için <code>%matplotlib inline</code> komutunu kullanın.
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Matplotlib ile oluşturulabilecek grafik türleri:</strong>
+                            <ul style="margin-top: 10px;">
+                                <li>• Çizgi grafikleri (plot)</li>
+                                <li>• Çubuk grafikleri (bar)</li>
+                                <li>• Dağılım grafikleri (scatter)</li>
+                                <li>• Histogram (hist)</li>
+                                <li>• Pasta grafiği (pie)</li>
+                                <li>• Kutu grafiği (boxplot)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-save note-card-icon"></i>
+                            <span class="note-card-title">Grafik Kaydetme</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>plt.savefig('grafik.png', dpi=300, bbox_inches='tight')</code><br>
+                            PNG, PDF, SVG formatlarını destekler. <code>show()</code> dan önce çağırın.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Yeni Bölüm: Hata Ayıklama ve İpuçları -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bug"></i>
+                    Hata Ayıklama ve Geliştirme İpuçları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Python öğrenirken karşılaşacağınız yaygın hatalar ve bunları nasıl çözeceğiniz hakkında bilgiler:
+                    </p>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Yaygın Hatalar:</strong><br>
+                            • <code>IndentationError</code> - Girinti hatası<br>
+                            • <code>SyntaxError</code> - Sözdizimi hatası<br>
+                            • <code>NameError</code> - Tanımlanmamış değişken<br>
+                            • <code>TypeError</code> - Yanlış veri tipi kullanımı
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Hata Ayıklama İpuçları:</strong><br>
+                            • Hata mesajlarını dikkatli okuyun<br>
+                            • <code>print()</code> ile değişken değerlerini kontrol edin<br>
+                            • Kodunuzu küçük parçalar halinde test edin<br>
+                            • IDE'nizin debugger özelliğini kullanın
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-tools note-card-icon"></i>
+                            <span class="note-card-title">Geliştirme Ortamları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Popüler Python IDE'leri:</strong><br>
+                            • PyCharm - Profesyonel geliştirme<br>
+                            • VS Code - Hafif ve esnek<br>
+                            • Jupyter Notebook - Veri analizi için<br>
+                            • IDLE - Python ile birlikte gelir
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Yeni Bölüm: İleri Düzey Konular -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-rocket"></i>
+                    Sonraki Adımlar ve İleri Konular
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Python temellerini öğrendikten sonra hangi konulara odaklanabileceğiniz:
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>İleri Python Konuları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>List Comprehensions:</strong> <code>[x**2 for x in range(10)]</code></li>
+                                <li><strong>Lambda Fonksiyonları:</strong> <code>lambda x: x*2</code></li>
+                                <li><strong>Decorators:</strong> Fonksiyon süsleyicileri</li>
+                                <li><strong>Generators:</strong> Bellek verimli iteratorlar</li>
+                                <li><strong>Context Managers:</strong> <code>with</code> bloğu kullanımı</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-graduation-cap note-card-icon"></i>
+                            <span class="note-card-title">Uzmanlık Alanları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Web Geliştirme:</strong> Django, Flask<br>
+                            <strong>Veri Bilimi:</strong> Scikit-learn, TensorFlow<br>
+                            <strong>Otomasyon:</strong> Selenium, PyAutoGUI<br>
+                            <strong>API Geliştirme:</strong> FastAPI, REST APIs
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Öğrenmeye Devam Etmek İçin:</strong><br>
+                            • Küçük projeler yapın (hesap makinesi, to-do list)<br>
+                            • GitHub'da kod paylaşın<br>
+                            • Python topluluklarına katılın<br>
+                            • Açık kaynak projelere katkıda bulunun
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(0, 212, 255, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Öğrenmeye Devam Et!
+                </h2>
+                <div class="section-content">
+
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">Son Tavsiyeler</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Pratik yapın:</strong> Her gün en az 30 dakika kod yazın<br>
+                            <strong>Sabırlı olun:</strong> Programlama öğrenmek zaman alır<br>
+                            <strong>Topluluk desteği:</strong> Stack Overflow, Python forums<br>
+                            <strong>Resmi dokümantasyon:</strong> docs.python.org'u inceleyin
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fab fa-python"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            print("Başarılar dileriz! 🚀")
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Console Easter Egg
+        console.log('%c🐍 Python Öğrenme Portalı', 'color: #00d4ff; font-size: 20px; font-weight: bold;');
+        console.log('%c> Grok Theme initialized', 'color: #00d4ff; font-family: monospace;');
+        console.log('%c> Python modules loaded', 'color: #00d4ff; font-family: monospace;');
+        console.log('%c> Enhanced features activated', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> print("Ready to code!")', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator (subtle)
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(0, 212, 255, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
