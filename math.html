@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematik | Burak Demiröz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(0, 212, 255, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #00d4ff;
+            --skin-color-hover: #00a8cc;
+            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --math-purple: #bd93f9;
+            --math-green: #50fa7b;
+            --math-orange: #ffb86c;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-square-root-alt {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 212, 255, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 13px;
+            display: block;
+            padding: 8px 12px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-square-root-alt {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-formula {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-formula::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Math Formula Blocks */
+        .formula-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(189, 147, 249, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .formula-block::before {
+            content: 'Formula';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--math-purple);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .formula-block .formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            color: var(--math-purple);
+            margin: 10px 0;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Math Application Boxes */
+        .application-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .application-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .application-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Math Section Grid */
+        .math-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .math-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .math-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--math-purple), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .math-card:hover::before {
+            left: 100%;
+        }
+
+        .math-card:hover {
+            border-color: var(--math-purple);
+            box-shadow: 0 0 20px rgba(189, 147, 249, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .math-card-title {
+            color: var(--text-black900);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .math-card-icon {
+            color: var(--math-purple);
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .math-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+
+            .math-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-square-root-alt"></i>
+                <span>Matematik</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Matematik Alanları</div>
+        <ul class="sidebar-menu">
+            <li><a href="#temel-matematik" class="active">Temel Matematik</a></li>
+            <li><a href="#aksiyomatik-geometri">Aksiyomatik Geometri</a></li>
+            <li><a href="#analitik-geometri">Analitik Geometri</a></li>
+            <li><a href="#analiz">Analiz</a></li>
+            <li><a href="#diferansiyel-denklemler">Diferansiyel Denklemler</a></li>
+            <li><a href="#diferansiyel-geometri">Diferansiyel Geometri</a></li>
+            <li><a href="#fonksiyonel-analiz">Fonksiyonel Analiz</a></li>
+            <li><a href="#fraktal-geometri">Fraktal Geometri</a></li>
+            <li><a href="#galois-teorisi">Galois Teorisi</a></li>
+            <li><a href="#graf-teorisi">Graf Teorisi</a></li>
+            <li><a href="#grup-teorisi">Grup Teorisi</a></li>
+            <li><a href="#istatistik">İstatistik</a></li>
+            <li><a href="#kismi-diferansiyel">Kısmi Diferansiyel Denklemler</a></li>
+            <li><a href="#komplex-analiz">Komplex Analiz</a></li>
+            <li><a href="#kriptografi">Kriptografi</a></li>
+            <li><a href="#lineer-cebir">Lineer Cebir</a></li>
+            <li><a href="#lineer-programlama">Lineer Programlama</a></li>
+            <li><a href="#maple">Maple</a></li>
+            <li><a href="#matematik-hileleri">Matematik Hileleri</a></li>
+            <li><a href="#matematiksel-finans">Matematiksel Finans</a></li>
+            <li><a href="#matematiksel-fizik">Matematiksel Fizik</a></li>
+            <li><a href="#matlab">Matlab</a></li>
+            <li><a href="#metrik-uzaylar">Metrik Uzaylar</a></li>
+            <li><a href="#olasilik">Olasılık</a></li>
+            <li><a href="#riemann-geometri">Riemann Geometri</a></li>
+            <li><a href="#sayilar-teorisi">Sayılar Teorisi</a></li>
+            <li><a href="#soyut-cebir">Soyut Cebir</a></li>
+            <li><a href="#soyut-matematik">Soyut Matematik</a></li>
+            <li><a href="#topoloji">Topoloji</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-square-root-alt"></i>
+                    Matematik
+                </h1>
+                <p class="hero-subtitle">
+                    Evrenin dilini keşfedin - sayılardan geometriye, analizden cebire matematik dünyasına kapsamlı bir yolculuk
+                </p>
+                <div class="hero-formula">
+                    e^(iπ) + 1 = 0
+                </div>
+            </section>
+
+            <!-- Temel Matematik Section -->
+            <section id="temel-matematik" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    Matematiğin Temelleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Matematik, evrenin temel yapısını anlamamızı sağlayan ve tüm bilimlerin temelini oluşturan bir disiplindir. 
+                        Sayılardan geometriye, analizden cebire uzanan geniş spektrumu ile matematik, hem soyut düşünce hem de pratik uygulamalar sunar.
+                    </p>
+
+                    <div class="formula-block">
+                        <div class="formula">∀x ∈ ℝ : x² ≥ 0</div>
+                        <p style="color: var(--text-black700); font-size: 14px; margin-top: 10px;">
+                            Her gerçel sayının karesi negatif olmayan bir değerdir
+                        </p>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Matematiğin Ana Dalları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Sayılar Teorisi:</strong> Tamsayılar ve özellikleri</li>
+                                <li>• <strong>Cebir:</strong> Sembolik hesaplamalar</li>
+                                <li>• <strong>Geometri:</strong> Şekiller ve uzay</li>
+                                <li>• <strong>Analiz:</strong> Limit, türev, integral</li>
+                                <li>• <strong>Topoloji:</strong> Uzayın sürekli özellikleri</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mathematics Areas Grid -->
+            <div class="math-grid">
+                <!-- Aksiyomatik Geometri -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-ruler-combined math-card-icon"></i>
+                        Aksiyomatik Geometri
+                    </h3>
+                    <div class="math-card-content">
+                        Euklid'in aksiyomlarından başlayarak geometrinin mantıksal temellerini inceler. 
+                        Nokta, doğru ve düzlem kavramlarını aksiyomatik yaklaşımla ele alır.
+                    </div>
+                </div>
+
+                <!-- Analitik Geometri -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-chart-line math-card-icon"></i>
+                        Analitik Geometri
+                    </h3>
+                    <div class="math-card-content">
+                        Koordinat sistemleri kullanarak geometrik problemleri cebirsel yöntemlerle çözer. 
+                        Doğrular, çemberler, konikler ve 3D yüzeyler incelenir.
+                    </div>
+                </div>
+
+                <!-- Analiz -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-infinity math-card-icon"></i>
+                        Analiz
+                    </h3>
+                    <div class="math-card-content">
+                        Limit, süreklilik, türev ve integral kavramlarını kapsar. 
+                        Fonksiyonların davranışını ve değişim oranlarını inceler.
+                    </div>
+                </div>
+
+                <!-- Diferansiyel Denklemler -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-wave-square math-card-icon"></i>
+                        Diferansiyel Denklemler
+                    </h3>
+                    <div class="math-card-content">
+                        Bilinmeyen fonksiyonlar ve türevleri arasındaki ilişkileri içeren denklemler. 
+                        Fizik, mühendislik ve biyolojide yaygın uygulamaları vardır.
+                    </div>
+                </div>
+
+                <!-- Diferansiyel Geometri -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-bezier-curve math-card-icon"></i>
+                        Diferansiyel Geometri
+                    </h3>
+                    <div class="math-card-content">
+                        Eğriler ve yüzeyleri diferansiyel hesap araçlarıyla inceler. 
+                        Eğrilik, burulma ve jeodezikler gibi kavramları ele alır.
+                    </div>
+                </div>
+
+                <!-- Fonksiyonel Analiz -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-function math-card-icon"></i>
+                        Fonksiyonel Analiz
+                    </h3>
+                    <div class="math-card-content">
+                        Sonsuz boyutlu uzaylar ve bu uzaylardaki fonksiyonları inceler. 
+                        Banach ve Hilbert uzayları temel yapıları oluşturur.
+                    </div>
+                </div>
+
+                <!-- Fraktal Geometri -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-snowflake math-card-icon"></i>
+                        Fraktal Geometri
+                    </h3>
+                    <div class="math-card-content">
+                        Kendine benzer yapılar ve kesirli boyutlu geometrik şekilleri inceler. 
+                        Mandelbrot kümesi ve Julia kümeleri önemli örneklerdir.
+                    </div>
+                </div>
+
+                <!-- Galois Teorisi -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-key math-card-icon"></i>
+                        Galois Teorisi
+                    </h3>
+                    <div class="math-card-content">
+                        Polinomların kökleri ve alan genişlemeleri arasındaki ilişkiyi inceler. 
+                        Denklemlerin çözümü için gerekli teorik temeli sağlar.
+                    </div>
+                </div>
+
+                <!-- Graf Teorisi -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-project-diagram math-card-icon"></i>
+                        Graf Teorisi
+                    </h3>
+                    <div class="math-card-content">
+                        Düğümler (vertices) ve kenarlar (edges) ile oluşan yapıları inceler. 
+                        Ağ teorisi, optimizasyon ve bilgisayar bilimlerinde kullanılır.
+                    </div>
+                </div>
+
+                <!-- Grup Teorisi -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-shapes math-card-icon"></i>
+                        Grup Teorisi
+                    </h3>
+                    <div class="math-card-content">
+                        Simetri kavramını matematiksel olarak formüle eden alan. 
+                        Fizik, kristalografi ve kriptografide önemli uygulamaları vardır.
+                    </div>
+                </div>
+
+                <!-- İstatistik -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-chart-bar math-card-icon"></i>
+                        İstatistik
+                    </h3>
+                    <div class="math-card-content">
+                        Veri toplama, analiz etme ve yorumlama bilimi. 
+                        Olasılık teorisine dayalı olarak belirsizlik altında karar verme araçları sunar.
+                    </div>
+                </div>
+
+                <!-- Kısmi Diferansiyel Denklemler -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-wave-square math-card-icon"></i>
+                        Kısmi Diferansiyel Denklemler
+                    </h3>
+                    <div class="math-card-content">
+                        Birden fazla değişkenli fonksiyonların kısmi türevlerini içeren denklemler. 
+                        Fizik ve mühendislikte temel modelleme aracıdır.
+                    </div>
+                </div>
+
+                <!-- Komplex Analiz -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-compass math-card-icon"></i>
+                        Komplex Analiz
+                    </h3>
+                    <div class="math-card-content">
+                        Komplex sayılar kümesi üzerinde analitik fonksiyonları inceler. 
+                        Cauchy teoremi ve residü hesabı temel araçlardır.
+                    </div>
+                </div>
+
+                <!-- Kriptografi -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-lock math-card-icon"></i>
+                        Kriptografi
+                    </h3>
+                    <div class="math-card-content">
+                        Bilgi güvenliğini matematiksel yöntemlerle sağlar. 
+                        Sayılar teorisi ve cebir kullanarak şifreleme algoritmaları geliştirir.
+                    </div>
+                </div>
+
+                <!-- Lineer Cebir -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-table math-card-icon"></i>
+                        Lineer Cebir
+                    </h3>
+                    <div class="math-card-content">
+                        Vektörler, matrisler ve lineer dönüşümlerle ilgili çalışmalar. 
+                        Bilgisayar grafikleri, makine öğrenmesi ve fizik için temeldir.
+                    </div>
+                </div>
+
+                <!-- Lineer Programlama -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-chart-area math-card-icon"></i>
+                        Lineer Programlama
+                    </h3>
+                    <div class="math-card-content">
+                        Lineer kısıtlamalar altında optimizasyon problemlerini çözer. 
+                        Üretim planlaması ve kaynak tahsisinde kullanılır.
+                    </div>
+                </div>
+
+                <!-- Maple -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-leaf math-card-icon"></i>
+                        Maple
+                    </h3>
+                    <div class="math-card-content">
+                        Sembolik matematik hesaplamaları için geliştirilmiş yazılım. 
+                        Karmaşık matematiksel ifadeleri analitik olarak çözebilir.
+                    </div>
+                </div>
+
+                <!-- Matematik Hileleri -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-magic math-card-icon"></i>
+                        Matematik Hileleri
+                    </h3>
+                    <div class="math-card-content">
+                        Hesaplama tekniklerini hızlandıran pratik yöntemler. 
+                        Mental matematik ve problem çözme stratejilerini içerir.
+                    </div>
+                </div>
+
+                <!-- Matematiksel Finans -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-coins math-card-icon"></i>
+                        Matematiksel Finans
+                    </h3>
+                    <div class="math-card-content">
+                        Finansal piyasaları ve araçları matematiksel modeller ile analiz eder. 
+                        Black-Scholes modeli ve risk yönetimi temel konulardır.
+                    </div>
+                </div>
+
+                <!-- Matematiksel Fizik -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-atom math-card-icon"></i>
+                        Matematiksel Fizik
+                    </h3>
+                    <div class="math-card-content">
+                        Fiziksel problemleri matematiksel yöntemlerle çözer. 
+                        Kuantum mekaniği ve relativite teorisi için matematiksel framework sağlar.
+                    </div>
+                </div>
+
+                <!-- Matlab -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-code math-card-icon"></i>
+                        Matlab
+                    </h3>
+                    <div class="math-card-content">
+                        Numerik hesaplama ve mühendislik uygulamaları için platform. 
+                        Matris işlemleri ve grafik görselleştirme konularında güçlüdür.
+                    </div>
+                </div>
+
+                <!-- Metrik Uzaylar -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-ruler math-card-icon"></i>
+                        Metrik Uzaylar
+                    </h3>
+                    <div class="math-card-content">
+                        Uzaklık kavramının soyutlaştırıldığı matematiksel yapılar. 
+                        Analiz ve topoloji için temel kavram sağlar.
+                    </div>
+                </div>
+
+                <!-- Olasılık -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-dice math-card-icon"></i>
+                        Olasılık
+                    </h3>
+                    <div class="math-card-content">
+                        Belirsizlik ve rastgelelik kavramlarını matematiksel olarak inceler. 
+                        İstatistik ve stokastik süreçler için temel oluşturur.
+                    </div>
+                </div>
+
+                <!-- Riemann Geometri -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-globe math-card-icon"></i>
+                        Riemann Geometri
+                    </h3>
+                    <div class="math-card-content">
+                        Eğri uzaylarda geometri yapar ve Einstein'ın genel relativite teorisinin temelini oluşturur. 
+                        Metrik tensor ve eğrilik kavramları merkezi rol oynar.
+                    </div>
+                </div>
+
+                <!-- Sayılar Teorisi -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-hashtag math-card-icon"></i>
+                        Sayılar Teorisi
+                    </h3>
+                    <div class="math-card-content">
+                        Tamsayıların özelliklerini inceleyen saf matematik dalı. 
+                        Asal sayılar, modüler aritmetik ve Diophantine denklemler ana konulardır.
+                    </div>
+                </div>
+
+                <!-- Soyut Cebir -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-cube math-card-icon"></i>
+                        Soyut Cebir
+                    </h3>
+                    <div class="math-card-content">
+                        Gruplar, halkalar ve cisimler gibi cebirsel yapıları inceler. 
+                        Modern matematiğin temelini oluşturan soyutlama seviyesi sağlar.
+                    </div>
+                </div>
+
+                <!-- Soyut Matematik -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-brain math-card-icon"></i>
+                        Soyut Matematik
+                    </h3>
+                    <div class="math-card-content">
+                        Matematiksel yapıları genel ve soyut düzeyde inceler. 
+                        Kategori teorisi ve matematiksel mantık gibi alanları kapsar.
+                    </div>
+                </div>
+
+                <!-- Topoloji -->
+                <div class="math-card">
+                    <h3 class="math-card-title">
+                        <i class="fas fa-ring math-card-icon"></i>
+                        Topoloji
+                    </h3>
+                    <div class="math-card-content">
+                        Uzayın sürekli deformasyonlar altında korunan özelliklerini inceler. 
+                        Genel topoloji ve cebirsel topoloji ana dallarıdır.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Applications -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Matematik Uygulamaları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Matematik sadece teorik bir disiplin değil, aynı zamanda günlük hayatımızdan ileri teknolojiye 
+                        kadar her alanda praktik uygulamaları bulunan bir araç setidir.
+                    </p>
+
+                    <div class="application-box">
+                        <div class="application-box-content">
+                            <strong>Teknoloji ve Mühendislik:</strong><br>
+                            • Bilgisayar grafikleri ve 3D modelleme<br>
+                            • Sinyal işleme ve görüntü analizi<br>
+                            • Makine öğrenmesi ve yapay zeka<br>
+                            • Kriptografi ve siber güvenlik
+                        </div>
+                    </div>
+
+                    <div class="application-box">
+                        <div class="application-box-content">
+                            <strong>Bilim ve Araştırma:</strong><br>
+                            • Fizik modellemesi ve simülasyon<br>
+                            • Biyoinformatik ve genomik<br>
+                            • İklim modelleri ve çevre bilimleri<br>
+                            • Astronomi ve uzay bilimleri
+                        </div>
+                    </div>
+
+                    <div class="application-box">
+                        <div class="application-box-content">
+                            <strong>Finans ve Ekonomi:</strong><br>
+                            • Risk analizi ve portföy optimizasyonu<br>
+                            • Türev ürün fiyatlaması<br>
+                            • Ekonometrik modelleme<br>
+                            • Algoritmic trading sistemleri
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mathematics Tools -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tools"></i>
+                    Matematik Araçları ve Yazılımları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Modern matematik çalışmalarında kullanılan başlıca yazılım araçları ve platformlar:
+                    </p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-calculator note-card-icon"></i>
+                            <span class="note-card-title">Sembolik Matematik</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Maple:</strong> Sembolik hesaplamalar ve analitik çözümler<br>
+                            <strong>Mathematica:</strong> Kapsamlı matematik ve bilimsel hesaplama<br>
+                            <strong>SymPy:</strong> Python tabanlı sembolik matematik kütüphanesi
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-chart-line note-card-icon"></i>
+                            <span class="note-card-title">Numerik Hesaplama</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>MATLAB:</strong> Mühendislik ve bilimsel hesaplamalar<br>
+                            <strong>NumPy/SciPy:</strong> Python bilimsel hesaplama kütüphaneleri<br>
+                            <strong>R:</strong> İstatistik ve veri analizi platformu
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-pencil-ruler note-card-icon"></i>
+                            <span class="note-card-title">Geometri ve Görselleştirme</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>GeoGebra:</strong> Dinamik matematik yazılımı<br>
+                            <strong>Matplotlib:</strong> Python grafik ve görselleştirme<br>
+                            <strong>Desmos:</strong> Online grafik hesap makinesi
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final Section -->
+            <section class="content-section" style="text-align: center; background: rgba(0, 212, 255, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Matematik Yolculuğunuz Başlasın!
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Matematik, evrenin sırlarını çözmek için kullandığımız en güçlü araçtır. 
+                        Her bir dal, gerçekliği anlamanın farklı bir yolunu sunar.
+                    </p>
+
+                    <div class="formula-block" style="margin: 30px 0;">
+                        <div class="formula">∫₋∞^∞ e^(-x²) dx = √π</div>
+                        <p style="color: var(--text-black700); font-size: 14px; margin-top: 10px;">
+                            Gauss integrali - matematiğin güzelliğinin simgesi
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-square-root-alt"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            "Mathematics is the language of the universe"
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (current && item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+            });
+        });
+
+        // Interactive Math Cards
+        const mathCards = document.querySelectorAll('.math-card');
+        mathCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-5px) scale(1.0)';
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Console Mathematics
+        console.log('%c√ Matematik Portalı', 'color: #00d4ff; font-size: 20px; font-weight: bold;');
+        console.log('%c> Grok Theme initialized', 'color: #00d4ff; font-family: monospace;');
+        console.log('%c> Mathematical modules loaded', 'color: #bd93f9; font-family: monospace;');
+        console.log('%c> Formula rendering activated', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> console.log("∀x ∈ ℝ: Welcome to Mathematics!")', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(189, 147, 249, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Mathematical Animation Effects
+        function createMathParticle() {
+            const symbols = ['∫', '∑', '∞', '∂', '√', 'π', '∆', 'Ω'];
+            const particle = document.createElement('div');
+            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            particle.style.cssText = `
+                position: fixed;
+                color: rgba(0, 212, 255, 0.3);
+                font-size: 20px;
+                pointer-events: none;
+                z-index: -1;
+                left: ${Math.random() * 100}%;
+                top: 100%;
+                animation: float-up 6s linear forwards;
+            `;
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 6000);
+        }
+
+        // Add floating animation CSS
+        const mathAnimationStyle = document.createElement('style');
+        mathAnimationStyle.textContent = `
+            @keyframes float-up {
+                0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                10% { opacity: 0.3; }
+                90% { opacity: 0.3; }
+                100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(mathAnimationStyle);
+
+        // Create particles periodically
+        setInterval(createMathParticle, 3000);
+    </script>
+</body>
+</html>

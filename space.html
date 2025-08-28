@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uzay | Burak Demiröz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Space Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(138, 43, 226, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #8a2be2;
+            --skin-color-hover: #7b1fa2;
+            --neon-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            --text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
+            --accent-blue: #00bfff;
+            --accent-orange: #ff6347;
+            --accent-yellow: #ffd700;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Starfield Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, white, transparent),
+                radial-gradient(2px 2px at 40px 70px, white, transparent),
+                radial-gradient(1px 1px at 50px 50px, white, transparent),
+                radial-gradient(1px 1px at 80px 10px, white, transparent),
+                radial-gradient(2px 2px at 130px 80px, white, transparent),
+                radial-gradient(1px 1px at 110px 120px, white, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: stars-move 200s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        @keyframes stars-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-200px, -200px); }
+        }
+        
+        /* Nebula Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.2) 0%, transparent 60%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: nebula-pulse 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes nebula-pulse {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: translate(-50%, -50%) rotate(0deg) scale(1);
+            }
+            50% { 
+                opacity: 0.6; 
+                transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+            }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-rocket {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+            animation: rocket-float 3s ease-in-out infinite;
+        }
+        
+        @keyframes rocket-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(138, 43, 226, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.1);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-rocket {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-quote {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-quote::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Planet Cards */
+        .planet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .planet-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .planet-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .planet-card:hover::before {
+            opacity: 1;
+        }
+        
+        .planet-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--skin-color);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.3);
+        }
+        
+        .planet-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px currentColor);
+        }
+        
+        .planet-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-black900);
+            margin-bottom: 10px;
+        }
+        
+        .planet-info {
+            font-size: 14px;
+            color: var(--text-black700);
+            line-height: 1.6;
+        }
+        
+        /* Space Facts Box */
+        .space-fact {
+            background: rgba(138, 43, 226, 0.1);
+            border-left: 3px solid var(--skin-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .space-fact::before {
+            content: '🌌';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+        }
+        
+        .space-fact-content {
+            padding-left: 40px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+        
+        /* Mission Cards */
+        .mission-timeline {
+            margin: 30px 0;
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .mission-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--skin-color), transparent);
+        }
+        
+        .mission-item {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .mission-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--skin-color);
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        
+        .mission-year {
+            color: var(--skin-color);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .mission-name {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .mission-description {
+            color: var(--text-black700);
+            font-size: 14px;
+        }
+        
+        /* Solar System Animation */
+        .solar-system {
+            margin: 40px 0;
+            height: 300px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sun {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffd700 0%, #ff6347 100%);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 40px #ffd700;
+        }
+        
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 50%;
+        }
+        
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .orbit-1 {
+            width: 120px;
+            height: 120px;
+            animation: rotate 10s linear infinite;
+        }
+        
+        .orbit-2 {
+            width: 180px;
+            height: 180px;
+            animation: rotate 20s linear infinite;
+        }
+        
+        .orbit-3 {
+            width: 240px;
+            height: 240px;
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .planet-1 {
+            width: 10px;
+            height: 10px;
+            background: #87ceeb;
+            top: -5px;
+            left: calc(50% - 5px);
+        }
+        
+        .planet-2 {
+            width: 15px;
+            height: 15px;
+            background: #00bfff;
+            top: -7px;
+            left: calc(50% - 7px);
+        }
+        
+        .planet-3 {
+            width: 12px;
+            height: 12px;
+            background: #ff6347;
+            top: -6px;
+            left: calc(50% - 6px);
+        }
+        
+        /* Special Effects */
+        .comet {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: comet-fly 10s linear infinite;
+            z-index: 5;
+        }
+        
+        .comet::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, white, transparent);
+            transform: translateX(-100px);
+        }
+        
+        @keyframes comet-fly {
+            0% {
+                top: 20%;
+                left: -100px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 80%;
+                left: calc(100% + 100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .planet-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .solar-system {
+                height: 200px;
+            }
+            
+            .orbit-1 { width: 80px; height: 80px; }
+            .orbit-2 { width: 120px; height: 120px; }
+            .orbit-3 { width: 160px; height: 160px; }
+            
+            .sun {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Comet Animation -->
+    <div class="comet"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>Uzay</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#giris" class="active">Giriş</a></li>
+            <li><a href="#gunes-sistemi">Güneş Sistemi</a></li>
+            <li><a href="#gezegenler">Gezegenler</a></li>
+            <li><a href="#yildizlar">Yıldızlar ve Galaksiler</a></li>
+        </ul>
+    </aside>
+
+            <!-- Giriş Section -->
+            <section id="giris" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-satellite"></i>
+                    Uzay Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Uzay</strong>, Dünya'nın atmosferinin ötesindeki sonsuz boşluktur. Yaklaşık 100 km yükseklikteki Kármán çizgisinden sonra başlar ve içinde gök cisimleri, gaz bulutları, kozmik tozlar ve radyasyon bulunur.
+                    </p>
+                    
+                    <div class="space-fact">
+                        <div class="space-fact-content">
+                            <strong>İlginç Bilgi:</strong> Uzayda ses dalgaları yayılmaz çünkü ses iletimi için maddeye ihtiyaç vardır. Uzayın büyük kısmı boşluktur!
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Gözlemlenebilir evrenin çapı yaklaşık <strong>93 milyar ışık yılıdır</strong>. Evren 13.8 milyar yıl önce Büyük Patlama (Big Bang) ile başlamıştır ve hala genişlemeye devam etmektedir.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Uzayın Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Sıcaklık: -270°C (mutlak sıfıra yakın)</li>
+                                <li>• Basınç: Neredeyse sıfır (vakum)</li>
+                                <li>• Yerçekimi: Cisimlerden uzaklaştıkça azalır</li>
+                                <li>• Radyasyon: Güneş ve kozmik kaynaklı yoğun radyasyon</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Güneş Sistemi Section -->
+            <section id="gunes-sistemi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-sun"></i>
+                    Güneş Sistemi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Güneş sistemimiz, merkezinde <strong>Güneş</strong> bulunan ve etrafında dönen 8 gezegen, cüce gezegenler, asteroitler ve kuyruklu yıldızlardan oluşur.
+                    </p>
+                    
+                    <!-- Solar System Animation -->
+                    <div class="solar-system">
+                        <div class="sun"></div>
+                        <div class="orbit orbit-1">
+                            <div class="planet planet-1"></div>
+                        </div>
+                        <div class="orbit orbit-2">
+                            <div class="planet planet-2"></div>
+                        </div>
+                        <div class="orbit orbit-3">
+                            <div class="planet planet-3"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-fact">
+                        <div class="space-fact-content">
+                            <strong>Güneş Hakkında:</strong> Güneş, Güneş Sisteminin toplam kütlesinin %99.86'sını oluşturur. Çekirdeğinde saniyede 600 milyon ton hidrojen helyuma dönüşür!
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gezegenler Section -->
+            <section id="gezegenler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-globe"></i>
+                    Güneş Sistemindeki Gezegenler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Güneş sistemimizde 4 kayalık (iç) gezegen ve 4 gaz devi (dış) gezegen bulunur.
+                    </p>
+                    
+                    <div class="planet-grid">
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #8b7d6b;">🪐</div>
+                            <div class="planet-name">Merkür</div>
+                            <div class="planet-info">
+                                Güneşe en yakın gezegen<br>
+                                88 günde Güneş'in etrafında döner<br>
+                                Atmosferi yok denecek kadar az
+                            </div>
+                        </div>
+                        
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #ffa500;">♀</div>
+                            <div class="planet-name">Venüs</div>
+                            <div class="planet-info">
+                                En sıcak gezegen (462°C)<br>
+                                Ters yönde döner<br>
+                                Sera etkisi nedeniyle çok sıcak
+                            </div>
+                        </div>
+                        
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #00bfff;">🌍</div>
+                            <div class="planet-name">Dünya</div>
+                            <div class="planet-info">
+                                Yaşamın var olduğu tek gezegen<br>
+                                %71'i su ile kaplı<br>
+                                1 doğal uydu: Ay
+                            </div>
+                        </div>
+                        
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #ff6347;">♂</div>
+                            <div class="planet-name">Mars</div>
+                            <div class="planet-info">
+                                Kızıl Gezegen<br>
+                                2 uydusu var: Phobos ve Deimos<br>
+                                Gelecekteki yaşam alanı adayı
+                            </div>
+                        </div>
+                        
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #daa520;">♃</div>
+                            <div class="planet-name">Jüpiter</div>
+                            <div class="planet-info">
+                                En büyük gezegen<br>
+                                79 uydusu var<br>
+                                Büyük Kırmızı Leke fırtınası
+                            </div>
+                        </div>
+                        
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #f4c430;">♄</div>
+                            <div class="planet-name">Satürn</div>
+                            <div class="planet-info">
+                                Muhteşem halkaları var<br>
+                                82 uydusu var<br>
+                                Sudan hafif, suda yüzebilir
+                            </div>
+                        </div>
+                        
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #4fd1c5;">⛢</div>
+                            <div class="planet-name">Uranüs</div>
+                            <div class="planet-info">
+                                84 yılda Güneş'i döner<br>
+                                27 uydusu var<br>
+                                98° eğimle yan yatık döner
+                            </div>
+                        </div>
+                        
+                        <div class="planet-card">
+                            <div class="planet-icon" style="color: #4169e1;">♆</div>
+                            <div class="planet-name">Neptün</div>
+                                                            <div class="planet-info">
+                                En uzak gezegen<br>
+                                En hızlı rüzgarlar (2100 km/s)<br>
+                                14 uydusu var
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
