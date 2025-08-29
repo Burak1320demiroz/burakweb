@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka & Machine Learning | Burak Demiröz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* AI Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(138, 43, 226, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #8a2be2;
+            --skin-color-hover: #7b68ee;
+            --neon-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            --text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --ai-accent: #00ff88;
+            --ml-accent: #ff6b6b;
+            --dl-accent: #4ecdc4;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Neural Network Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(78, 205, 196, 0.03) 0%, transparent 50%),
+                linear-gradient(rgba(138, 43, 226, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+            animation: neural-pulse 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes neural-pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* AI Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: ai-glow 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes ai-glow {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% { 
+                opacity: 0.6; 
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-brain {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.6));
+            animation: brain-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes brain-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 8px rgba(138, 43, 226, 0.6);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--skin-color), var(--ai-accent));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 320px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(138, 43, 226, 0.3);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 13px;
+            display: block;
+            padding: 12px 15px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            border-radius: 5px;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.08);
+            transform: translateX(8px);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.2);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.15);
+            text-shadow: 0 0 8px rgba(138, 43, 226, 0.6);
+        }
+        
+        /* Subsection styling */
+        .sidebar-menu a.subsection {
+            padding-left: 30px;
+            font-size: 12px;
+            color: var(--text-black700);
+        }
+        
+        .sidebar-menu a.subsection:hover {
+            border-left-color: var(--ai-accent);
+            color: var(--ai-accent);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 320px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 80px 0;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 54px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-brain {
+            color: var(--skin-color);
+            margin-right: 20px;
+            filter: drop-shadow(0 0 25px rgba(138, 43, 226, 0.8));
+            animation: brain-pulse 2s ease-in-out infinite;
+        }
+        
+        .hero-subtitle {
+            font-size: 22px;
+            color: var(--text-black700);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 25px 50px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.3), transparent);
+            animation: ai-sweep 4s infinite;
+        }
+        
+        @keyframes ai-sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 60px;
+            padding: 35px;
+            background: rgba(10, 10, 10, 0.4);
+            border: 1px solid rgba(138, 43, 226, 0.15);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), var(--ai-accent), transparent);
+            animation: neural-scan 5s infinite;
+        }
+        
+        @keyframes neural-scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 32px;
+            color: var(--text-black900);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 20px;
+            font-size: 28px;
+            filter: drop-shadow(0 0 12px rgba(138, 43, 226, 0.6));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 18px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Subsection Headers */
+        .subsection-title {
+            font-size: 24px;
+            color: var(--ai-accent);
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .subsection-title i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .function { color: #50fa7b; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        
+        /* Output Blocks */
+        .output-block {
+            background: rgba(138, 43, 226, 0.08);
+            border-left: 4px solid var(--skin-color);
+            padding: 18px;
+            margin: 18px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .output-block::before {
+            content: '> Output:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(138, 43, 226, 0.12);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            color: var(--skin-color);
+            font-size: 22px;
+            filter: drop-shadow(0 0 12px rgba(138, 43, 226, 0.6));
+        }
+        
+        .info-box-content {
+            padding-left: 50px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.12);
+            border: 1px solid rgba(255, 149, 0, 0.4);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            color: var(--warning-color);
+            font-size: 22px;
+            filter: drop-shadow(0 0 12px rgba(255, 149, 0, 0.6));
+        }
+        
+        .warning-box-content {
+            padding-left: 50px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.12);
+            border: 1px solid rgba(80, 250, 123, 0.4);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            color: var(--success-color);
+            font-size: 22px;
+            filter: drop-shadow(0 0 12px rgba(80, 250, 123, 0.6));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 50px;
+            color: var(--success-color);
+        }
+
+        /* AI Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid rgba(138, 43, 226, 0.25);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.3);
+            transform: translateY(-3px);
+            background: rgba(10, 10, 10, 0.9);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Special AI Cards */
+        .ai-card {
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .ai-card:hover {
+            border-color: var(--ai-accent);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .ml-card {
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .ml-card:hover {
+            border-color: var(--ml-accent);
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .dl-card {
+            border-color: rgba(78, 205, 196, 0.3);
+        }
+
+        .dl-card:hover {
+            border-color: var(--dl-accent);
+            box-shadow: 0 0 25px rgba(78, 205, 196, 0.3);
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(138, 43, 226, 0.15);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 5px;
+            padding: 3px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+        }
+        
+        /* Algorithm Visualization Box */
+        .algo-viz {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(0, 255, 136, 0.05));
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .algo-viz::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--skin-color), var(--ai-accent), var(--dl-accent), var(--skin-color));
+            border-radius: 12px;
+            z-index: -1;
+            animation: border-glow 3s linear infinite;
+        }
+
+        @keyframes border-glow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .algo-title {
+            color: var(--skin-color);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.6);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+            
+            .section-title {
+                font-size: 26px;
+            }
+        }
+
+        /* Matrix Effect */
+        .matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                var(--skin-color) 2px,
+                var(--skin-color) 4px
+            );
+            animation: matrix-rain 10s linear infinite;
+        }
+
+        @keyframes matrix-rain {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>AI & Machine Learning</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#ai-giris" class="active">Yapay Zeka Nedir?</a></li>
+            <li><a href="#ml-temeller">Machine Learning</a></li>
+            <li><a href="#scikit-learn" class="subsection">Scikit-learn</a></li>
+            <li><a href="#supervised" class="subsection">Gözetimli Öğrenme</a></li>
+            <li><a href="#unsupervised" class="subsection">Gözetimsiz Öğrenme</a></li>
+            <li><a href="#model-evaluation" class="subsection">Model Değerlendirme</a></li>
+            <li><a href="#deep-learning">Deep Learning</a></li>
+            <li><a href="#tensorflow" class="subsection">TensorFlow</a></li>
+            <li><a href="#pytorch" class="subsection">PyTorch</a></li>
+            <li><a href="#keras" class="subsection">Keras</a></li>
+            <li><a href="#neural-networks">Yapay Sinir Ağları</a></li>
+            <li><a href="#cnn" class="subsection">CNN</a></li>
+            <li><a href="#rnn" class="subsection">RNN & LSTM</a></li>
+            <li><a href="#transformer" class="subsection">Transformer</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-brain"></i>
+                    Yapay Zeka & Machine Learning
+                </h1>
+                <p class="hero-subtitle">
+                    Yapay zeka ve makine öğrenmesi dünyasına kapsamlı giriş
+                </p>
+                <div class="hero-code">
+                    import tensorflow as tf<br>
+                    # Geleceği kodlayın
+                </div>
+            </section>
+
+            <!-- AI Giriş Section -->
+            <section id="ai-giris" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-robot"></i>
+                    Yapay Zeka Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Yapay Zeka (AI)</strong>, makinelerin insan benzeri düşünme, öğrenme ve problem çözme yetenekleri sergilemesini sağlayan teknoloji alanıdır. AI, bilgisayarların algısal verileri işleyerek akıllı davranışlar sergilemesine olanak tanır.
+                    </p>
+                    
+                    <div class="ai-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">AI Tarihçesi</span>
+                        </div>
+                        <div class="note-card-content">
+                            AI terimi ilk kez 1956'da John McCarthy tarafından Dartmouth Konferansı'nda kullanıldı. O zamandan beri AI, uzman sistemlerden günümüzün derin öğrenme algoritmalarına kadar büyük bir evrim geçirdi.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>AI'nın Ana Dalları:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><strong>Machine Learning:</strong> Veriden öğrenme</li>
+                                <li><strong>Deep Learning:</strong> Çok katmanlı sinir ağları</li>
+                                <li><strong>Natural Language Processing:</strong> Doğal dil işleme</li>
+                                <li><strong>Computer Vision:</strong> Görüntü işleme ve tanıma</li>
+                                <li><strong>Robotics:</strong> Otonom sistemler</li>
+                                <li><strong>Expert Systems:</strong> Uzman sistem tabanlı AI</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Python AI Kütüphaneleri:</strong> TensorFlow, PyTorch, Keras, Scikit-learn, OpenCV, NLTK, Pandas, NumPy temel araçlardır.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        AI sistemleri, <strong>makine öğrenmesi</strong> algoritmaları kullanarak verilerden destenler çıkarır ve gelecekteki durumlar için tahminler yapar. Bu süreç, geleneksel programlama yaklaşımından farklı olarak, açık kurallar yazmak yerine sistemin verilerden öğrenmesine dayanır.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Machine Learning Section -->
+            <section id="ml-temeller" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Machine Learning Temelleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Machine Learning (ML)</strong>, bilgisayarların açıkça programlanmadan verilerden öğrenme yeteneğidir. ML algoritmaları, büyük veri setlerindeki kalıpları tanır ve bu kalıpları kullanarak yeni veriler hakkında tahminler yapar.
+                    </p>
+                    
+                    <div class="algo-viz">
+                        <div class="algo-title">ML İş Akışı</div>
+                        <p style="color: var(--text-black700); margin-top: 10px;">
+                            <strong>1. Veri Toplama</strong> → <strong>2. Veri Ön İşleme</strong> → <strong>3. Model Seçimi</strong> → <strong>4. Eğitim</strong> → <strong>5. Değerlendirme</strong> → <strong>6. Dağıtım</strong>
+                        </p>
+                    </div>
+
+                    <div class="ml-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-chart-line note-card-icon"></i>
+                            <span class="note-card-title">ML Öğrenme Türleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Gözetimli Öğrenme:</strong> Etiketli verilerle eğitim<br>
+                            <strong>Gözetimsiz Öğrenme:</strong> Etiket olmadan desen bulma<br>
+                            <strong>Pekiştirmeli Öğrenme:</strong> Ödül-ceza sistemi ile öğrenme
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scikit-learn Section -->
+            <section id="scikit-learn" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-flask"></i>
+                    Scikit-learn ile ML'e Başlangıç
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Scikit-learn</strong>, Python'da machine learning için en popüler kütüphanedir. Basit ve etkili veri analizi araçları sunar ve machine learning algoritmalarının çoğunu içerir.
+                    </p>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Kurulum:</strong> <span class="kbd">pip install scikit-learn</span>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error
+
+<span class="comment"># Örnek veri seti yükle</span>
+boston = datasets.<span class="function">load_boston</span>()
+X, y = boston.data, boston.target
+
+<span class="comment"># Eğitim ve test verilerini ayır</span>
+X_train, X_test, y_train, y_test = <span class="function">train_test_split</span>(
+    X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>
+)
+
+<span class="comment"># Model oluştur ve eğit</span>
+model = <span class="function">LinearRegression</span>()
+model.<span class="function">fit</span>(X_train, y_train)
+
+<span class="comment"># Tahmin yap</span>
+predictions = model.<span class="function">predict</span>(X_test)
+mse = <span class="function">mean_squared_error</span>(y_test, predictions)
+<span class="function">print</span>(<span class="string">f"Ortalama Kare Hatası: {mse:.2f}"</span>)</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Scikit-learn'ün Temel Modülleri:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><code>sklearn.datasets</code> - Örnek veri setleri</li>
+                                <li><code>sklearn.preprocessing</code> - Veri ön işleme</li>
+                                <li><code>sklearn.model_selection</code> - Model seçimi</li>
+                                <li><code>sklearn.metrics</code> - Performans metrikleri</li>
+                                <li><code>sklearn.linear_model</code> - Lineer modeller</li>
+                                <li><code>sklearn.ensemble</code> - Topluluk yöntemleri</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gözetimli Öğrenme Section -->
+            <section id="supervised" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-eye"></i>
+                    Gözetimli Öğrenme Algoritmaları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Gözetimli öğrenme</strong>, etiketli veriler kullanarak modelleri eğitir. Hedef değişken (target) bilinen verilerle algoritma öğrenir ve yeni veriler için tahminler yapar.
+                    </p>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-chart-line"></i>
+                        Lineer Regresyon
+                    </h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Örnek veri</span>
+X = np.<span class="function">array</span>([[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>], [<span class="number">4</span>], [<span class="number">5</span>]])
+y = np.<span class="function">array</span>([<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>])
+
+<span class="comment"># Model oluştur ve eğit</span>
+model = <span class="function">LinearRegression</span>()
+model.<span class="function">fit</span>(X, y)
+
+<span class="comment"># Tahmin</span>
+prediction = model.<span class="function">predict</span>([[<span class="number">6</span>]])
+<span class="function">print</span>(<span class="string">f"6 için tahmin: {prediction[0]:.2f}"</span>)</code></pre>
+                    </div>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-binary"></i>
+                        Lojistik Regresyon
+                    </h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression
+<span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris
+
+<span class="comment"># İris veri seti</span>
+iris = <span class="function">load_iris</span>()
+X, y = iris.data, iris.target
+
+<span class="comment"># Lojistik regresyon</span>
+log_model = <span class="function">LogisticRegression</span>()
+log_model.<span class="function">fit</span>(X, y)
+
+<span class="comment"># Doğruluk skoru</span>
+accuracy = log_model.<span class="function">score</span>(X, y)
+<span class="function">print</span>(<span class="string">f"Doğruluk: {accuracy:.3f}"</span>)</code></pre>
+                    </div>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-tree"></i>
+                        Karar Ağaçları ve Random Forest
+                    </h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+
+<span class="comment"># Karar ağacı</span>
+tree_model = <span class="function">DecisionTreeClassifier</span>(random_state=<span class="number">42</span>)
+tree_model.<span class="function">fit</span>(X_train, y_train)
+
+<span class="comment"># Random Forest</span>
+rf_model = <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>)
+rf_model.<span class="function">fit</span>(X_train, y_train)
+
+<span class="function">print</span>(<span class="string">f"RF Doğruluk: {rf_model.score(X_test, y_test):.3f}"</span>)</code></pre>
+                    </div>
+
+                    <div class="ml-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Algoritma Seçimi İpuçları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Küçük veri:</strong> Lojistik/Lineer Regresyon<br>
+                            <strong>Yüksek boyutlu:</strong> SVM, Random Forest<br>
+                            <strong>Yorumlanabilirlik:</strong> Karar Ağaçları<br>
+                            <strong>Yüksek performans:</strong> Gradient Boosting
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gözetimsiz Öğrenme Section -->
+            <section id="unsupervised" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-search"></i>
+                    Gözetimsiz Öğrenme
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Gözetimsiz öğrenme</strong>, etiket bilgisi olmadan verilerden gizli kalıpları keşfetmeye odaklanır. Kümeleme ve boyut indirgeme en yaygın gözetimsiz öğrenme yöntemleridir.
+                    </p>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-object-group"></i>
+                        K-Means Kümeleme
+                    </h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Örnek veri oluştur</span>
+X = np.<span class="function">random</span>.<span class="function">rand</span>(<span class="number">100</span>, <span class="number">2</span>) * <span class="number">10</span>
+
+<span class="comment"># K-Means kümeleme</span>
+kmeans = <span class="function">KMeans</span>(n_clusters=<span class="number">3</span>, random_state=<span class="number">42</span>)
+clusters = kmeans.<span class="function">fit_predict</span>(X)
+
+<span class="comment"># Sonuçları görselleştir</span>
+plt.<span class="function">scatter</span>(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=clusters, cmap=<span class="string">'viridis'</span>)
+plt.<span class="function">scatter</span>(kmeans.cluster_centers_[:, <span class="number">0</span>], 
+           kmeans.cluster_centers_[:, <span class="number">1</span>], 
+           c=<span class="string">'red'</span>, marker=<span class="string">'x'</span>, s=<span class="number">200</span>)
+plt.<span class="function">title</span>(<span class="string">"K-Means Kümeleme"</span>)
+plt.<span class="function">show</span>()</code></pre>
+                    </div>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        Principal Component Analysis (PCA)
+                    </h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA
+
+<span class="comment"># PCA ile boyut indirgeme</span>
+pca = <span class="function">PCA</span>(n_components=<span class="number">2</span>)
+X_reduced = pca.<span class="function">fit_transform</span>(iris.data)
+
+<span class="function">print</span>(<span class="string">f"Açıklanan varyans oranı: {pca.explained_variance_ratio_}"</span>)
+<span class="function">print</span>(<span class="string">f"Toplam açıklanan varyans: {sum(pca.explained_variance_ratio_):.3f}"</span>)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Model Evaluation Section -->
+            <section id="model-evaluation" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Model Değerlendirme Metrikleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Machine learning modellerinin performansını değerlendirmek için çeşitli metrikler kullanılır. Hangi metriği kullanacağınız, probleminizin türüne bağlıdır.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score, precision_score, recall_score, f1_score
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix, classification_report, roc_curve
+
+<span class="comment"># Sınıflandırma metrikleri</span>
+y_true = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>]
+y_pred = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]
+
+accuracy = <span class="function">accuracy_score</span>(y_true, y_pred)
+precision = <span class="function">precision_score</span>(y_true, y_pred)
+recall = <span class="function">recall_score</span>(y_true, y_pred)
+f1 = <span class="function">f1_score</span>(y_true, y_pred)
+
+<span class="function">print</span>(<span class="string">f"Doğruluk: {accuracy:.3f}"</span>)
+<span class="function">print</span>(<span class="string">f"Kesinlik: {precision:.3f}"</span>)
+<span class="function">print</span>(<span class="string">f"Duyarlılık: {recall:.3f}"</span>)
+<span class="function">print</span>(<span class="string">f"F1 Skoru: {f1:.3f}"</span>)</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Metrik Açıklamaları:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><strong>Doğruluk (Accuracy):</strong> Doğru tahminlerin oranı</li>
+                                <li><strong>Kesinlik (Precision):</strong> Pozitif tahminlerin doğru olma oranı</li>
+                                <li><strong>Duyarlılık (Recall):</strong> Gerçek pozitiflerin yakalanma oranı</li>
+                                <li><strong>F1 Skoru:</strong> Precision ve Recall'un harmonik ortalaması</li>
+                                <li><strong>ROC Eğrisi:</strong> True Positive Rate vs False Positive Rate</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ml-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-balance-scale note-card-icon"></i>
+                            <span class="note-card-title">Confusion Matrix</span>
+                        </div>
+                        <div class="note-card-content">
+                            Confusion Matrix, sınıflandırma problemlerinde modelin hangi sınıfları nasıl tahmin ettiğini gösterir:<br>
+                            <code>confusion_matrix(y_true, y_pred)</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deep Learning Section -->
+            <section id="deep-learning" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-network-wired"></i>
+                    Deep Learning'e Giriş
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Deep Learning</strong>, çok katmanlı yapay sinir ağları kullanarak karmaşık kalıpları öğrenen machine learning alt dalıdır. İnsan beynindeki nöronları taklit eden yapılar kullanır.
+                    </p>
+                    
+                    <div class="dl-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-brain note-card-icon"></i>
+                            <span class="note-card-title">Deep Learning vs Classical ML</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Deep Learning:</strong> Otomatik özellik çıkarımı, büyük veri gerektir<br>
+                            <strong>Classical ML:</strong> Manuel özellik mühendisliği, küçük veri ile çalışabilir
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TensorFlow Section -->
+            <section id="tensorflow" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-google"></i>
+                    TensorFlow ile Derin Öğrenme
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>TensorFlow</strong>, Google tarafından geliştirilen açık kaynaklı bir machine learning platformudur. Özellikle derin öğrenme uygulamaları için güçlü araçlar sunar.
+                    </p>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Kurulum:</strong> <span class="kbd">pip install tensorflow</span>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf
+<span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras
+
+<span class="comment"># Basit bir sinir ağı</span>
+model = keras.<span class="function">Sequential</span>([
+    keras.    layers.<span class="function">Dense</span>(<span class="number">128</span>, activation=<span class="string">'relu'</span>, input_shape=(<span class="number">784</span>,)),
+    layers.<span class="function">Dropout</span>(<span class="number">0.2</span>),
+    layers.<span class="function">Dense</span>(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)
+])
+
+<span class="comment"># Modeli derle</span>
+model.<span class="function">compile</span>(
+    optimizer=<span class="string">'adam'</span>,
+    loss=<span class="string">'sparse_categorical_crossentropy'</span>,
+    metrics=[<span class="string">'accuracy'</span>]
+)
+
+<span class="comment"># Eğitim</span>
+model.<span class="function">fit</span>(x_train, y_train, epochs=<span class="number">5</span>, batch_size=<span class="number">128</span>)</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>GPU Kullanımı:</strong> TensorFlow GPU desteği için <code>pip install tensorflow-gpu</code> veya CUDA kurulumu gerekebilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Neural Networks Section -->
+            <section id="neural-networks" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    Yapay Sinir Ağları (ANN)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Yapay Sinir Ağları</strong>, insan beynindeki nöronları taklit eden matematiksel modellerdir. Her nöron, girdileri alır, işler ve çıktı üretir.
+                    </p>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-cogs"></i>
+                        Aktivasyon Fonksiyonları
+                    </h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+<span class="comment"># Aktivasyon fonksiyonları</span>
+<span class="keyword">def</span> <span class="function">relu</span>(x):
+    <span class="keyword">return</span> np.<span class="function">maximum</span>(<span class="number">0</span>, x)
+
+<span class="keyword">def</span> <span class="function">sigmoid</span>(x):
+    <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.<span class="function">exp</span>(-x))
+
+<span class="keyword">def</span> <span class="function">tanh</span>(x):
+    <span class="keyword">return</span> np.<span class="function">tanh</span>(x)
+
+<span class="comment"># Test verileri</span>
+x = np.<span class="function">linspace</span>(-<span class="number">5</span>, <span class="number">5</span>, <span class="number">100</span>)
+
+plt.<span class="function">figure</span>(figsize=(<span class="number">12</span>, <span class="number">4</span>))
+plt.<span class="function">subplot</span>(<span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>)
+plt.<span class="function">plot</span>(x, <span class="function">relu</span>(x))
+plt.<span class="function">title</span>(<span class="string">'ReLU'</span>)
+plt.<span class="function">grid</span>(<span class="keyword">True</span>)</code></pre>
+                    </div>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-target"></i>
+                        Kayıp Fonksiyonları
+                    </h3>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Yaygın Kayıp Fonksiyonları:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><strong>Mean Squared Error (MSE):</strong> Regresyon problemleri</li>
+                                <li><strong>Cross-Entropy:</strong> Sınıflandırma problemleri</li>
+                                <li><strong>Binary Cross-Entropy:</strong> İkili sınıflandırma</li>
+                                <li><strong>Huber Loss:</strong> Outlier'lara dayanıklı regresyon</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 class="subsection-title">
+                        <i class="fas fa-rocket"></i>
+                        Optimizasyon Algoritmaları
+                    </h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> optimizers
+
+<span class="comment"># Farklı optimizer'lar</span>
+sgd = optimizers.<span class="function">SGD</span>(learning_rate=<span class="number">0.01</span>)
+adam = optimizers.<span class="function">Adam</span>(learning_rate=<span class="number">0.001</span>)
+rmsprop = optimizers.<span class="function">RMSprop</span>(learning_rate=<span class="number">0.001</span>)
+
+<span class="comment"># Model derleme</span>
+model.<span class="function">compile</span>(optimizer=adam, loss=<span class="string">'categorical_crossentropy'</span>)</code></pre>
+                    </div>
+
+                    <div class="dl-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-tachometer-alt note-card-icon"></i>
+                            <span class="note-card-title">Optimizer Karşılaştırması</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>SGD:</strong> Basit, yavaş konvergans<br>
+                            <strong>Adam:</strong> Hızlı, yaygın kullanım<br>
+                            <strong>RMSprop:</strong> RNN'ler için uygun
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CNN Section -->
+            <section id="cnn" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-image"></i>
+                    Evrişimli Sinir Ağları (CNN)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Convolutional Neural Networks (CNN)</strong>, görüntü işleme ve bilgisayarlı görü uygulamaları için özelleşmiş sinir ağı mimarisidir. CNN'ler, görüntülerdeki yerel özellikleri tespit etmek için evrişim (convolution) işlemi kullanır.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> layers, models
+
+<span class="comment"># CNN modeli</span>
+cnn_model = models.<span class="function">Sequential</span>([
+    layers.<span class="function">Conv2D</span>(<span class="number">32</span>, (<span class="number">3</span>, <span class="number">3</span>), activation=<span class="string">'relu'</span>, input_shape=(<span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>)),
+    layers.<span class="function">MaxPooling2D</span>(<span class="number">2</span>, <span class="number">2</span>),
+    layers.<span class="function">Conv2D</span>(<span class="number">64</span>, (<span class="number">3</span>, <span class="number">3</span>), activation=<span class="string">'relu'</span>),
+    layers.<span class="function">MaxPooling2D</span>(<span class="number">2</span>, <span class="number">2</span>),
+    layers.<span class="function">Conv2D</span>(<span class="number">64</span>, (<span class="number">3</span>, <span class="number">3</span>), activation=<span class="string">'relu'</span>),
+    layers.<span class="function">Flatten</span>(),
+    layers.<span class="function">Dense</span>(<span class="number">64</span>, activation=<span class="string">'relu'</span>),
+    layers.<span class="function">Dense</span>(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)
+])
+
+cnn_model.<span class="function">compile</span>(
+    optimizer=<span class="string">'adam'</span>,
+    loss=<span class="string">'sparse_categorical_crossentropy'</span>,
+    metrics=[<span class="string">'accuracy'</span>]
+)</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>CNN Katman Türleri:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><strong>Conv2D:</strong> Evrişim katmanı - özellik çıkarımı</li>
+                                <li><strong>MaxPooling2D:</strong> Boyut azaltma ve özellik seçimi</li>
+                                <li><strong>Flatten:</strong> 2D'den 1D'ye dönüştürme</li>
+                                <li><strong>Dense:</strong> Tam bağlantılı katman</li>
+                                <li><strong>Dropout:</strong> Overfitting önleme</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="dl-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-eye note-card-icon"></i>
+                            <span class="note-card-title">CNN Uygulama Alanları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Görüntü Tanıma:</strong> Nesne, yüz, el yazısı<br>
+                            <strong>Medikal Görüntüleme:</strong> X-ray, MRI analizi<br>
+                            <strong>Otonom Araçlar:</strong> Yol işaretleri, nesne tespiti
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RNN Section -->
+            <section id="rnn" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-redo"></i>
+                    Tekrarlayan Sinir Ağları (RNN, LSTM, GRU)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Recurrent Neural Networks (RNN)</strong>, sıralı verilerle çalışmak için tasarlanmış sinir ağlarıdır. Geçmiş bilgileri hatırlayarak gelecek tahminler yapabilir.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> layers, models
+
+<span class="comment"># LSTM modeli</span>
+lstm_model = models.<span class="function">Sequential</span>([
+    layers.<span class="function">LSTM</span>(<span class="number">50</span>, return_sequences=<span class="keyword">True</span>, input_shape=(<span class="number">timesteps</span>, <span class="number">features</span>)),
+    layers.<span class="function">Dropout</span>(<span class="number">0.2</span>),
+    layers.<span class="function">LSTM</span>(<span class="number">50</span>, return_sequences=<span class="keyword">False</span>),
+    layers.<span class="function">Dropout</span>(<span class="number">0.2</span>),
+    layers.<span class="function">Dense</span>(<span class="number">1</span>)
+])
+
+lstm_model.<span class="function">compile</span>(optimizer=<span class="string">'adam'</span>, loss=<span class="string">'mse'</span>)
+
+<span class="comment"># GRU alternatifi</span>
+gru_model = models.<span class="function">Sequential</span>([
+    layers.<span class="function">GRU</span>(<span class="number">50</span>, return_sequences=<span class="keyword">True</span>),
+    layers.<span class="function">GRU</span>(<span class="number">50</span>),
+    layers.<span class="function">Dense</span>(<span class="number">1</span>)
+])</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>RNN Varyantları:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><strong>Vanilla RNN:</strong> Temel yapı, vanishing gradient sorunu</li>
+                                <li><strong>LSTM:</strong> Long Short-Term Memory, uzun dönem bağımlılık</li>
+                                <li><strong>GRU:</strong> Gated Recurrent Unit, LSTM'in basitleştirilmiş hali</li>
+                                <li><strong>Bidirectional RNN:</strong> İki yönlü işleme</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="dl-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-clock note-card-icon"></i>
+                            <span class="note-card-title">RNN Uygulama Alanları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Doğal Dil İşleme:</strong> Metin üretimi, çeviri<br>
+                            <strong>Zaman Serisi:</strong> Hisse senedi, hava durumu tahmini<br>
+                            <strong>Ses İşleme:</strong> Konuşma tanıma, müzik analizi
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transformer Section -->
+            <section id="transformer" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-magic"></i>
+                    Transformer Mimarisi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Transformer</strong>, "Attention is All You Need" makalesi ile tanıtılan ve modern AI'nın temelini oluşturan mimaridir. GPT, BERT gibi büyük dil modelleri Transformer tabanlıdır.
+                    </p>
+                    
+                    <div class="algo-viz">
+                        <div class="algo-title">Transformer Yapısı</div>
+                        <p style="color: var(--text-black700); margin-top: 10px;">
+                            <strong>Input Embeddings</strong> → <strong>Positional Encoding</strong> → <strong>Multi-Head Attention</strong> → <strong>Feed Forward</strong> → <strong>Output</strong>
+                        </p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+
+<span class="keyword">class</span> <span class="function">SimpleTransformer</span>(nn.Module):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, vocab_size, d_model, nhead, num_layers):
+        <span class="function">super</span>().<span class="function">__init__</span>()
+        self.embedding = nn.<span class="function">Embedding</span>(vocab_size, d_model)
+        self.transformer = nn.<span class="function">Transformer</span>(
+            d_model=d_model,
+            nhead=nhead,
+            num_encoder_layers=num_layers,
+            num_decoder_layers=num_layers
+        )
+        self.fc = nn.<span class="function">Linear</span>(d_model, vocab_size)
+        
+    <span class="keyword">def</span> <span class="function">forward</span>(self, src, tgt):
+        src = self.<span class="function">embedding</span>(src)
+        tgt = self.<span class="function">embedding</span>(tgt)
+        output = self.<span class="function">transformer</span>(src, tgt)
+        <span class="keyword">return</span> self.<span class="function">fc</span>(output)</code></pre>
+                    </div>
+
+                    <div class="dl-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">Transformer Avantajları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Paralelleştirme:</strong> RNN'lere göre daha hızlı eğitim<br>
+                            <strong>Attention Mechanism:</strong> Uzun mesafeli bağımlılıkları yakalama<br>
+                            <strong>Transfer Learning:</strong> Önceden eğitilmiş modeller
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advanced Topics Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap"></i>
+                    İleri Düzey Konular ve Pratikler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        AI ve ML alanında derinleşmek için aşağıdaki konuları inceleyin ve bol bol pratik yapın:
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>İleri Konular:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><strong>Transfer Learning:</strong> Önceden eğitilmiş modelleri kullanma</li>
+                                <li><strong>Generative AI:</strong> GANs, VAEs, Diffusion modelleri</li>
+                                <li><strong>Reinforcement Learning:</strong> Q-Learning, Policy Gradients</li>
+                                <li><strong>MLOps:</strong> Model deployment ve monitoring</li>
+                                <li><strong>Federated Learning:</strong> Dağıtık öğrenme</li>
+                                <li><strong>Explainable AI:</strong> Model yorumlanabilirliği</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Etik Considerations:</strong> AI modellerinizde bias, fairness ve privacy konularını göz önünde bulundurun. Responsible AI principles'a uygun geliştirme yapın.
+                        </div>
+                    </div>
+
+                    <div class="ai-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-project-diagram note-card-icon"></i>
+                            <span class="note-card-title">Proje Önerileri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Başlangıç:</strong> İris sınıflandırması, house price prediction<br>
+                            <strong>Orta:</strong> Handwritten digit recognition, sentiment analysis<br>
+                            <strong>İleri:</strong> Object detection, chatbot, recommendation system
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Öğrenmeye Devam İçin:</strong><br>
+                            • Kaggle yarışmalarına katılın<br>
+                            • Papers With Code'da son makaleleri takip edin<br>
+                            • GitHub'da açık kaynak projelere katkıda bulunun<br>
+                            • Google Colab ile ücretsiz GPU kullanın
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Kapsamlı bir ML projesi için temel şablon</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score
+<span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler
+
+<span class="comment"># Pipeline kullanarak daha organize kod</span>
+pipeline = <span class="function">Pipeline</span>([
+    (<span class="string">'scaler'</span>, <span class="function">StandardScaler</span>()),
+    (<span class="string">'model'</span>, <span class="function">RandomForestClassifier</span>())
+])
+
+<span class="comment"># Cross-validation ile model performansı</span>
+cv_scores = <span class="function">cross_val_score</span>(pipeline, X, y, cv=<span class="number">5</span>)
+<span class="function">print</span>(<span class="string">f"CV Ortalama: {cv_scores.mean():.3f} (+/- {cv_scores.std() * 2:.3f})"</span>)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Son Section -->
+            <section class="content-section" style="text-align: center; background: rgba(138, 43, 226, 0.08);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-rocket"></i>
+                    AI Yolculuğunuza Başlayın!
+                </h2>
+                <div class="section-content">
+                    <div class="matrix-bg"></div>
+                    
+                    <div class="note-card" style="margin-top: 40px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        <div class="note-card-header">
+                            <i class="fas fa-brain note-card-icon"></i>
+                            <span class="note-card-title">Son Öneriler</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Teori + Pratik:</strong> Algoritmaları anlayın, sonra uygulayın<br>
+                            <strong>Veri kalitesi:</strong> İyi veri, iyi model demektir<br>
+                            <strong>Sabırlı olun:</strong> AI öğrenmek maraton, sprint değildir<br>
+                            <strong>Topluluk:</strong> AI/ML topluluklarına katılın ve networking yapın<br>
+                            <strong>Güncel kalın:</strong> AI hızla gelişen bir alan
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 40px;">
+                        <span style="color: var(--skin-color); font-size: 60px; filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.8));">
+                            <i class="fas fa-brain"></i>
+                        </span>
+                        <p style="margin-top: 20px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace; font-size: 18px;">
+                            import future<br>
+                            from AI import success
+                        </p>
+                        <p style="margin-top: 15px; color: var(--ai-accent); font-weight: 600;">
+                            Yapay zeka ile geleceği şekillendirin!
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Enhanced Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px) scale(1.02)';
+                card.style.boxShadow = '0 0 30px rgba(138, 43, 226, 0.4)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+                card.style.boxShadow = '0 0 25px rgba(138, 43, 226, 0.3)';
+            });
+        });
+
+        // AI Console Easter Eggs
+        console.log('%c🧠 AI & Machine Learning Portal', 'color: #8a2be2; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #8a2be2;');
+        console.log('%c> Neural networks initialized', 'color: #8a2be2; font-family: monospace;');
+        console.log('%c> TensorFlow modules loaded', 'color: #00ff88; font-family: monospace;');
+        console.log('%c> PyTorch ready for training', 'color: #4ecdc4; font-family: monospace;');
+        console.log('%c> Deep learning activation: SUCCESS', 'color: #50fa7b; font-family: monospace; font-weight: bold;');
+        console.log('%c> print("Welcome to the future of AI!")', 'color: #ff6b6b; font-family: monospace; font-weight: bold;');
+
+        // Advanced Scroll Progress with AI theme
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Enhanced scroll progress with gradient
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 3px;
+                background: linear-gradient(90deg, var(--skin-color), var(--ai-accent), var(--dl-accent));
+                z-index: 9999;
+                transition: width 0.1s ease;
+                box-shadow: 0 0 10px rgba(138, 43, 226, 0.6);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Floating AI particles effect
+        function createAIParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.width = Math.random() * 4 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = `rgba(138, 43, 226, ${Math.random() * 0.5 + 0.1})`;
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '-1';
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 0 },
+                { transform: `translateY(-${window.innerHeight + 100}px) rotate(360deg)`, opacity: 1 },
+                { transform: `translateY(-${window.innerHeight + 200}px) rotate(720deg)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 15000 + 10000,
+                easing: 'linear'
+            });
+            
+            animation.onfinish = () => particle.remove();
+        }
+
+        // CreateDense</span>(<span class="number">128</span>, activation=<span class="string">'relu'</span>, input_shape=(<span class="number">784</span>,)),
+    keras.layers.<span class="function">Dropout</span>(<span class="number">0.2</span>),
+    keras.layers.<span class="function">Dense</span>(<span class="number">64</span>, activation=<span class="string">'relu'</span>),
+    keras.layers.<span class="function">Dense</span>(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)
+])
+
+model.<span class="function">compile</span>(
+    optimizer=<span class="string">'adam'</span>,
+    loss=<span class="string">'sparse_categorical_crossentropy'</span>,
+    metrics=[<span class="string">'accuracy'</span>]
+)
+
+<span class="function">print</span>(model.<span class="function">summary</span>())</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>TensorFlow Temel Kavramları:</strong>
+                            <ul style="margin-top: 15px; margin-left: 25px;">
+                                <li><strong>Tensor:</strong> Çok boyutlu veri yapısı</li>
+                                <li><strong>Graph:</strong> Hesaplama grafiği</li>
+                                <li><strong>Session:</strong> Graf çalıştırma ortamı (TF 1.x)</li>
+                                <li><strong>Eager Execution:</strong> Anlık çalıştırma (TF 2.x varsayılan)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PyTorch Section -->
+            <section id="pytorch" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    PyTorch ile Dinamik Neural Networks
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>PyTorch</strong>, Facebook (Meta) tarafından geliştirilen ve dinamik hesaplama grafikleri sunan deep learning kütüphanesidir. Araştırma topluluğunda çok popülerdir.
+                    </p>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Kurulum:</strong> <span class="kbd">pip install torch torchvision</span>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+<span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim
+
+<span class="comment"># Basit neural network tanımı</span>
+<span class="keyword">class</span> <span class="function">SimpleNet</span>(nn.Module):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        <span class="function">super</span>(<span class="function">SimpleNet</span>, self).<span class="function">__init__</span>()
+        self.fc1 = nn.<span class="function">Linear</span>(<span class="number">784</span>, <span class="number">128</span>)
+        self.fc2 = nn.<span class="function">Linear</span>(<span class="number">128</span>, <span class="number">64</span>)
+        self.fc3 = nn.<span class="function">Linear</span>(<span class="number">64</span>, <span class="number">10</span>)
+        self.relu = nn.<span class="function">ReLU</span>()
+        
+    <span class="keyword">def</span> <span class="function">forward</span>(self, x):
+        x = self.<span class="function">relu</span>(self.<span class="function">fc1</span>(x))
+        x = self.<span class="function">relu</span>(self.<span class="function">fc2</span>(x))
+        x = self.<span class="function">fc3</span>(x)
+        <span class="keyword">return</span> x
+
+<span class="comment"># Model oluştur</span>
+model = <span class="function">SimpleNet</span>()
+optimizer = optim.<span class="function">Adam</span>(model.parameters(), lr=<span class="number">0.001</span>)
+criterion = nn.<span class="function">CrossEntropyLoss</span>()
+
+<span class="function">print</span>(model)</code></pre>
+                    </div>
+
+                    <div class="dl-card note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-balance-scale note-card-icon"></i>
+                            <span class="note-card-title">TensorFlow vs PyTorch</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>TensorFlow:</strong> Üretim odaklı, geniş ekosistem<br>
+                            <strong>PyTorch:</strong> Araştırma odaklı, kolay debugging<br>
+                            <strong>Ortak:</strong> GPU desteği, otomatik türev hesabı
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Keras Section -->
+            <section id="keras" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-layer-group"></i>
+                    Keras: Kolay Deep Learning
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Keras</strong>, deep learning modellerini hızlı bir şekilde prototipleştirmek için tasarlanmış yüksek seviye bir API'dir. TensorFlow 2.0 ile birlikte entegre edilmiştir.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">import</span> tensorflow.keras <span class="keyword">as</span> keras
+<span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> layers
+
+<span class="comment"># MNIST el yazısı rakam tanıma</span>
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.<span class="function">load_data</span>()
+
+<span class="comment"># Veri ön işleme</span>
+x_train = x_train.<span class="function">reshape</span>(<span class="number">60000</span>, <span class="number">784</span>).<span class="function">astype</span>(<span class="string">'float32'</span>) / <span class="number">255</span>
+x_test = x_test.<span class="function">reshape</span>(<span class="number">10000</span>, <span class="number">784</span>).<span class="function">astype</span>(<span class="string">'float32'</span>) / <span class="number">255</span>
+
+<span class="comment"># Model oluştur</span>
+model = keras.<span class="function">Sequential</span>([
+    layers.<span class="function

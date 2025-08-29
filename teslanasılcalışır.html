@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Nasıl Çalışır? | Elektrikli Otomobil Teknolojisi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Tesla Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(220, 0, 0, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #dc143c;
+            --skin-color-hover: #b21030;
+            --neon-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+            --text-shadow: 0 0 10px rgba(220, 20, 60, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(220, 20, 60, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220, 20, 60, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(220, 20, 60, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-car-electric {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(220, 20, 60, 0.5));
+            animation: electric-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes electric-pulse {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(220, 20, 60, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(220, 20, 60, 0.8)); }
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(220, 20, 60, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(220, 20, 60, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(220, 20, 60, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(220, 20, 60, 0.1);
+            text-shadow: 0 0 5px rgba(220, 20, 60, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-car-electric {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(220, 20, 60, 0.8));
+            animation: electric-pulse 2s ease-in-out infinite;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-stats {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(220, 20, 60, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(220, 20, 60, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(220, 20, 60, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Tesla Component Diagram */
+        .tesla-diagram {
+            background: #1a1a1a;
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+            text-align: center;
+        }
+        
+        .tesla-diagram::before {
+            content: 'Tesla System';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+
+        .tesla-visual {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tesla-component {
+            background: rgba(220, 20, 60, 0.1);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tesla-component:hover {
+            background: rgba(220, 20, 60, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
+        }
+
+        .tesla-component i {
+            color: var(--skin-color);
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .tesla-component .component-name {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(220, 20, 60, 0.1);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(220, 20, 60, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Tech Specs Table */
+        .specs-table {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .specs-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.1);
+        }
+
+        .specs-row:last-child {
+            border-bottom: none;
+        }
+
+        .specs-label {
+            color: var(--text-black700);
+            font-weight: 500;
+        }
+
+        .specs-value {
+            color: var(--skin-color);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+
+        /* Animation for Tesla car */
+        .tesla-car-animation {
+            position: relative;
+            text-align: center;
+            margin: 30px 0;
+            height: 100px;
+        }
+
+        .car-icon {
+            font-size: 48px;
+            color: var(--skin-color);
+            animation: car-drive 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(220, 20, 60, 0.6));
+        }
+
+        @keyframes car-drive {
+            0% { transform: translateX(-50px); }
+            50% { transform: translateX(50px); }
+            100% { transform: translateX(-50px); }
+        }
+
+        /* Battery Charge Animation */
+        .battery-indicator {
+            width: 100%;
+            height: 20px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .battery-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--skin-color), rgba(220, 20, 60, 0.7));
+            width: 85%;
+            animation: battery-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes battery-pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .battery-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+
+            .tesla-visual {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-car-electric"></i>
+                <span>Tesla</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#tesla-nedir" class="active">Tesla Nedir?</a></li>
+            <li><a href="#elektrik-motoru">Elektrik Motoru</a></li>
+            <li><a href="#batarya-sistemi">Batarya Sistemi</a></li>
+            <li><a href="#sarj-sistemi">Şarj Sistemi</a></li>
+            <li><a href="#otonom-suruş">Otonom Sürüş</a></li>
+            <li><a href="#supercharger">Supercharger Ağı</a></li>
+            <li><a href="#yazilim-guncellemeleri">Yazılım Güncellemeleri</a></li>
+            <li><a href="#cevre-etkisi">Çevre Etkisi</a></li>
+            <li><a href="#gelecek-teknolojiler">Gelecek Teknolojiler</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-car-electric"></i>
+                    Tesla Nasıl Çalışır?
+                </h1>
+                <p class="hero-subtitle">
+                    Elektrikli otomobil teknolojisinin en iyilerinden Tesla'nın
+                    nasıl çalıştığını keşfedin
+                </p>
+                <div class="hero-stats">
+                    <div class="tesla-car-animation">
+                        <i class="fas fa-car car-icon"></i>
+                    </div>
+                    Model S: 0-100 km/s 2.1 saniye
+                </div>
+            </section>
+
+            <!-- Tesla Nedir Section -->
+            <section id="tesla-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Tesla Nedir ve Nasıl Çalışır?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Tesla</strong>, Elon Musk tarafından kurulmuş olan ve tamamen elektrikli araçlar üreten bir otomotiv şirketidir. Tesla araçları, geleneksel benzinli motorlar yerine elektrik motorları kullanarak çevre dostu ulaşım sağlar.
+                    </p>
+                    <p>
+                        Tesla'nın temel çalışma prensibi, büyük kapasiteli lityum-iyon bataryalardan aldığı elektrik enerjisini elektrik motorları aracılığıyla mekanik enerjiye dönüştürmesi üzerine kuruludur.
+                    </p>
+                    
+                    <div class="tesla-diagram">
+                        <h3 style="color: var(--skin-color); margin-bottom: 20px;">Tesla Ana Bileşenleri</h3>
+                        <div class="tesla-visual">
+                            <div class="tesla-component">
+                                <i class="fas fa-battery-full"></i>
+                                <div class="component-name">Batarya Paketi</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-cog"></i>
+                                <div class="component-name">Elektrik Motoru</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-microchip"></i>
+                                <div class="component-name">Kontrol Ünitesi</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-bolt"></i>
+                                <div class="component-name">İnverter</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Temel Avantaj:</strong> Elektrik motorları %90'a varan verimlilik sunar, benzinli motorlar ise sadece %20-30 verimlidir.
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Tesla'nın Benzersiz Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Yazılım tabanlı araç sistemi</li>
+                                <li>• Havadan (OTA) güncellemeler</li>
+                                <li>• Autopilot ve tam otonom sürüş kabiliyeti</li>
+                                <li>• Supercharger hızlı şarj ağı</li>
+                                <li>• Minimal hareketli parça (daha az bakım)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">Tesla Tarihçesi</span>
+                        </div>
+                        <div class="note-card-content">
+                            2003'te Martin Eberhard ve Marc Tarpenning tarafından kurulan Tesla, 2004'te Elon Musk'ın katılımıyla bugünkü konumuna geldi. İlk model Roadster 2008'de piyasaya çıktı.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Elektrik Motoru Section -->
+            <section id="elektrik-motoru" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cog"></i>
+                    Elektrik Motoru Teknolojisi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Tesla araçları, <strong>AC indüksiyon motorları</strong> ve <strong>kalıcı mıknatıslı senkron motorlar</strong> kullanır. Bu motorlar, elektrik enerjisini doğrudan mekanik enerjiye çevirerek tekerlekleri döndürür.
+                    </p>
+                    
+                    <div class="specs-table">
+                        <div class="specs-row">
+                            <span class="specs-label">Motor Tipi</span>
+                            <span class="specs-value">AC İndüksiyon / Kalıcı Mıknatıs</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Güç</span>
+                            <span class="specs-value">283-1020 HP (Modele göre)</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Tork</span>
+                            <span class="specs-value">375-1420 Nm</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Verimlilik</span>
+                            <span class="specs-value">~90%</span>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-zap note-card-icon"></i>
+                            <span class="note-card-title">Elektrik Motoru vs Benzinli Motor</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Elektrik:</strong> Anında tork, sessiz çalışma, az bakım<br>
+                            <strong>Benzinli:</strong> Gecikmeli güç, gürültülü, sık bakım gerekir
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Tesla'nın elektrik motorları, <strong>inverter</strong> adı verilen bir elektronik ünite tarafından kontrol edilir. İnverter, bataryadan gelen doğru akımı (DC) alternatif akıma (AC) çevirerek motorun hızını ve gücünü hassas şekilde kontrol eder.
+                    </p>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Regenerative Braking:</strong> Tesla frene bastığınızda motor jeneratör moduna geçer ve hareket enerjisini bataryaya geri yükler. Bu özellik menzili %20'ye kadar artırabilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Batarya Sistemi Section -->
+            <section id="batarya-sistemi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-battery-full"></i>
+                    Batarya Sistemi ve Enerji Yönetimi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Tesla'nın kalbi <strong>lityum-iyon batarya paketleridir</strong>. Bu bataryalar, binlerce küçük silindirik hücreden oluşur ve arabanın tabanına yerleştirilir. Bu tasarım hem ağırlık merkezini alçaltır hem de çarpışma güvenliğini artırır.
+                    </p>
+
+                    <div class="battery-indicator">
+                        <div class="battery-fill"></div>
+                        <div class="battery-text">Batarya Seviyesi: 85%</div>
+                    </div>
+                    
+                    <div class="specs-table">
+                        <div class="specs-row">
+                            <span class="specs-label">Batarya Kapasitesi</span>
+                            <span class="specs-value">50-100+ kWh</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Hücre Sayısı</span>
+                            <span class="specs-value">2,170-7,104 adet</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Menzil</span>
+                            <span class="specs-value">350-650 km</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Ömür</span>
+                            <span class="specs-value">300,000-500,000 km</span>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-thermometer-half note-card-icon"></i>
+                            <span class="note-card-title">Termal Yönetim</span>
+                        </div>
+                        <div class="note-card-content">
+                            Tesla, batarya sıcaklığını optimal seviyede tutmak için gelişmiş soğutma sistemi kullanır. Soğuk havalarda batarya ısıtılır, sıcakta ise soğutulur.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Batarya Teknolojisi Detayları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>18650/2170/4680 Hücreleri:</strong> Farklı modellerde farklı boyutlar</li>
+                                <li>• <strong>NCA/NCM Kimyası:</strong> Nikel-Kobalt-Alüminyum/Manganez</li>
+                                <li>• <strong>BMS (Battery Management System):</strong> Her hücreyi ayrı ayrı izler</li>
+                                <li>• <strong>Modüler Tasarım:</strong> Hasar durumunda bölüm değiştirilebilir</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Batarya Ömrü İpuçları:</strong><br>
+                            • %20-80 arasında şarj etmek optimal<br>
+                            • Extreme sıcaklardan kaçının<br>
+                            • Günlük kullanımda %100 şarj etmeyin<br>
+                            • Uzun park sürelerinde %50 seviyesinde bırakın
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Şarj Sistemi Section -->
+            <section id="sarj-sistemi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-plug"></i>
+                    Şarj Sistemi ve Teknolojileri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Tesla, farklı ihtiyaçlar için çeşitli şarj seçenekleri sunar. Ev şarjından hızlı DC şarja kadar geniş bir yelpaze mevcuttur.
+                    </p>
+                    
+                    <div class="tesla-diagram">
+                        <h3 style="color: var(--skin-color); margin-bottom: 20px;">Şarj Türleri</h3>
+                        <div class="tesla-visual">
+                            <div class="tesla-component">
+                                <i class="fas fa-home"></i>
+                                <div class="component-name">Ev Şarjı<br>(Level 1/2)</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-building"></i>
+                                <div class="component-name">Hedef Şarj<br>(AC)</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-bolt"></i>
+                                <div class="component-name">Supercharger<br>(DC)</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-road"></i>
+                                <div class="component-name">Hızlı Şarj<br>(CCS)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="specs-table">
+                        <div class="specs-row">
+                            <span class="specs-label">Ev Şarjı (230V)</span>
+                            <span class="specs-value">7-22 kW (~8-12 saat)</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Supercharger V3</span>
+                            <span class="specs-value">250 kW (~15-25 dakika)</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Şarj Portu</span>
+                            <span class="specs-value">Tesla Connector / CCS2</span>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-clock note-card-icon"></i>
+                            <span class="note-card-title">Şarj Süresi Hesaplaması</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Formül:</strong> Şarj Süresi = (Batarya Kapasitesi × Şarj Oranı) ÷ Şarj Gücü<br>
+                            <strong>Örnek:</strong> 75 kWh bataryayı %20'den %80'e çıkarmak = 45 kWh ÷ 22 kW = ~2 saat
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Şarj Eğrisi:</strong> Batarya %80'e yaklaştıkça şarj hızı düşer. Bu, batarya ömrünü korumak için normal bir durumdur.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Tesla App ile Şarj:</strong> Uzaktan şarj başlatma, sıcaklık kontrolü ve şarj zamanlaması yapabilirsiniz.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Otonom Sürüş Section -->
+            <section id="otonom-suruş" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-robot"></i>
+                    Autopilot ve Otonom Sürüş
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Tesla'nın <strong>Autopilot</strong> sistemi, kameralar, radar ve ultrasonik sensörler kullanarak yarı-otonom sürüş sağlar. Gelişmiş yapay zeka algoritmaları sayesinde araç çevresini analiz eder ve sürücüye yardımcı olur.
+                    </p>
+                    
+                    <div class="tesla-diagram">
+                        <h3 style="color: var(--skin-color); margin-bottom: 20px;">Autopilot Sensörleri</h3>
+                        <div class="tesla-visual">
+                            <div class="tesla-component">
+                                <i class="fas fa-camera"></i>
+                                <div class="component-name">8 Kamera<br>360° Görüş</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-satellite-dish"></i>
+                                <div class="component-name">Radar<br>Uzun Menzil</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-wave-square"></i>
+                                <div class="component-name">Ultrasonik<br>Yakın Mesafe</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-brain"></i>
+                                <div class="component-name">Neural Net<br>AI İşlemci</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Autopilot Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Trafik Uyumlu Hız Kontrolü:</strong> Otomatik hız ayarı</li>
+                                <li>• <strong>Otosteer:</strong> Şerit takibi ve yön değiştirme</li>
+                                <li>• <strong>Acil Durum Freni:</strong> Çarpışma önleme</li>
+                                <li>• <strong>Yan Çarpışma Uyarısı:</strong> Göremeceğiniz araçları algılar</li>
+                                <li>• <strong>Akıllı Çağırma:</strong> Aracı uzaktan getirme</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-microchip note-card-icon"></i>
+                            <span class="note-card-title">FSD (Full Self-Driving)</span>
+                        </div>
+                        <div class="note-card-content">
+                            Tam otonom sürüş özelliği şehir içi sürüş, trafik ışığı tanıma, park etme ve çağırma gibi gelişmiş özellikler içerir. Beta sürümünde test edilmektedir.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Güvenlik Uyarısı:</strong> Autopilot aktifken sürücü her zaman uyanık olmalı ve direksiyonu tutmalıdır. Bu henüz tam otonom bir sistem değildir.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Vision-Only Yaklaşım:</strong> Yeni Tesla modelleri sadece kameraları kullanır, radar sensörü içermez. Bu, insan gözüne benzer görüş sistemi sağlar.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supercharger Section -->
+            <section id="supercharger" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-charging-station"></i>
+                    Supercharger Ağı
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Tesla Supercharger</strong>, dünyanın en büyük hızlı DC şarj ağıdır. Tesla araç sahiplerinin uzun yolculuklarda rahatça seyahat edebilmesini sağlar.
+                    </p>
+
+                    <div class="specs-table">
+                        <div class="specs-row">
+                            <span class="specs-label">Supercharger V3 Gücü</span>
+                            <span class="specs-value">250 kW</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Dünya Geneli Stasyon</span>
+                            <span class="specs-value">45,000+ Şarj Noktası</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Türkiye'deki Stasyon</span>
+                            <span class="specs-value">50+ Lokasyon</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Ortalama Şarj Süresi</span>
+                            <span class="specs-value">15-25 dakika</span>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-route note-card-icon"></i>
+                            <span class="note-card-title">Trip Planner</span>
+                        </div>
+                        <div class="note-card-content">
+                            Tesla'nın navigasyon sistemi otomatik olarak yolculuğunuz için gerekli şarj duraklarını planlar ve şarj süresini hesaplar.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Supercharger Avantajları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Otomatik kimlik doğrulama (fiş tak ve şarj et)</li>
+                                <li>• Dinamik fiyatlandırma</li>
+                                <li>• Gerçek zamanlı doluluk durumu</li>
+                                <li>• Uydu navigasyon entegrasyonu</li>
+                                <li>• Diğer marka araçlara da açık (seçili istasyonlar)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Şarj Etiketi:</strong> Şarj tamamlandığında aracınızı hemen çekin. Bekleme ücreti uygulanabilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Yazılım Güncellemeleri Section -->
+            <section id="yazilim-guncellemeleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-download"></i>
+                    Havadan Yazılım Güncellemeleri (OTA)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Tesla araçları, <strong>Over-The-Air (OTA)</strong> güncellemelerle sürekli olarak yeni özellikler ve iyileştirmeler alır. Bu, aracınızın giderek daha iyi hale geldiği anlamına gelir.
+                    </p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-satellite note-card-icon"></i>
+                            <span class="note-card-title">Güncelleme Süreci</span>
+                        </div>
+                        <div class="note-card-content">
+                            Güncelleme bildirimini aldığınızda, araç park halindeyken Wi-Fi veya LTE üzerinden yeni yazılımı indirir ve otomatik olarak yükler.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Son Güncellemelerle Gelen Özellikler:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Sentry Mode:</strong> Park halindeki güvenlik izleme</li>
+                                <li>• <strong>Dog Mode:</strong> Evcil hayvan güvenliği</li>
+                                <li>• <strong>Camping Mode:</strong> Enerji tasarrufu park modu</li>
+                                <li>• <strong>Netflix & YouTube:</strong> Eğlence sistemi</li>
+                                <li>• <strong>Karaoke:</strong> Araç içi eğlence</li>
+                                <li>• <strong>Oyunlar:</strong> Atari klasikleri ve modern oyunlar</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Güncelleme İpucu:</strong> Güncelleme sırasında aracınızın elektrik bağlantısı kesilmesin. Güncelleme genellikle 25-45 dakika sürer.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Beta Özellikleri:</strong> FSD Beta gibi deneysel özellikler dikkatli kullanılmalıdır. Henüz tam güvenilir değildirler.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Çevre Etkisi Section -->
+            <section id="cevre-etkisi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-leaf"></i>
+                    Çevre Etkisi ve Sürdürülebilirlik
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Tesla'nın misyonu, dünyayı sürdürülebilir enerjiye geçişi hızlandırmaktır. Elektrikli araçlar, özellikle yenilenebilir enerji kaynaklarından şarj edildiğinde, karbon ayak izini önemli ölçüde azaltır.
+                    </p>
+
+                    <div class="specs-table">
+                        <div class="specs-row">
+                            <span class="specs-label">CO2 Emisyonu</span>
+                            <span class="specs-value">0 gram/km (sürüş sırasında)</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Enerji Verimliliği</span>
+                            <span class="specs-value">15-20 kWh/100km</span>
+                        </div>
+                        <div class="specs-row">
+                            <span class="specs-label">Yaşam Döngüsü Analizi</span>
+                            <span class="specs-value">%60 daha az emisyon</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Tesla'nın Sürdürülebilirlik Çalışmaları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Gigafactory:</strong> %100 yenilenebilir enerji</li>
+                                <li>• <strong>Batarya Geri Dönüşüm:</strong> %95 malzeme geri kazanımı</li>
+                                <li>• <strong>Solar Roof:</strong> Ev enerjisi üretimi</li>
+                                <li>• <strong>Powerwall:</strong> Ev enerji depolama</li>
+                                <li>• <strong>Karbon Nötr Hedef:</strong> 2030 yılına kadar</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-recycle note-card-icon"></i>
+                            <span class="note-card-title">Batarya Geri Dönüşümü</span>
+                        </div>
+                        <div class="note-card-content">
+                            Tesla, kullanım ömrünü tamamlayan bataryaları %95 oranında geri dönüştürür. Lityum, kobalt ve nikel gibi değerli malzemeler yeni bataryalarda tekrar kullanılır.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Yeşil Şarj:</strong> Evinizde güneş paneli kullanarak Tesla'nızı %100 yenilenebilir enerjiyle şarj edebilirsiniz.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gelecek Teknolojiler Section -->
+            <section id="gelecek-teknolojiler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-rocket"></i>
+                    Gelecek Teknolojiler ve İnovasyonlar
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Tesla sürekli olarak yenilik yapmaya devam ediyor. Gelecekte bizi bekleyen teknolojiler elektrikli ulaşımı daha da devrim niteliğinde değiştirecek.
+                    </p>
+
+                    <div class="tesla-diagram">
+                        <h3 style="color: var(--skin-color); margin-bottom: 20px;">Gelecek Tesla Teknolojileri</h3>
+                        <div class="tesla-visual">
+                            <div class="tesla-component">
+                                <i class="fas fa-cube"></i>
+                                <div class="component-name">4680 Hücre<br>Teknolojisi</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-taxi"></i>
+                                <div class="component-name">Robotaxi<br>Servisi</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-truck"></i>
+                                <div class="component-name">Semi<br>Elektrikli Kamyon</div>
+                            </div>
+                            <div class="tesla-component">
+                                <i class="fas fa-rocket"></i>
+                                <div class="component-name">Roadster 2<br>SpaceX Paket</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Yakında Gelecek Yenilikler:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>4680 Batarya Hücreleri:</strong> 5x enerji, 6x güç, %16 daha uzun menzil</li>
+                                <li>• <strong>Structural Battery Pack:</strong> Batarya, araç şasisinin parçası</li>
+                                <li>• <strong>Million Mile Battery:</strong> 1.6 milyon km ömürlü batarya</li>
+                                <li>• <strong>Tesla Bot (Optimus):</strong> İnsansı robot teknolojisi</li>
+                                <li>• <strong>Wireless Charging:</strong> Kablosuz şarj teknolojisi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-industry note-card-icon"></i>
+                            <span class="note-card-title">Üretim İnovasyonu</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Unboxed Process:</strong> Tesla'nın yeni üretim metoduyla %50 daha az alan, %50 daha az maliyet hedefleniyor.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Teknoloji Riski:</strong> Gelişmiş özellikler beta aşamasında olabilir ve beklenmedik davranışlar sergileyebilir.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Tesla Network:</strong> Gelecekte Tesla sahipleri aracını robotaxi olarak kiraya verebilecek ve pasif gelir elde edebilecek.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(220, 20, 60, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Tesla'nın Geleceği
+                </h2>
+                <div class="section-content">
+
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">Önemli Noktalar</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Teknoloji:</strong> Sürekli gelişen yapay zeka ve batarya teknolojisi<br>
+                            <strong>Çevre:</strong> Sıfır emisyon ve sürdürülebilir üretim<br>
+                            <strong>Güvenlik:</strong> En güvenli araçlar arasında (5 yıldız NHTSA)<br>
+                            <strong>Performans:</strong> Spor araba performansı, lüks araç konforu
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-car-electric"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            "Sürdürülebilir ulaşımın geleceği şimdi başlıyor!"
+                        </p>
