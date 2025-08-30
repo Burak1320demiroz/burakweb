@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps & Docker | Burak Demiröz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(0, 212, 255, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #00d4ff;
+            --skin-color-hover: #00a8cc;
+            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-docker {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 212, 255, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-docker {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Docker/Shell';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .function { color: #50fa7b; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        
+        /* Output Blocks */
+        .output-block {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+        }
+        
+        .output-block::before {
+            content: '> Output:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fab fa-docker"></i>
+                <span>DevOps & Docker</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#devops-nedir" class="active">DevOps Nedir?</a></li>
+            <li><a href="#docker-temel">Docker Temelleri</a></li>
+            <li><a href="#dockerfile">Dockerfile</a></li>
+            <li><a href="#docker-compose">Docker Compose</a></li>
+            <li><a href="#kubernetes">Kubernetes Giriş</a></li>
+            <li><a href="#ci-cd">CI/CD Pipeline</a></li>
+            <li><a href="#monitoring">Monitoring & Logging</a></li>
+            <li><a href="#security">Güvenlik</a></li>
+            <li><a href="#best-practices">Best Practices</a></li>
+            <li><a href="#tools">DevOps Araçları</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fab fa-docker"></i>
+                    DevOps & Docker
+                </h1>
+                <div class="hero-code">
+                    docker run -it --rm ubuntu:latest
+                </div>
+            </section>
+
+            <!-- DevOps Nedir Section -->
+            <section id="devops-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-infinity"></i>
+                    DevOps Nedir, Neden Önemli?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>DevOps</strong> (Development + Operations), yazılım geliştirme ve sistem operasyonları arasında işbirliği ve entegrasyonu artırmayı hedefleyen bir yaklaşımdır. Bu metodoloji, daha hızlı ve güvenilir yazılım teslimatını sağlar.
+                    </p>
+                    <p>
+                        DevOps kültürü, geleneksel silo yapılarını kırarak geliştiriciler ve sistem yöneticileri arasında ortak sorumluluk anlayışını benimser. Bu yaklaşım otomasyonu, sürekli entegrasyonu ve sürekli teslimatı temel alır.
+                    </p>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Pro İpucu:</strong> DevOps sadece araçlar değil, bir kültür değişimidir. İnsanların düşünce biçimini ve çalışma şeklini değiştirmeyi hedefler.
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>DevOps'un Ana Faydaları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Daha hızlı yazılım teslimatı</li>
+                                <li>• Daha az hata ve daha hızlı düzeltme</li>
+                                <li>• Otomatik test ve deployment</li>
+                                <li>• Daha iyi takım işbirliği</li>
+                                <li>• Müşteri memnuniyetinde artış</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">DevOps Döngüsü</span>
+                        </div>
+                        <div class="note-card-content">
+                            Plan → Code → Build → Test → Release → Deploy → Operate → Monitor - Bu süreç sürekli olarak tekrar eder ve iyileştirilir.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Amazon, Netflix, Google gibi büyük teknoloji şirketleri DevOps pratiklerini benimser. Bu şirketler günde yüzlerce deployment yapabilir ve sistemlerinin çalışabilirliğini yüksek seviyelerde tutar.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Docker Temel Section -->
+            <section id="docker-temel" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-docker"></i>
+                    Docker Temelleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Docker</strong>, uygulamaları containerlar içinde paketleyerek tutarlı ve taşınabilir çalışma ortamları sağlayan bir platformdur. Sanal makinelere kıyasla daha hafif ve verimli bir sanallaştırma sunar.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Dockerfile örneği - Node.js uygulaması</span>
+<span class="keyword">FROM</span> <span class="string">node:18-alpine</span>
+
+<span class="keyword">WORKDIR</span> <span class="string">/app</span>
+
+<span class="keyword">COPY</span> <span class="string">package*.json ./</span>
+<span class="keyword">RUN</span> <span class="string">npm install</span>
+
+<span class="keyword">COPY</span> <span class="string">. .</span>
+
+<span class="keyword">EXPOSE</span> <span class="number">3000</span>
+
+<span class="keyword">CMD</span> <span class="string">["npm", "start"]</span></code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-layer-group note-card-icon"></i>
+                            <span class="note-card-title">Dockerfile Talimatları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>FROM</code> - Base image<br>
+                            <code>RUN</code> - Build sırasında komut çalıştır<br>
+                            <code>COPY</code> - Host'tan dosya kopyala<br>
+                            <code>WORKDIR</code> - Çalışma dizini belirle<br>
+                            <code>EXPOSE</code> - Port bilgisi<br>
+                            <code>CMD</code> - Container başlatıldığında çalışacak komut
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Image oluşturma ve çalıştırma:
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Image build etme</span>
+<span class="keyword">docker</span> build -t my-app:v1.0 .
+
+<span class="comment"># Image çalıştırma</span>
+<span class="keyword">docker</span> run -p 3000:3000 my-app:v1.0
+
+<span class="comment"># Background'da çalıştırma</span>
+<span class="keyword">docker</span> run -d -p 3000:3000 --name my-container my-app:v1.0</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>İpucu:</strong> <code>.dockerignore</code> dosyası kullanarak gereksiz dosyaları image'a dahil etmekten kaçının. Bu build süresini hızlandırır.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Best Practice:</strong> Multi-stage build kullanarak production image'larınızı mümkün olduğunca küçük tutun.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Docker Compose Section -->
+            <section id="docker-compose" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-sitemap"></i>
+                    Docker Compose ile Multi-Container Uygulamalar
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Docker Compose</strong>, çok container'lı uygulamaları tanımlamak ve çalıştırmak için kullanılan bir araçtır. YAML formatında yazılmış dosyalarla servislerinizi yönetir.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># docker-compose.yml dosyası</span>
+<span class="keyword">version:</span> <span class="string">'3.8'</span>
+
+<span class="keyword">services:</span>
+  <span class="keyword">web:</span>
+    <span class="keyword">build:</span> <span class="string">.</span>
+    <span class="keyword">ports:</span>
+      - <span class="string">"3000:3000"</span>
+    <span class="keyword">depends_on:</span>
+      - <span class="string">db</span>
+    <span class="keyword">environment:</span>
+      - <span class="string">NODE_ENV=production</span>
+
+  <span class="keyword">db:</span>
+    <span class="keyword">image:</span> <span class="string">postgres:15</span>
+    <span class="keyword">environment:</span>
+      - <span class="string">POSTGRES_DB=myapp</span>
+      - <span class="string">POSTGRES_USER=user</span>
+      - <span class="string">POSTGRES_PASSWORD=password</span>
+    <span class="keyword">volumes:</span>
+      - <span class="string">postgres_data:/var/lib/postgresql/data</span>
+
+<span class="keyword">volumes:</span>
+  <span class="keyword">postgres_data:</span></code></pre>
+                    </div>
+                    
+                    <p>Compose komutları:</p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Servisleri başlatma</span>
+<span class="keyword">docker-compose</span> up
+
+<span class="comment"># Background'da başlatma</span>
+<span class="keyword">docker-compose</span> up -d
+
+<span class="comment"># Servisleri durdurma</span>
+<span class="keyword">docker-compose</span> down
+
+<span class="comment"># Log'ları görme</span>
+<span class="keyword">docker-compose</span> logs
+
+<span class="comment"># Belirli servis için log</span>
+<span class="keyword">docker-compose</span> logs web</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Docker Compose Avantajları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Çok container'lı uygulamaları tek komutla yönetme</li>
+                                <li>• Servisler arası network otomatik oluşturma</li>
+                                <li>• Environment variables yönetimi</li>
+                                <li>• Volume ve network tanımlama</li>
+                                <li>• Scaling imkanları</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-network-wired note-card-icon"></i>
+                            <span class="note-card-title">Servis İletişimi</span>
+                        </div>
+                        <div class="note-card-content">
+                            Compose'da servisler birbirleriyle servis ismiyle iletişim kurabilir. Örnek: <code>db:5432</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kubernetes Section -->
+            <section id="kubernetes" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-dharmachakra"></i>
+                    Kubernetes (K8s) Giriş
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Kubernetes</strong>, container'ları büyük ölçekte yönetmek için Google tarafından geliştirilen açık kaynaklı bir orkestrasyon platformudur. Mikroservis mimarilerin production ortamında çalıştırılmasında kritik rol oynar.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># deployment.yaml</span>
+<span class="keyword">apiVersion:</span> <span class="string">apps/v1</span>
+<span class="keyword">kind:</span> <span class="string">Deployment</span>
+<span class="keyword">metadata:</span>
+  <span class="keyword">name:</span> <span class="string">my-app</span>
+<span class="keyword">spec:</span>
+  <span class="keyword">replicas:</span> <span class="number">3</span>
+  <span class="keyword">selector:</span>
+    <span class="keyword">matchLabels:</span>
+      <span class="keyword">app:</span> <span class="string">my-app</span>
+  <span class="keyword">template:</span>
+    <span class="keyword">metadata:</span>
+      <span class="keyword">labels:</span>
+        <span class="keyword">app:</span> <span class="string">my-app</span>
+    <span class="keyword">spec:</span>
+      <span class="keyword">containers:</span>
+      - <span class="keyword">name:</span> <span class="string">my-app</span>
+        <span class="keyword">image:</span> <span class="string">my-app:v1.0</span>
+        <span class="keyword">ports:</span>
+        - <span class="keyword">containerPort:</span> <span class="number">3000</span></code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Kubernetes Ana Bileşenleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Pod:</strong> En küçük deployment birimi</li>
+                                <li><strong>Service:</strong> Pod'lara erişim sağlayan abstraction</li>
+                                <li><strong>Deployment:</strong> Pod'ların desired state yönetimi</li>
+                                <li><strong>Namespace:</strong> Kaynak gruplandırma</li>
+                                <li><strong>ConfigMap/Secret:</strong> Konfigürasyon yönetimi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-magic note-card-icon"></i>
+                            <span class="note-card-title">Self-Healing</span>
+                        </div>
+                        <div class="note-card-content">
+                            Kubernetes, container'ların sağlık durumunu izler ve başarısız olanları otomatik olarak yeniden başlatır.
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Temel kubectl komutları</span>
+<span class="keyword">kubectl</span> apply -f deployment.yaml
+<span class="keyword">kubectl</span> get pods
+<span class="keyword">kubectl</span> get services
+<span class="keyword">kubectl</span> describe pod my-app-xxx
+<span class="keyword">kubectl</span> logs my-app-xxx
+<span class="keyword">kubectl</span> scale deployment my-app --replicas=5</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>İpucu:</strong> Yerel geliştirme için Minikube veya Docker Desktop'ın Kubernetes desteğini kullanabilirsiniz.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CI/CD Section -->
+            <section id="ci-cd" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-infinity"></i>
+                    CI/CD Pipeline Oluşturma
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>CI/CD</strong> (Continuous Integration/Continuous Deployment), kod değişikliklerinin otomatik olarak test edilip production'a deploy edilmesi sürecidir. GitLab CI, GitHub Actions, Jenkins gibi araçlar kullanılır.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># .github/workflows/deploy.yml</span>
+<span class="keyword">name:</span> <span class="string">CI/CD Pipeline</span>
+
+<span class="keyword">on:</span>
+  <span class="keyword">push:</span>
+    <span class="keyword">branches:</span> [ <span class="string">main</span> ]
+
+<span class="keyword">jobs:</span>
+  <span class="keyword">test:</span>
+    <span class="keyword">runs-on:</span> <span class="string">ubuntu-latest</span>
+    <span class="keyword">steps:</span>
+    - <span class="keyword">uses:</span> <span class="string">actions/checkout@v3</span>
+    - <span class="keyword">name:</span> <span class="string">Setup Node.js</span>
+      <span class="keyword">uses:</span> <span class="string">actions/setup-node@v3</span>
+      <span class="keyword">with:</span>
+        <span class="keyword">node-version:</span> <span class="string">'18'</span>
+    - <span class="keyword">run:</span> <span class="string">npm ci</span>
+    - <span class="keyword">run:</span> <span class="string">npm test</span>
+
+  <span class="keyword">deploy:</span>
+    <span class="keyword">needs:</span> <span class="string">test</span>
+    <span class="keyword">runs-on:</span> <span class="string">ubuntu-latest</span>
+    <span class="keyword">steps:</span>
+    - <span class="keyword">uses:</span> <span class="string">actions/checkout@v3</span>
+    - <span class="keyword">name:</span> <span class="string">Build Docker Image</span>
+      <span class="keyword">run:</span> <span class="string">docker build -t myapp:${{ github.sha }} .</span>
+    - <span class="keyword">name:</span> <span class="string">Deploy to Production</span>
+      <span class="keyword">run:</span> <span class="string">echo "Deploying to production..."</span></code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>CI/CD Pipeline Aşamaları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Source:</strong> Kod repository'den çekme</li>
+                                <li><strong>Build:</strong> Kodu compile etme, bağımlılıkları yükleme</li>
+                                <li><strong>Test:</strong> Unit, integration, e2e testleri</li>
+                                <li><strong>Security Scan:</strong> Güvenlik zafiyet taraması</li>
+                                <li><strong>Deploy:</strong> Staging/Production ortamına yerleştirme</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-rocket note-card-icon"></i>
+                            <span class="note-card-title">Blue-Green Deployment</span>
+                        </div>
+                        <div class="note-card-content">
+                            İki identik production ortamı kullanarak risk-free deployment yapma stratejisi. Hata durumunda anında geri dönüş mümkündür.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>İpucu:</strong> Automated testing olmadan CI/CD implementasyonu risklidir. Test coverage'ınızı %80 üzerine çıkarmaya odaklanın.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monitoring Section -->
+            <section id="monitoring" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Monitoring & Logging
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Production sistemlerinin sürekli izlenmesi kritiktir. <strong>Prometheus</strong>, <strong>Grafana</strong>, <strong>ELK Stack</strong> gibi araçlar ile sistem metrikleri ve log analizleri yapılır.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># docker-compose.yml - Monitoring Stack</span>
+<span class="keyword">version:</span> <span class="string">'3.8'</span>
+
+<span class="keyword">services:</span>
+  <span class="keyword">prometheus:</span>
+    <span class="keyword">image:</span> <span class="string">prom/prometheus</span>
+    <span class="keyword">ports:</span>
+      - <span class="string">"9090:9090"</span>
+    <span class="keyword">volumes:</span>
+      - <span class="string">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
+
+  <span class="keyword">grafana:</span>
+    <span class="keyword">image:</span> <span class="string">grafana/grafana</span>
+    <span class="keyword">ports:</span>
+      - <span class="string">"3000:3000"</span>
+    <span class="keyword">environment:</span>
+      - <span class="string">GF_SECURITY_ADMIN_PASSWORD=admin</span>
+
+  <span class="keyword">elasticsearch:</span>
+    <span class="keyword">image:</span> <span class="string">elasticsearch:8.5.0</span>
+    <span class="keyword">environment:</span>
+      - <span class="string">discovery.type=single-node</span>
+      - <span class="string">xpack.security.enabled=false</span></code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>İzlenmesi Gereken Metrikler:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Golden Signals:</strong> Latency, Traffic, Errors, Saturation</li>
+                                <li>• <strong>Infrastructure:</strong> CPU, Memory, Disk, Network</li>
+                                <li>• <strong>Application:</strong> Response time, Error rate, Throughput</li>
+                                <li>• <strong>Business:</strong> Conversion rate, User satisfaction</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-bell note-card-icon"></i>
+                            <span class="note-card-title">Alerting</span>
+                        </div>
+                        <div class="note-card-content">
+                            Kritik metrikler için threshold'lar belirleyin. Slack, PagerDuty, email ile otomatik alarm sistemi kurun.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>İpucu:</strong> "Observability" sadece monitoring değildir. Metrics, Logs ve Traces'in (MLT) üçlü kombinasyonu gereklidir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security Section -->
+            <section id="security" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Container Security
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Container güvenliği, DevOps süreçlerinin kritik bir parçasıdır. Image scanning, runtime protection ve access control konularında dikkatli olmak gerekir.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Security-focused Dockerfile</span>
+<span class="keyword">FROM</span> <span class="string">node:18-alpine</span>
+
+<span class="comment"># Non-root user oluşturma</span>
+<span class="keyword">RUN</span> <span class="string">addgroup -g 1001 -S nodejs</span>
+<span class="keyword">RUN</span> <span class="string">adduser -S nextjs -u 1001</span>
+
+<span class="keyword">WORKDIR</span> <span class="string">/app</span>
+
+<span class="keyword">COPY</span> <span class="string">package*.json ./</span>
+<span class="keyword">RUN</span> <span class="string">npm ci --only=production && npm cache clean --force</span>
+
+<span class="keyword">COPY</span> <span class="string">--chown=nextjs:nodejs . .</span>
+
+<span class="keyword">USER</span> <span class="string">nextjs</span>
+
+<span class="keyword">EXPOSE</span> <span class="number">3000</span>
+<span class="keyword">CMD</span> <span class="string">["npm", "start"]</span></code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Güvenlik Uyarıları:</strong><br>
+                            • Container'ları root user ile çalıştırmayın<br>
+                            • Base image'ları güncel tutun<br>
+                            • Gereksiz paketleri image'a dahil etmeyin<br>
+                            • Secret'ları environment variable olarak geçmeyin
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Container Security Best Practices:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Image Scanning:</strong> Trivy, Clair, Snyk kullanımı</li>
+                                <li>• <strong>Runtime Security:</strong> Falco, Twistlock implementasyonu</li>
+                                <li>• <strong>Network Policies:</strong> Kubernetes network segmentation</li>
+                                <li>• <strong>RBAC:</strong> Role-based access control</li>
+                                <li>• <strong>Secrets Management:</strong> Vault, AWS Secrets Manager</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-key note-card-icon"></i>
+                            <span class="note-card-title">Secrets Yönetimi</span>
+                        </div>
+                        <div class="note-card-content">
+                            API key'leri, password'ları asla kodda saklamayın. Kubernetes Secret, Docker Secret veya external vault sistemleri kullanın.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Best Practices Section -->
+            <section id="best-practices" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    DevOps Best Practices
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Başarılı DevOps implementasyonu için kanıtlanmış praktikler ve metodolojiler:
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Infrastructure as Code (IaC):</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Terraform:</strong> Multi-cloud infrastructure provisioning</li>
+                                <li>• <strong>Ansible:</strong> Configuration management</li>
+                                <li>• <strong>CloudFormation:</strong> AWS native IaC</li>
+                                <li>• <strong>Helm:</strong> Kubernetes package management</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>İpucu:</strong> "Everything as Code" prensibini benimseyin. Infrastructure, configuration, policy, documentation - her şey version control altında olmalı.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-recycle note-card-icon"></i>
+                            <span class="note-card-title">Immutable Infrastructure</span>
+                        </div>
+                        <div class="note-card-content">
+                            Server'ları güncelleme yerine yenisini deploy edin. Bu consistency sağlar ve rollback kolaylaştırır.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Terraform örneği</span>
+<span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {
+  <span class="keyword">ami</span>           = <span class="string">"ami-0c55b159cbfafe1d0"</span>
+  <span class="keyword">instance_type</span> = <span class="string">"t3.micro"</span>
+  
+  <span class="keyword">tags</span> = {
+    <span class="keyword">Name</span>        = <span class="string">"WebServer"</span>
+    <span class="keyword">Environment</span> = <span class="string">"Production"</span>
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Yaygın Hatalar:</strong><br>
+                            • Manual configuration changes yapma<br>
+                            • Monitoring ve logging'i sonradan düşünme<br>
+                            • Single point of failure bırakma<br>
+                            • Backup stratejisi olmadan production'a geçme
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tools Section -->
+            <section id="tools" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-toolbox"></i>
+                    DevOps Araç Ekosistemi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        DevOps süreçlerinde kullanılan temel araçlar ve kategorileri:
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Kategori Bazında Araçlar:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Version Control:</strong> Git, GitLab, GitHub, Bitbucket</li>
+                                <li><strong>CI/CD:</strong> Jenkins, GitLab CI, GitHub Actions, CircleCI</li>
+                                <li><strong>Containerization:</strong> Docker, Podman, containerd</li>
+                                <li><strong>Orchestration:</strong> Kubernetes, Docker Swarm, Nomad</li>
+                                <li><strong>Infrastructure:</strong> Terraform, Ansible, Puppet, Chef</li>
+                                <li><strong>Monitoring:</strong> Prometheus, Grafana, Datadog, New Relic</li>
+                                <li><strong>Logging:</strong> ELK Stack, Fluentd, Splunk</li>
+                                <li><strong>Security:</strong> Vault, OWASP ZAP, Aqua Security</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-cloud note-card-icon"></i>
+                            <span class="note-card-title">Cloud Providers</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>AWS:</strong> ECS, EKS, Lambda, CloudFormation<br>
+                            <strong>Azure:</strong> AKS, Container Instances, DevOps<br>
+                            <strong>GCP:</strong> GKE, Cloud Run, Cloud Build
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>İpucu:</strong> Araç seçiminde "vendor lock-in" riskini göz önünde bulundurun. Open source ve cloud-agnostic çözümleri tercih edin.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-graduation-cap note-card-icon"></i>
+                            <span class="note-card-title">Öğrenme Rotası</span>
+                        </div>
+                        <div class="note-card-content">
+                            1. Linux/Shell → 2. Git → 3. Docker → 4. Kubernetes → 5. CI/CD → 6. IaC → 7. Monitoring → 8. Security
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(0, 212, 255, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-rocket"></i>
+                    DevOps Yolculuğuna Başlayın!
+                </h2>
+                <div class="section-content">
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Son Tavsiyeler</span>
+                        </div>
+                        <div class="="comment"># Docker version kontrolü</span>
+<span class="keyword">docker</span> --version
+
+<span class="comment"># İlk container çalıştırma</span>
+<span class="keyword">docker</span> run hello-world
+
+<span class="comment"># Ubuntu container başlatma</span>
+<span class="keyword">docker</span> run -it ubuntu:latest bash</code></pre>
+                    </div>
+                    
+                    <div class="output-block">
+                        Docker version 24.0.7, build afdd53b
+                        Hello from Docker!
+                        root@container_id:/#
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-box note-card-icon"></i>
+                            <span class="note-card-title">Container vs Virtual Machine</span>
+                        </div>
+                        <div class="note-card-content">
+                            Containerlar host işletim sisteminin kernel'ini paylaşır, VM'ler ise her biri kendi işletim sistemine sahiptir. Bu nedenle containerlar daha hızlı başlar ve daha az kaynak kullanır.
+                        </div>
+                    </div>
+                    
+                    <p><strong>Temel Docker Komutları:</strong></p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Image'ları listeleme</span>
+<span class="keyword">docker</span> images
+
+<span class="comment"># Çalışan container'ları görme</span>
+<span class="keyword">docker</span> ps
+
+<span class="comment"># Tüm container'ları görme</span>
+<span class="keyword">docker</span> ps -a
+
+<span class="comment"># Container durdurma</span>
+<span class="keyword">docker</span> stop container_name
+
+<span class="comment"># Container silme</span>
+<span class="keyword">docker</span> rm container_name</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Pro İpucu:</strong> <span class="kbd">docker system prune</span> komutuyla kullanılmayan image'lar, container'lar ve network'leri temizleyebilirsiniz.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Docker'ın Ana Bileşenleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Image:</strong> Container'ın şablonu</li>
+                                <li><strong>Container:</strong> Çalışan image örneği</li>
+                                <li><strong>Registry:</strong> Image deposu (Docker Hub)</li>
+                                <li><strong>Dockerfile:</strong> Image build talimatları</li>
+                                <li><strong>Volume:</strong> Kalıcı veri saklama</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Container'lar varsayılan olarak stateless'tir. Önemli verileri volume veya bind mount kullanarak saklayın.
+                        </div>
+                    </div>
+                </div>
+            </section>

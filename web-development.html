@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development | Burak Demiröz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(0, 212, 255, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #00d4ff;
+            --skin-color-hover: #00a8cc;
+            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --html-color: #e34c26;
+            --css-color: #1572b6;
+            --js-color: #f7df1e;
+            --node-color: #339933;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-code {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 212, 255, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-code {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+
+        /* Technology Icons */
+        .tech-icon-html { color: var(--html-color); }
+        .tech-icon-css { color: var(--css-color); }
+        .tech-icon-js { color: var(--js-color); }
+        .tech-icon-node { color: var(--node-color); }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block.html-code::before { content: 'HTML'; color: var(--html-color); }
+        .code-block.css-code::before { content: 'CSS'; color: var(--css-color); }
+        .code-block.js-code::before { content: 'JavaScript'; color: var(--js-color); }
+        .code-block.node-code::before { content: 'Node.js'; color: var(--node-color); }
+        
+        .code-block::before {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .function { color: #50fa7b; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        .tag { color: #ff79c6; }
+        .attribute { color: #50fa7b; }
+        .property { color: #66d9ef; }
+        .value { color: #f1fa8c; }
+        
+        /* Output Blocks */
+        .output-block {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+        }
+        
+        .output-block::before {
+            content: '> Output:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Technology Cards */
+        .tech-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tech-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .tech-card-html { border-color: var(--html-color); }
+        .tech-card-css { border-color: var(--css-color); }
+        .tech-card-js { border-color: var(--js-color); }
+        .tech-card-node { border-color: var(--node-color); }
+
+        .tech-card-html:hover { box-shadow: 0 10px 30px rgba(227, 76, 38, 0.3); }
+        .tech-card-css:hover { box-shadow: 0 10px 30px rgba(21, 114, 182, 0.3); }
+        .tech-card-js:hover { box-shadow: 0 10px 30px rgba(247, 223, 30, 0.3); }
+        .tech-card-node:hover { box-shadow: 0 10px 30px rgba(51, 153, 51, 0.3); }
+
+        .tech-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .tech-card-icon {
+            font-size: 32px;
+            margin-right: 15px;
+        }
+
+        .tech-card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-black900);
+        }
+
+        .tech-card-description {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--skin-color), var(--success-color));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-90 { width: 90%; }
+        .progress-85 { width: 85%; }
+        .progress-80 { width: 80%; }
+        .progress-75 { width: 75%; }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+
+            .tech-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <span>Web Development</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#giris" class="active">Web Development Nedir?</a></li>
+            <li><a href="#html" class="html">HTML Temelleri</a></li>
+            <li><a href="#css" class="css">CSS ve Styling</a></li>
+            <li><a href="#javascript" class="js">JavaScript</a></li>
+            <li><a href="#nodejs" class="node">Node.js</a></li>
+            <li><a href="#frontend-backend">Frontend vs Backend</a></li>
+            <li><a href="#tools">Araçlar ve Editörler</a></li>
+            <li><a href="#deployment">Deployment</a></li>
+            <li><a href="#best-practices">En İyi Uygulamalar</a></li>
+            <li><a href="#roadmap">Öğrenme Yol Haritası</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-code"></i>
+                    Web Development
+                </h1>
+                <p class="hero-subtitle">Modern web teknolojileri ile profesyonel web siteleri ve uygulamalar geliştirin</p>
+                <div class="hero-code">
+                    console.log("Hello, Web Developer!");
+                </div>
+            </section>
+
+            <!-- Giriş Section -->
+            <section id="giris" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-globe"></i>
+                    Web Development Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Web Development</strong>, web siteleri ve web uygulamalarının tasarımı, geliştirilmesi ve bakımı sürecidir. Modern web development, kullanıcı deneyimini ön planda tutan, responsive ve performanslı web çözümleri üretmeyi hedefler.
+                    </p>
+                    
+                    <div class="tech-cards">
+                        <div class="tech-card tech-card-html">
+                            <div class="tech-card-header">
+                                <i class="fab fa-html5 tech-card-icon tech-icon-html"></i>
+                                <div class="tech-card-title">HTML</div>
+                            </div>
+                            <div class="tech-card-description">
+                                Web sayfalarının yapısını oluşturan işaretleme dili. İçerik ve anlam sağlar.
+                            </div>
+                        </div>
+
+                        <div class="tech-card tech-card-css">
+                            <div class="tech-card-header">
+                                <i class="fab fa-css3-alt tech-card-icon tech-icon-css"></i>
+                                <div class="tech-card-title">CSS</div>
+                            </div>
+                            <div class="tech-card-description">
+                                Web sayfalarının görsel tasarımını ve stilini kontrol eden stil sayfası dili.
+                            </div>
+                        </div>
+
+                        <div class="tech-card tech-card-js">
+                            <div class="tech-card-header">
+                                <i class="fab fa-js tech-card-icon tech-icon-js"></i>
+                                <div class="tech-card-title">JavaScript</div>
+                            </div>
+                            <div class="tech-card-description">
+                                Web sayfalarına interaktiflik ve dinamik özellikler kazandıran programlama dili.
+                            </div>
+                        </div>
+
+                        <div class="tech-card tech-card-node">
+                            <div class="tech-card-header">
+                                <i class="fab fa-node-js tech-card-icon tech-icon-node"></i>
+                                <div class="tech-card-title">Node.js</div>
+                            </div>
+                            <div class="tech-card-description">
+                                JavaScript'i sunucu tarafında çalıştırmaya olanak tanıyan runtime ortamı.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Kariyer Fırsatları:</strong> Web development alanında frontend developer, backend developer, full-stack developer, DevOps engineer gibi çeşitli roller bulunmaktadır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HTML Section -->
+            <section id="html" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-html5 tech-icon-html"></i>
+                    HTML (HyperText Markup Language)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>HTML</strong>, web sayfalarının temel yapı taşıdır. Semantic (anlamsal) etiketler kullanarak içeriği organize eder ve web tarayıcılarına ne gösterileceğini söyler.
+                    </p>
+                    
+                    <div class="code-block html-code">
+                        <pre><code><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="value">"tr"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>İlk Web Sayfam<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>Merhaba Dünya<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Bu benim ilk HTML sayfam.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>HTML5 Semantic Etiketler:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><code>&lt;header&gt;</code> - Sayfa başlığı</li>
+                                <li><code>&lt;nav&gt;</code> - Navigasyon menüsü</li>
+                                <li><code>&lt;main&gt;</code> - Ana içerik</li>
+                                <li><code>&lt;section&gt;</code> - Bölüm</li>
+                                <li><code>&lt;article&gt;</code> - Makale</li>
+                                <li><code>&lt;aside&gt;</code> - Yan içerik</li>
+                                <li><code>&lt;footer&gt;</code> - Sayfa altbilgisi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-accessibility note-card-icon"></i>
+                            <span class="note-card-title">Erişilebilirlik</span>
+                        </div>
+                        <div class="note-card-content">
+                            HTML yazarken <code>alt</code> attribute'ları, semantic etiketler ve proper heading hierarchy kullanarak erişilebilirliği artırın.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Yaygın Hatalar:</strong> DIV soup (gereksiz div kullanımı), semantic olmayan etiketler, eksik alt attribute'ları ve yanlış heading sırası.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CSS Section -->
+            <section id="css" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-css3-alt tech-icon-css"></i>
+                    CSS (Cascading Style Sheets)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>CSS</strong>, HTML elementlerinin görünümünü kontrol eden stil dilidir. Modern CSS ile responsive tasarımlar, animasyonlar ve karmaşık layoutlar oluşturabilirsiniz.
+                    </p>
+                    
+                    <div class="code-block css-code">
+                        <pre><code><span class="comment">/* CSS Reset */</span>
+<span class="tag">*</span> {
+    <span class="property">margin</span>: <span class="number">0</span>;
+    <span class="property">padding</span>: <span class="number">0</span>;
+    <span class="property">box-sizing</span>: <span class="value">border-box</span>;
+}
+
+<span class="comment">/* Flexbox Layout */</span>
+<span class="tag">.container</span> {
+    <span class="property">display</span>: <span class="value">flex</span>;
+    <span class="property">justify-content</span>: <span class="value">center</span>;
+    <span class="property">align-items</span>: <span class="value">center</span>;
+    <span class="property">min-height</span>: <span class="number">100vh</span>;
+    <span class="property">background</span>: <span class="value">linear-gradient(45deg, #667eea, #764ba2)</span>;
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Modern CSS Özellikleri:</strong> CSS Grid, Flexbox, Custom Properties (--variables), CSS animations ve transforms ile güçlü tasarımlar oluşturun.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--css-color); margin: 20px 0;">CSS Grid vs Flexbox:</h3>
+                    
+                    <div class="code-block css-code">
+                        <pre><code><span class="comment">/* CSS Grid - 2D Layout */</span>
+<span class="tag">.grid-container</span> {
+    <span class="property">display</span>: <span class="value">grid</span>;
+    <span class="property">grid-template-columns</span>: <span class="value">repeat(3, 1fr)</span>;
+    <span class="property">gap</span>: <span class="number">20px</span>;
+}
+
+<span class="comment">/* Flexbox - 1D Layout */</span>
+<span class="tag">.flex-container</span> {
+    <span class="property">display</span>: <span class="value">flex</span>;
+    <span class="property">flex-wrap</span>: <span class="value">wrap</span>;
+    <span class="property">gap</span>: <span class="number">20px</span>;
+}</code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-mobile-alt note-card-icon"></i>
+                            <span class="note-card-title">Responsive Design</span>
+                        </div>
+                        <div class="note-card-content">
+                            <code>@media (max-width: 768px) { ... }</code> - Media queries ile farklı ekran boyutlarına uyum sağlayın. Mobile-first yaklaşımı benimseyin.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- JavaScript Section -->
+            <section id="javascript" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-js tech-icon-js"></i>
+                    JavaScript
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>JavaScript</strong>, web sayfalarına dinamik özellikler ve interaktiflik kazandıran programlama dilidir. Modern JavaScript (ES6+) ile güçlü web uygulamaları geliştirebilirsiniz.
+                    </p>
+                    
+                    <div class="code-block js-code">
+                        <pre><code><span class="comment">// Modern JavaScript (ES6+)</span>
+<span class="keyword">const</span> <span class="function">fetchData</span> = <span class="keyword">async</span> (url) => {
+    <span class="keyword">try</span> {
+        <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(url);
+        <span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="function">json</span>();
+        <span class="keyword">return</span> data;
+    } <span class="keyword">catch</span> (error) {
+        <span class="function">console</span>.<span class="function">error</span>(<span class="string">'Hata:'</span>, error);
+    }
+};
+
+<span class="comment">// DOM Manipulation</span>
+<span class="keyword">const</span> button = document.<span class="function">querySelector</span>(<span class="string">'.btn'</span>);
+button.<span class="function">addEventListener</span>(<span class="string">'click'</span>, () => {
+    document.<span class="function">querySelector</span>(<span class="string">'.content'</span>).innerHTML = <span class="string">'Tıklandı!'</span>;
+});</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>JavaScript Temel Konular:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Variables:</strong> let, const, var</li>
+                                <li><strong>Functions:</strong> Arrow functions, async/await</li>
+                                <li><strong>Objects:</strong> Destructuring, spread operator</li>
+                                <li><strong>Arrays:</strong> map, filter, reduce</li>
+                                <li><strong>Promises:</strong> Asynchronous programming</li>
+                                <li><strong>DOM:</strong> Element selection ve manipulation</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--js-color); margin: 20px 0;">Popular JavaScript Frameworks:</h3>
+                    
+                    <div class="code-block js-code">
+                        <pre><code><span class="comment">// React Component</span>
+<span class="keyword">import</span> React, { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="function">Counter</span>() {
+    <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>);
+    
+    <span class="keyword">return</span> (
+        <span class="tag">&lt;div&gt;</span>
+            <span class="tag">&lt;p&gt;</span>Sayaç: {count}<span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">onClick</span>={() => <span class="function">setCount</span>(count + <span class="number">1</span>)}<span class="tag">&gt;</span>
+                Artır
+            <span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    );
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Framework Seçimi:</strong> React, Vue.js ve Angular en popüler frontend framework'leridir. Projenizin ihtiyaçlarına göre seçim yapın.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Node.js Section -->
+            <section id="nodejs" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-node-js tech-icon-node"></i>
+                    Node.js
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Node.js</strong>, JavaScript'i sunucu tarafında çalıştırmaya olanak tanıyan runtime ortamıdır. V8 JavaScript engine üzerine kurulu olup, yüksek performanslı web sunucuları ve API'ler geliştirmenizi sağlar.
+                    </p>
+                    
+                    <div class="code-block node-code">
+                        <pre><code><span class="comment">// Express.js ile basit web sunucusu</span>
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> app = <span class="function">express</span>();
+
+<span class="comment">// Middleware</span>
+app.<span class="function">use</span>(express.<span class="function">json</span>());
+
+<span class="comment">// Routes</span>
+app.<span class="function">get</span>(<span class="string">'/'</span>, (req, res) => {
+    res.<span class="function">json</span>({ message: <span class="string">'Merhaba Node.js!'</span> });
+});
+
+app.<span class="function">post</span>(<span class="string">'/users'</span>, (req, res) => {
+    <span class="keyword">const</span> { name, email } = req.body;
+    <span class="comment">// Veritabanı işlemleri...</span>
+    res.<span class="function">status</span>(<span class="number">201</span>).<span class="function">json</span>({ id: <span class="number">1</span>, name, email });
+});
+
+<span class="keyword">const</span> PORT = process.env.PORT || <span class="number">3000</span>;
+app.<span class="function">listen</span>(PORT, () => {
+    <span class="function">console</span>.<span class="function">log</span>(<span class="string">`Sunucu ${PORT} portunda çalışıyor`</span>);
+});</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Node.js Kurulumu:</strong> <span class="kbd">node --version</span> ve <span class="kbd">npm --version</span> komutlarıyla kurulumunuzu kontrol edin. NVM kullanarak multiple Node.js versiyonları yönetin.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--node-color); margin: 20px 0;">NPM ve Package Management:</h3>
+                    
+                    <div class="code-block node-code">
+                        <pre><code><span class="comment">// package.json oluşturma</span>
+npm init -y
+
+<span class="comment">// Bağımlılık yükleme</span>
+npm install express mongoose bcryptjs jsonwebtoken
+
+<span class="comment">// Development bağımlılığı</span>
+npm install --save-dev nodemon jest
+
+<span class="comment">// Global paket yükleme</span>
+npm install -g pm2</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Popüler Node.js Modülleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Express.js:</strong> Web framework</li>
+                                <li><strong>Mongoose:</strong> MongoDB ODM</li>
+                                <li><strong>Socket.io:</strong> Real-time communication</li>
+                                <li><strong>Passport.js:</strong> Authentication</li>
+                                <li><strong>Joi:</strong> Data validation</li>
+                                <li><strong>Lodash:</strong> Utility library</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-database note-card-icon"></i>
+                            <span class="note-card-title">Veritabanı Entegrasyonu</span>
+                        </div>
+                        <div class="note-card-content">
+                            Node.js ile MongoDB, PostgreSQL, MySQL gibi veritabanlarını kullanabilirsiniz. ORM/ODM araçları: Mongoose, Sequelize, Prisma.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Frontend vs Backend Section -->
+            <section id="frontend-backend" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-layer-group"></i>
+                    Frontend vs Backend
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Web development iki ana alana ayrılır: <strong>Frontend</strong> (kullanıcının gördüğü kısım) ve <strong>Backend</strong> (sunucu tarafındaki logic ve veri yönetimi).
+                    </p>
+
+                    <div class="tech-cards">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-desktop tech-card-icon tech-icon-css"></i>
+                                <div class="tech-card-title">Frontend Development</div>
+                            </div>
+                            <div class="tech-card-description">
+                                <strong>Teknolojiler:</strong> HTML, CSS, JavaScript, React, Vue.js, Angular<br>
+                                <strong>Sorumluluklar:</strong> UI/UX, responsive design, performans optimizasyonu
+                            </div>
+                        </div>
+
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-server tech-card-icon tech-icon-node"></i>
+                                <div class="tech-card-title">Backend Development</div>
+                            </div>
+                            <div class="tech-card-description">
+                                <strong>Teknolojiler:</strong> Node.js, Python, Java, PHP, databases<br>
+                                <strong>Sorumluluklar:</strong> API geliştirme, veritabanı yönetimi, güvenlik
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Full-Stack Developer:</strong> Hem frontend hem backend teknolojilerinde uzman olan geliştiricilerdir. MEAN, MERN, LAMP gibi stack'leri kullanırlar.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-exchange-alt note-card-icon"></i>
+                            <span class="note-card-title">API Communication</span>
+                        </div>
+                        <div class="note-card-content">
+                            Frontend ve backend arasında veri alışverişi REST API'ler veya GraphQL ile yapılır. JSON formatı yaygın olarak kullanılır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tools Section -->
+            <section id="tools" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tools"></i>
+                    Araçlar ve Editörler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Web development sürecinde kullanılan temel araçlar ve editörler üretkenliğinizi artıracak ve geliştirme deneyiminizi iyileştirecektir.
+                    </p>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Code Editörleri:</h3>
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <ul style="margin-left: 20px;">
+                                <li><strong>Visual Studio Code:</strong> En popüler, ücretsiz, extension desteği</li>
+                                <li><strong>WebStorm:</strong> JetBrains'in güçlü IDE'si</li>
+                                <li><strong>Sublime Text:</strong> Hızlı ve hafif</li>
+                                <li><strong>Atom:</strong> GitHub tarafından geliştirilen</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Version Control:</h3>
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Git temel komutlar</span>
+git init
+git add .
+git commit -m <span class="string">"İlk commit"</span>
+git push origin main
+
+<span class="comment"># Branch işlemleri</span>
+git checkout -b feature/yeni-ozellik
+git merge feature/yeni-ozellik</code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fab fa-github note-card-icon"></i>
+                            <span class="note-card-title">GitHub/GitLab</span>
+                        </div>
+                        <div class="note-card-content">
+                            Git repository'lerini host etmek, collaborative development ve CI/CD için GitHub, GitLab veya Bitbucket kullanın.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Build Tools ve Task Runners:</h3>
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <ul style="margin-left: 20px;">
+                                <li><strong>Webpack:</strong> Module bundler</li>
+                                <li><strong>Vite:</strong> Fast build tool</li>
+                                <li><strong>Parcel:</strong> Zero-config bundler</li>
+                                <li><strong>Gulp:</strong> Task automation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deployment Section -->
+            <section id="deployment" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    Deployment ve Hosting
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Geliştirdiğiniz web uygulamalarını canlıya almak için çeşitli hosting ve deployment seçenekleri mevcuttur.
+                    </p>
+
+                    <div class="tech-cards">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-rocket tech-card-icon tech-icon-html"></i>
+                                <div class="tech-card-title">Static Hosting</div>
+                            </div>
+                            <div class="tech-card-description">
+                                <strong>Platformlar:</strong> Netlify, Vercel, GitHub Pages<br>
+                                <strong>Uygun:</strong> Static siteler, SPA'ler, JAMStack uygulamaları
+                            </div>
+                        </div>
+
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-server tech-card-icon tech-icon-node"></i>
+                                <div class="tech-card-title">Full-Stack Hosting</div>
+                            </div>
+                            <div class="tech-card-description">
+                                <strong>Platformlar:</strong> Heroku, DigitalOcean, AWS, Google Cloud<br>
+                                <strong>Uygun:</strong> Node.js apps, databases, complex backends
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-block node-code">
+                        <pre><code><span class="comment">// Heroku deployment için package.json script</span>
+{
+  <span class="string">"scripts"</span>: {
+    <span class="string">"start"</span>: <span class="string">"node server.js"</span>,
+    <span class="string">"dev"</span>: <span class="string">"nodemon server.js"</span>
+  },
+  <span class="string">"engines"</span>: {
+    <span class="string">"node"</span>: <span class="string">"16.x"</span>
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>CI/CD Pipeline:</strong> GitHub Actions, GitLab CI veya Jenkins kullanarak otomatik deployment süreçleri oluşturun.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-shield-alt note-card-icon"></i>
+                            <span class="note-card-title">Domain ve SSL</span>
+                        </div>
+                        <div class="note-card-content">
+                            Custom domain adı ve SSL sertifikası ile profesyonel bir görünüm kazandırın. Let's Encrypt ile ücretsiz SSL alabilirsiniz.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Best Practices Section -->
+            <section id="best-practices" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    En İyi Uygulamalar
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Kaliteli ve sürdürülebilir web uygulamaları geliştirmek için takip etmeniz gereken en iyi uygulamalar:
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Code Quality:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Clean, readable kod yazın</li>
+                                <li>Meaningful variable ve function isimleri kullanın</li>
+                                <li>Code comments ekleyin</li>
+                                <li>DRY (Don't Repeat Yourself) prensibini uygulayın</li>
+                                <li>ESLint ve Prettier kullanın</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Güvenlik:</strong> Input validation, SQL injection koruması, XSS prevention, HTTPS kullanımı, secure headers ve authentication/authorization sistemleri hayati önem taşır.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Performance:</strong> Image optimization, minification, caching, lazy loading ve CDN kullanımı ile sayfalarınızın hızını artırın.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-mobile-alt note-card-icon"></i>
+                            <span class="note-card-title">Responsive Design</span>
+                        </div>
+                        <div class="note-card-content">
+                            Mobile-first yaklaşımı benimseyin. Flexbox ve CSS Grid kullanın. Touch-friendly interface tasarlayın.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-users note-card-icon"></i>
+                            <span class="note-card-title">User Experience</span>
+                        </div>
+                        <div class="note-card-content">
+                            Intuitive navigation, fast loading times, error handling ve accessibility standards ile kullanıcı deneyimini optimize edin.
+                        </div>
+                    </div>
+                </div>
+            </section>

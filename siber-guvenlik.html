@@ -695,38 +695,39 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-title">Güvenlik Konuları</div>
         <ul class="sidebar-menu">
-            <li><a href="#web-basics" class="active">Web Temelleri</a></li>
+            <li><a href="#web-basics" class="active">Web Basics</a></li>
             <li><a href="#owasp-top10">OWASP Top 10</a></li>
             <li><a href="#sql-injection">SQL Injection</a></li>
             <li><a href="#path-traversal">Path Traversal</a></li>
-            <li><a href="#information-disclosure">Bilgi İfşası</a></li>
-            <li><a href="#file-upload">Dosya Yükleme</a></li>
-            <li><a href="#command-injection">Komut Enjeksiyonu</a></li>
-            <li><a href="#business-logic">İş Mantığı Açıkları</a></li>
-            <li><a href="#authentication">Kimlik Doğrulama</a></li>
-            <li><a href="#access-control">Erişim Kontrolü</a></li>
-            <li><a href="#ssrf">SSRF ve IDOR</a></li>
+            <li><a href="#information-disclosure">Information Disclosure</a></li>
+            <li><a href="#file-upload">File Upload Vulnerabilities</a></li>
+            <li><a href="#command-injection">OS Command Injection</a></li>
+            <li><a href="#business-logic">Business Logic Vulnerabilities</a></li>
+            <li><a href="#authentication">Authentication Vulnerabilities</a></li>
+            <li><a href="#access-control">Access Control Vulnerabilities</a></li>
+            <li><a href="#ssrf">SSRF</a></li>
             <li><a href="#template-injection">Template Injection</a></li>
-            <li><a href="#jwt">JWT</a></li>
-            <li><a href="#xss">XSS</a></li>
-            <li><a href="#csrf">CSRF</a></li>
+            <li><a href="#jwt">JSON Web Tokens</a></li>
+            <li><a href="#xss">Cross-site Scripting (XSS)</a></li>
+            <li><a href="#csrf">Cross-site Request Forgery (CSRF)</a></li>
             <li><a href="#clickjacking">Clickjacking</a></li>
-            <li><a href="#dom-based">DOM Tabanlı Açıklar</a></li>
+            <li><a href="#dom-based">DOM-based Vulnerabilities</a></li>
             <li><a href="#cors">CORS</a></li>
-            <li><a href="#xxe">XXE</a></li>
+            <li><a href="#xxe">XXE Injection</a></li>
             <li><a href="#request-smuggling">HTTP Request Smuggling</a></li>
             <li><a href="#websockets">WebSockets</a></li>
-            <li><a href="#cache-poisoning">Cache Poisoning</a></li>
-            <li><a href="#deserialization">Deserialization</a></li>
-            <li><a href="#host-header">Host Header Attacks</a></li>
-            <li><a href="#oauth">OAuth</a></li>
+            <li><a href="#cache-poisoning">Web Cache Poisoning</a></li>
+            <li><a href="#deserialization">Insecure Deserialization</a></li>
+            <li><a href="#host-header">HTTP Host Header Attacks</a></li>
+            <li><a href="#oauth">OAuth Authentication</a></li>
+            <li><a href="#essential-skills">Essential Skills</a></li>
             <li><a href="#prototype-pollution">Prototype Pollution</a></li>
-            <li><a href="#graphql">GraphQL</a></li>
+            <li><a href="#graphql">GraphQL API Vulnerabilities</a></li>
             <li><a href="#race-conditions">Race Conditions</a></li>
             <li><a href="#nosql">NoSQL Injection</a></li>
             <li><a href="#api-testing">API Testing</a></li>
             <li><a href="#web-llm">Web LLM Attacks</a></li>
-            <li><a href="#cache-deception">Cache Deception</a></li>
+            <li><a href="#cache-deception">Web Cache Deception</a></li>
         </ul>
     </aside>
 
@@ -1089,7 +1090,341 @@ Access-Control-Allow-Methods: GET, POST</code></pre>
                 </div>
             </section>
 
-            <!-- WebSockets Section -->
+            <!-- HTTP Request Smuggling Section -->
+            <section id="request-smuggling" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-exchange-alt"></i>
+                    HTTP Request Smuggling
+                </h2>
+                <div class="section-content">
+                    <p>
+                        HTTP request smuggling, front-end ve back-end sunucular arasındaki HTTP istek ayrıştırma farklarından yararlanan gelişmiş bir saldırı tekniğidir.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code>// CL.TE (Content-Length vs Transfer-Encoding)
+POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 13
+Transfer-Encoding: chunked
+
+0
+
+SMUGGLED</code></pre>
+                    </div>
+
+                    <div class="critical-box">
+                        <div class="critical-box-content">
+                            <strong>Request Smuggling Türleri:</strong><br>
+                            • CL.TE: Content-Length önce işlenir<br>
+                            • TE.CL: Transfer-Encoding önce işlenir<br>
+                            • TE.TE: Çifte Transfer-Encoding<br>
+                            • CL.CL: Çifte Content-Length
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cache Poisoning Section -->
+            <section id="cache-poisoning" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-database"></i>
+                    Web Cache Poisoning
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Web cache poisoning, cache mekanizmasını manipüle ederek zararlı içeriği diğer kullanıcılara servis etmeye yönelik saldırı türüdür.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code>// Cache key pollution
+GET /?callback=alert(1) HTTP/1.1
+Host: vulnerable-website.com
+X-Forwarded-Host: evil.com
+
+// Unkeyed header exploitation
+GET / HTTP/1.1
+Host: vulnerable-website.com
+X-Forwarded-Proto: https://evil.com</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Cache Poisoning Vektörleri:</strong><br>
+                            • HTTP header manipulation<br>
+                            • Parameter pollution<br>
+                            • Unkeyed inputs exploitation<br>
+                            • Cache key collision
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deserialization Section -->
+            <section id="deserialization" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-archive"></i>
+                    Insecure Deserialization
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Güvensiz deserialization, serialize edilmiş nesnelerin güvensiz şekilde deserialize edilmesi sonucu ortaya çıkan güvenlik açığıdır.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code>// Java deserialization payload
+aced0005737200116a6176612e7574696c2e48617368536574...
+
+// PHP deserialization
+O:4:"User":2:{s:4:"name";s:5:"admin";s:4:"role";s:5:"admin";}
+
+// Python pickle
+c__builtin__
+eval
+(S'__import__("os").system("rm -rf /")'
+tR.</code></pre>
+                    </div>
+
+                    <div class="critical-box">
+                        <div class="critical-box-content">
+                            <strong>Deserialization Riskleri:</strong><br>
+                            • Remote code execution<br>
+                            • Privilege escalation<br>
+                            • DoS attacks<br>
+                            • Object injection
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Host Header Attacks Section -->
+            <section id="host-header" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-server"></i>
+                    HTTP Host Header Attacks
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Host header saldırıları, HTTP Host başlığının manipüle edilmesi yoluyla gerçekleştirilen saldırı türleridir.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code>// Host header injection
+GET /password-reset HTTP/1.1
+Host: evil.com
+...
+
+// Virtual host bypass
+GET /admin HTTP/1.1
+Host: localhost
+
+// Host header authentication bypass
+GET /admin HTTP/1.1  
+Host: internal-admin.com</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Host Header Saldırı Türleri:</strong><br>
+                            • Password reset poisoning<br>
+                            • Virtual host bypass<br>
+                            • Authentication bypass<br>
+                            • Cache poisoning via Host header
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- OAuth Section -->
+            <section id="oauth" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-key"></i>
+                    OAuth Authentication Vulnerabilities
+                </h2>
+                <div class="section-content">
+                    <p>
+                        OAuth kimlik doğrulama sistemlerindeki güvenlik açıkları, yetkilendirme akışının yanlış implementasyonundan kaynaklanır.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code>// OAuth redirect URI manipulation
+https://oauth-server.com/auth?
+client_id=123&
+redirect_uri=https://evil.com&
+response_type=code&
+scope=openid%20profile
+
+// State parameter bypass
+https://client.com/oauth-callback?
+code=AUTH_CODE_HERE
+// Missing state parameter</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>OAuth Güvenlik Riskleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Redirect URI manipulation</strong></li>
+                                <li><strong>State parameter bypass</strong></li>
+                                <li><strong>Authorization code interception</strong></li>
+                                <li><strong>Scope escalation</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Essential Skills Section (moved) -->
+            <section id="essential-skills" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tools"></i>
+                    Essential Skills (Temel Beceriler)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Web güvenliği alanında uzmanlaşmak için gerekli temel beceriler ve bilgi alanları.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Teknik Beceriler:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Network protocols:</strong> HTTP/HTTPS, TCP/IP, DNS</li>
+                                <li><strong>Web technologies:</strong> HTML, CSS, JavaScript, AJAX</li>
+                                <li><strong>Server-side languages:</strong> PHP, Python, Java, .NET</li>
+                                <li><strong>Databases:</strong> SQL, NoSQL query languages</li>
+                                <li><strong>Operating systems:</strong> Linux, Windows command line</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Güvenlik Araçları Uzmanlığı:</strong><br>
+                            • Burp Suite - Professional web testing<br>
+                            • OWASP ZAP - Open source scanner<br>
+                            • Nmap - Network discovery<br>
+                            • Metasploit - Penetration testing framework<br>
+                            • Wireshark - Network protocol analyzer
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-certificate note-card-icon"></i>
+                            <span class="note-card-title">Sertifikasyon Yolları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Entry-level:</strong> Security+, GSEC<br>
+                            <strong>Intermediate:</strong> CEH, GCIH, GWEB<br>
+                            <strong>Advanced:</strong> OSCP, CISSP, SABSA<br>
+                            <strong>Specialist:</strong> GWEB, GWAPT, GMOB
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Prototype Pollution Section -->
+            <section id="prototype-pollution" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-code-branch"></i>
+                    Prototype Pollution
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Prototype pollution, JavaScript'te Object.prototype'ı manipüle ederek uygulama davranışını değiştiren client-side saldırı türüdür.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code>// Prototype pollution payload
+{
+  "__proto__": {
+    "isAdmin": true,
+    "role": "administrator"
+  }
+}
+
+// Via constructor
+{
+  "constructor": {
+    "prototype": {
+      "isAdmin": true
+    }
+  }
+}
+
+// URL parameter pollution
+/?__proto__[isAdmin]=true</code></pre>
+                    </div>
+
+                    <div class="critical-box">
+                        <div class="critical-box-content">
+                            <strong>Prototype Pollution Etkileri:</strong><br>
+                            • Property injection into Object.prototype<br>
+                            • Authentication bypass<br>
+                            • Privilege escalation<br>
+                            • RCE via code execution contexts
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Korunma:</strong> Object.freeze(Object.prototype) kullanın ve recursive merge işlemlerini dikkatli yapın.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Race Conditions Section -->
+            <section id="race-conditions" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-stopwatch"></i>
+                    Race Conditions (Yarış Durumları)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Race condition saldırıları, eşzamanlı istekler göndererek uygulamanın tutarlılık kontrollerini aşmayı hedefler.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code>// Race condition exploitation
+for i in range(100):
+    threading.Thread(
+        target=transfer_money, 
+        args=(account1, account2, 1000)
+    ).start()
+
+// Time-of-check vs time-of-use
+if (user.balance >= amount):
+    # VULNERABLE WINDOW
+    user.balance -= amount
+    transfer(amount)</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Race Condition Türleri:</strong><br>
+                            • Limit bypass (rate limiting, transaction limits)<br>
+                            • Double spending attacks<br>
+                            • Resource exhaustion<br>
+                            • Time-of-check vs time-of-use (TOCTTOU)
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lock note-card-icon"></i>
+                            <span class="note-card-title">Korunma Yöntemleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Database locks:</strong> Atomic transactions<br>
+                            <strong>Mutex/Semaphore:</strong> Critical section protection<br>
+                            <strong>Rate limiting:</strong> Request throttling<br>
+                            <strong>Idempotency:</strong> Safe repeated operations
+                        </div>
+                    </div>
+                </div>
+            </section>
             <section id="websockets" class="content-section">
                 <h2 class="section-title">
                     <i class="fas fa-plug"></i>
@@ -1422,169 +1757,46 @@ for i in range(1000):
                 </div>
             </section>
 
-            <!-- Final Summary Section -->
-            <section class="content-section" style="text-align: center; background: rgba(255, 51, 51, 0.05);">
-                <h2 class="section-title" style="justify-content: center;">
-                    <i class="fas fa-shield-alt"></i>
-                    Güvenli Geliştirme Prensipleri
-                </h2>
-                <div class="section-content">
-                    <div class="critical-box">
-                        <div class="critical-box-content" style="text-align: left;">
-                            <strong>Security by Design:</strong> Güvenliği baştan tasarlayın<br>
-                            <strong>Defense in Depth:</strong> Katmanlı güvenlik stratejisi<br>
-                            <strong>Principle of Least Privilege:</strong> Minimum yetki prensibi<br>
-                            <strong>Fail Secure:</strong> Hata durumunda güvenli davranış<br>
-                            <strong>Security Testing:</strong> Düzenli güvenlik testleri
-                        </div>
-                    </div>
-
-                    <div class="note-card" style="margin-top: 30px; text-align: left;">
-                        <div class="note-card-header">
-                            <i class="fas fa-exclamation-triangle note-card-icon"></i>
-                            <span class="note-card-title">Son Uyarılar</span>
-                        </div>
-                        <div class="note-card-content">
-                            <strong>Sürekli öğrenin:</strong> Güvenlik tehditleri sürekli evrilir<br>
-                            <strong>Güncel kalın:</strong> CVE listelerini ve güvenlik bültenlerini takip edin<br>
-                            <strong>Etik davranın:</strong> Öğrendiğiniz teknikleri sadece savunma amaçlı kullanın<br>
-                            <strong>Topluluk:</strong> Güvenlik topluluklarına katılın ve deneyim paylaşın
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 30px;">
-                        <span style="color: var(--skin-color); font-size: 48px;">
-                            <i class="fas fa-shield-halved"></i>
-                        </span>
-                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
-                            Security.log("Güvenli kodlama başarılar!");
-                        </p>
+        <!-- Final Summary Section -->
+        <section class="content-section" style="text-align: center; background: rgba(255, 51, 51, 0.05); margin-bottom: 100px;">
+            <h2 class="section-title" style="justify-content: center;">
+                <i class="fas fa-shield-alt"></i>
+                Güvenli Geliştirme Prensipleri
+            </h2>
+            <div class="section-content">
+                <div class="critical-box">
+                    <div class="critical-box-content" style="text-align: left;">
+                        <strong>Security by Design:</strong> Güvenliği baştan tasarlayın<br>
+                        <strong>Defense in Depth:</strong> Katmanlı güvenlik stratejisi<br>
+                        <strong>Principle of Least Privilege:</strong> Minimum yetki prensibi<br>
+                        <strong>Fail Secure:</strong> Hata durumunda güvenli davranış<br>
+                        <strong>Security Testing:</strong> Düzenli güvenlik testleri
                     </div>
                 </div>
-            </section>
-        </div>
-    </main>
 
-    <!-- JavaScript -->
-    <script>
-        // Sidebar Toggle
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('active');
-        }
+                <div class="note-card" style="margin-top: 30px; text-align: left;">
+                    <div class="note-card-header">
+                        <i class="fas fa-exclamation-triangle note-card-icon"></i>
+                        <span class="note-card-title">Son Uyarılar</span>
+                    </div>
+                    <div class="note-card-content">
+                        <strong>Sürekli öğrenin:</strong> Güvenlik tehditleri sürekli evrilir<br>
+                        <strong>Güncel kalın:</strong> CVE listelerini ve güvenlik bültenlerini takip edin<br>
+                        <strong>Etik davranın:</strong> Öğrendiğiniz teknikleri sadece savunma amaçlı kullanın<br>
+                        <strong>Topluluk:</strong> Güvenlik topluluklarına katılın ve deneyim paylaşın
+                    </div>
+                </div>
 
-        // Active Menu Item
-        const menuItems = document.querySelectorAll('.sidebar-menu a');
-        const sections = document.querySelectorAll('.content-section');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= sectionTop - 100) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            menuItems.forEach(item => {
-                item.classList.remove('active');
-                if (current && item.getAttribute('href').includes(current)) {
-                    item.classList.add('active');
-                }
-            });
-        });
-
-        // Smooth Scroll
-        menuItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = item.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                    targetSection.scrollIntoView({ behavior: 'smooth' });
-                }
-                
-                // Close sidebar on mobile
-                if (window.innerWidth <= 1024) {
-                    toggleSidebar();
-                }
-            });
-        });
-
-        // Interactive Note Cards
-        const noteCards = document.querySelectorAll('.note-card');
-        noteCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-3px) scale(1.02)';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(-2px) scale(1.0)';
-            });
-        });
-
-        // Vulnerability Level Animation
-        const vulnLevels = document.querySelectorAll('.vuln-level.critical');
-        vulnLevels.forEach(level => {
-            level.addEventListener('mouseenter', () => {
-                level.style.animation = 'critical-glow 0.5s ease-in-out infinite';
-            });
-            
-            level.addEventListener('mouseleave', () => {
-                level.style.animation = '';
-            });
-        });
-
-        // Console Security Messages
-        console.log('%c🛡️ Web Security Portal', 'color: #ff3333; font-size: 20px; font-weight: bold;');
-        console.log('%c> Security theme initialized', 'color: #ff3333; font-family: monospace;');
-        console.log('%c> Vulnerability scanner activated', 'color: #ff3333; font-family: monospace;');
-        console.log('%c> Defense systems online', 'color: #50fa7b; font-family: monospace;');
-        console.log('%c> console.log("Stay secure!");', 'color: #ff0000; font-family: monospace; font-weight: bold;');
-
-        // Security Scan Progress
-        window.addEventListener('scroll', () => {
-            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
-        });
-
-        // Add security scan progress CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            html::after {
-                content: '';
-                position: fixed;
-                top: 70px;
-                left: 0;
-                width: var(--scroll-progress, 0%);
-                height: 2px;
-                background: linear-gradient(90deg, var(--skin-color), rgba(255, 51, 51, 0.5));
-                z-index: 9999;
-                transition: width 0.1s ease;
-                box-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
-            }
-
-            @keyframes critical-glow {
-                0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
-                50% { box-shadow: 0 0 20px rgba(255, 0, 0, 1); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Security Level Counter
-        let securityScanProgress = 0;
-        setInterval(() => {
-            securityScanProgress = (securityScanProgress + 1) % 100;
-            if (securityScanProgress === 0) {
-                console.log('%c> Security scan complete: All vulnerabilities documented', 'color: #50fa7b; font-family: monospace;');
-            }
-        }, 200);
-    </script>
-</body>
-</html>
-
-            <!-- Web Basics Section -->
+                <div style="margin-top: 30px;">
+                    <span style="color: var(--skin-color); font-size: 48px;">
+                        <i class="fas fa-shield-halved"></i>
+                    </span>
+                    <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                        Security.log("Güvenli kodlama başarılar!");
+                    </p>
+                </div>
+            </div>
+                        <!-- Web Basics Section -->
             <section id="web-basics" class="content-section">
                 <h2 class="section-title">
                     <i class="fas fa-globe"></i>
@@ -1822,7 +2034,7 @@ if(isset($_GET['cmd'])) {
 // Kullanım: uploaded-file.php?cmd=whoami</code></pre>
                     </div>
 
-                    <div name="note-card">
+                    <div class="note-card">
                         <div class="note-card-header">
                             <i class="fas fa-check-circle note-card-icon"></i>
                             <span class="note-card-title">Güvenli Dosya Yükleme</span>
@@ -1867,9 +2079,9 @@ system("ping -c 4 " . $_GET['host']);
                         </div>
                     </div>
 
-                    <div name="pro-tip-box">
+                    <div class="pro-tip-box">
                         <div class="pro-tip-box-content">
-                            <strong>⚠️ Önlem:</strong> Kullanıcı girişini sistem komutlarında kullanmaktan kaçının. Gerekirse whitelist ile sınırlandırın.
+                            <strong>Önlem:</strong> Kullanıcı girişini sistem komutlarında kullanmaktan kaçının. Gerekirse whitelist ile sınırlandırın.
                         </div>
                     </div>
                 </div>
@@ -1987,3 +2199,128 @@ http://example.com/user-profile?id=124</code></pre>
                     </div>
                 </div>
             </section>
+            
+        </section>
+    </div>
+</main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (current && item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile only
+                const sidebar = document.getElementById('sidebar');
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Vulnerability Level Animation
+        const vulnLevels = document.querySelectorAll('.vuln-level.critical');
+        vulnLevels.forEach(level => {
+            level.addEventListener('mouseenter', () => {
+                level.style.animation = 'critical-glow 0.5s ease-in-out infinite';
+            });
+            
+            level.addEventListener('mouseleave', () => {
+                level.style.animation = '';
+            });
+        });
+
+        // Console Security Messages
+        console.log('%c🛡️ Web Security Portal', 'color: #ff3333; font-size: 20px; font-weight: bold;');
+        console.log('%c> Security theme initialized', 'color: #ff3333; font-family: monospace;');
+        console.log('%c> Vulnerability scanner activated', 'color: #ff3333; font-family: monospace;');
+        console.log('%c> Defense systems online', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> console.log("Stay secure!");', 'color: #ff0000; font-family: monospace; font-weight: bold;');
+
+        // Security Scan Progress
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add security scan progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(255, 51, 51, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+                box-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
+            }
+
+            @keyframes critical-glow {
+                0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+                50% { box-shadow: 0 0 20px rgba(255, 0, 0, 1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Security Level Counter
+        let securityScanProgress = 0;
+        setInterval(() => {
+            securityScanProgress = (securityScanProgress + 1) % 100;
+            if (securityScanProgress === 0) {
+                console.log('%c> Security scan complete: All vulnerabilities documented', 'color: #50fa7b; font-family: monospace;');
+            }
+        }, 200);
+    </script>
+</body>
+</html>
+

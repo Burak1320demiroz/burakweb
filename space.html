@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uzay | Evrenin Sırları</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Space Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(138, 43, 226, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #8a2be2;
+            --skin-color-hover: #6a1b9a;
+            --neon-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            --text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --light-color: #ffd700;
+            --blackhole-color: #4b0082;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Stars Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #ddd, transparent);
+            background-size: 200px 100px;
+            animation: stars-move 50s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes stars-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-200px, -100px); }
+        }
+        
+        /* Space Nebula Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, rgba(75, 0, 130, 0.05) 40%, transparent 70%);
+            top: 30%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            animation: nebula-pulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes nebula-pulse {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.2); }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-rocket {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+            animation: rocket-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes rocket-glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.8)); }
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(138, 43, 226, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.1);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-rocket {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.8));
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-quote {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-quote::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.2), transparent);
+            animation: cosmic-sweep 4s infinite;
+        }
+        
+        @keyframes cosmic-sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 5s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Special Theme Boxes */
+        .info-box {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Light Box - Golden theme */
+        .light-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .light-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--light-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            animation: light-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes light-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .light-box-content {
+            padding-left: 40px;
+            color: var(--light-color);
+        }
+
+        /* Blackhole Box - Dark purple theme */
+        .blackhole-box {
+            background: rgba(75, 0, 130, 0.2);
+            border: 1px solid rgba(75, 0, 130, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blackhole-box::before {
+            content: '\f111';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--blackhole-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 15px rgba(75, 0, 130, 0.8));
+            animation: blackhole-spin 4s linear infinite;
+        }
+        
+        @keyframes blackhole-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        .blackhole-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30px 30px, transparent 20px, rgba(75, 0, 130, 0.1) 21px);
+            pointer-events: none;
+        }
+        
+        .blackhole-box-content {
+            padding-left: 40px;
+            color: var(--blackhole-color);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Metric Display */
+        .metric-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            border-color: var(--skin-color);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--skin-color);
+            margin-bottom: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-label {
+            color: var(--text-black700);
+            font-size: 14px;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+
+            .metric-display {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>Uzay</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#uzay-nedir" class="active">Uzay Nedir?</a></li>
+            <li><a href="#uzayin-yapisi">Uzayın Yapısı</a></li>
+            <li><a href="#isik-tanimi">Işık Nedir?</a></li>
+            <li><a href="#isik-hizi">Işık Hızı</a></li>
+            <li><a href="#isik-spektrum">Işık Spektrumu</a></li>
+            <li><a href="#karadelik-nedir">Karadelik Nedir?</a></li>
+            <li><a href="#karadelik-olusumu">Karadelik Oluşumu</a></li>
+            <li><a href="#karadelik-cesitleri">Karadelik Çeşitleri</a></li>
+            <li><a href="#event-horizon">Olay Ufku</a></li>
+            <li><a href="#hawking-radyasyon">Hawking Radyasyonu</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-rocket"></i>
+                    Uzayın Sırları
+                </h1>
+                <p class="hero-subtitle">
+                    Sonsuz evrenin derinliklerinde yolculuk: Uzay, Işık ve Karadelikler
+                </p>
+                <div class="hero-quote">
+                    "İki şey sonsuzdur: evren ve insanın aptallığı; evren hakkında emin değilim." - Einstein
+                </div>
+            </section>
+
+            <!-- Uzay Nedir Section -->
+            <section id="uzay-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-globe"></i>
+                    Uzay Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Uzay</strong>, Dünya'nın atmosferinin ötesinde uzanan, madde yoğunluğunun son derece düşük olduğu üç boyutlu alandır. Genellikle Dünya'dan 100 kilometre yukarıda bulunan Kármán Çizgisi'nden itibaren uzayın başladığı kabul edilir.
+                    </p>
+                    <p>
+                        Uzay, tamamen boş bir alan değildir. İçinde çok düşük yoğunlukta gaz molekülleri, kozmik radyasyon, manyetik alanlar ve çeşitli partiküller bulunur. Bu "vakum" ortamında, madde yoğunluğu Dünya'daki havanın trilyonlarca katı daha azdır.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Uzayın Temel Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Çok düşük basınç (neredeyse vakum)</li>
+                                <li>• Ekstrem sıcaklık değişimleri</li>
+                                <li>• Güçlü radyasyon maruziyeti</li>
+                                <li>• Yerçekiminin zayıflaması</li>
+                                <li>• Ses dalgalarının yayılamaması</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="metric-display">
+                        <div class="metric-card">
+                            <div class="metric-value">100 km</div>
+                            <div class="metric-label">Kármán Çizgisi</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">-270°C</div>
+                            <div class="metric-label">Uzayın Sıcaklığı</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">93.8 Milyar</div>
+                            <div class="metric-label">Işık Yılı Çapı</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-satellite note-card-icon"></i>
+                            <span class="note-card-title">Uzay Araştırmaları</span>
+                        </div>
+                        <div class="note-card-content">
+                            1957'de Sputnik 1 ile başlayan uzay çağından bu yana, insanoğlu Ay'a ayak basmış, Mars'a keşif araçları göndermiş ve Güneş Sistemi'nin sınırlarını aşmıştır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Uzayın Yapısı Section -->
+            <section id="uzayin-yapisi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-atoms"></i>
+                    Uzayın Yapısı ve Bileşenleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Uzay, farklı boyutlarda ve yapılarda birçok gök cismi içerir. Bu cisimler, güneş sistemleri, galaksiler ve galaksi kümeleri halinde organize olmuş durumdadır.
+                    </p>
+                    
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Karanlık Madde ve Karanlık Enerji:</strong> Evrenin %95'ini oluşturan bu gizemli bileşenler hakkında hâlâ çok az şey biliyoruz. Sadece %5'i bizim gözlemleyebildiğimiz normal maddeden oluşur.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">Yıldızlar ve Gezegenler</span>
+                        </div>
+                        <div class="note-card-content">
+                            Samanyolu Galaksisi'nde yaklaşık 400 milyar yıldız bulunur. Bu yıldızların çoğunun etrafında gezegen sistemleri döner. Bilim insanları şimdiye kadar 5000'den fazla ötegezegenin varlığını doğruladı.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Işık Tanımı Section -->
+            <section id="isik-tanimi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Işık Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Işık</strong>, elektromanyetik spektrumun görünür kısmını oluşturan elektromanyetik radyasyondur. Hem dalga hem de parçacık (foton) özelliği gösteren ikili yapısıyla, fiziğin en temel ve gizemli fenomenlerinden biridir.
+                    </p>
+                    <p>
+                        Işık, elektrik ve manyetik alanların birbirine dik olarak salınım yaptığı, uzayda yayılan enerji dalgalarıdır. Vakumda saniyede yaklaşık 300.000 kilometre hızla hareket eder ve evrendeki en hızlı fenomendir.
+                    </p>
+                    
+                    <div class="light-box">
+                        <div class="light-box-content">
+                            <strong>Işığın Temel Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Dalga-parçacık ikiliği (wave-particle duality)</li>
+                                <li>• Elektromanyetik radyasyon</li>
+                                <li>• Kırılma ve yansıma özelliği</li>
+                                <li>• Frekans ve dalga boyu ile karakterize edilir</li>
+                                <li>• Enerji taşır (E = hf)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-eye note-card-icon"></i>
+                            <span class="note-card-title">Görünür Işık Spektrumu</span>
+                        </div>
+                        <div class="note-card-content">
+                            İnsan gözünün algılayabildiği ışık, yaklaşık 380-700 nanometre dalga boyu arasındadır. Bu aralık mor, mavi, yeşil, sarı, turuncu ve kırmızı renklerini içerir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Işık Hızı Section -->
+            <section id="isik-hizi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Işık Hızı ve Önemi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Işık hızı (c)</strong>, evrendeki fiziksel bir sabittir ve değeri yaklaşık 299.792.458 m/s'dir. Einstein'ın özel görelilik teorisine göre, hiçbir nesne bu hızı aşamaz.
+                    </p>
+                    
+                    <div class="metric-display">
+                        <div class="metric-card">
+                            <div class="metric-value">299,792,458</div>
+                            <div class="metric-label">m/s</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">1.079 Milyar</div>
+                            <div class="metric-label">km/h</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">8,3</div>
+                            <div class="metric-label">dakika (Güneş-Dünya)</div>
+                        </div>
+                    </div>
+
+                    <div class="light-box">
+                        <div class="light-box-content">
+                            <strong>Işık Hızının Evrendeki Rolü:</strong><br>
+                            Işık hızı sadece bir hız değil, aynı zamanda uzay ve zamanın yapısını belirleyen temel bir sabittir. E=mc² denklemindeki 'c', işte bu hızdır.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Zaman Genişlemesi:</strong> Işık hızına yaklaştıkça zaman yavaşlar. Bu etki GPS uyduları için bile hesaplanmak zorundadır, aksi takdirde konum hatası oluşur.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Işık Spektrumu Section -->
+            <section id="isik-spektrum" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-rainbow"></i>
+                    Elektromanyetik Spektrum
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Elektromanyetik spektrum</strong>, tüm elektromanyetik radyasyon türlerini frekans veya dalga boyuna göre düzenlenmiş halidir. Görünür ışık, bu spektrumun sadece çok küçük bir kısmını oluşturur.
+                    </p>
+                    
+                    <div class="light-box">
+                        <div class="light-box-content">
+                            <strong>Spektrum Sıralaması (Düşük → Yüksek Frekans):</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Radyo Dalgaları</li>
+                                <li>• Mikrodalga</li>
+                                <li>• Kızılötesi</li>
+                                <li>• Görünür Işık</li>
+                                <li>• Ultraviyole</li>
+                                <li>• X-Işınları</li>
+                                <li>• Gama Işınları</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-telescope note-card-icon"></i>
+                            <span class="note-card-title">Astronomide Işık</span>
+                        </div>
+                        <div class="note-card-content">
+                            Farklı dalga boylarında gözlem yaparak, yıldızların sıcaklığını, bileşimini ve hareketini anlayabiliriz. Hubble Uzay Teleskobu da bu prensiple çalışır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Karadelik Nedir Section -->
+            <section id="karadelik-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-circle"></i>
+                    Karadelik Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Karadelik</strong>, yerçekimi alanı o kadar güçlü olan bir uzay-zaman bölgesidir ki, hiçbir şey -ışık dâhil- bu alandan kaçamaz. Einstein'ın genel görelilik teorisinin bir sonucu olarak öngörülmüş ve daha sonra gözlemsel olarak doğrulanmıştır.
+                    </p>
+                    <p>
+                        Karadelikler, çok büyük kütleli yıldızların yaşam döngüsünün sonunda çökerek oluştukları düşünülür. Bu çöküş sırasında madde, sonsuz küçük bir noktada (tekilllik) toplanır ve uzay-zamanı büker.
+                    </p>
+                    
+                    <div class="blackhole-box">
+                        <div class="blackhole-box-content">
+                            <strong>Karadeliğin Temel Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Olay ufku (event horizon)</li>
+                                <li>• Tekilllik (singularity)</li>
+                                <li>• Güçlü yerçekimi alanı</li>
+                                <li>• Zaman genişlemesi etkisi</li>
+                                <li>• Hawking radyasyonu</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="metric-display">
+                        <div class="metric-card">
+                            <div class="metric-value">6,5 Milyar</div>
+                            <div class="metric-label">Güneş Kütlesi (M87*)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">4 Milyon</div>
+                            <div class="metric-label">Güneş Kütlesi (Sagittarius A*)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">26.000</div>
+                            <div class="metric-label">Işık Yılı (Merkez Uzaklığı)</div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Spagetifikasyon Etkisi:</strong> Karadeliğe yaklaşan bir nesne, güçlü gel-git kuvvetleri nedeniyle spagetti gibi uzar. Bu etki ayakları baştan daha güçlü çeken yerçekimi farkından kaynaklanır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Karadelik Oluşumu Section -->
+            <section id="karadelik-olusumu" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-superpowers"></i>
+                    Karadelik Oluşumu
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Karadelikler, genellikle çok büyük yıldızların (en az 20-25 güneş kütlesi) yaşam döngüsünün sonunda oluşur. Bu süreç <strong>süpernova patlaması</strong> ile başlar.
+                    </p>
+                    
+                    <div class="blackhole-box">
+                        <div class="blackhole-box-content">
+                            <strong>Karadelik Oluşum Süreci:</strong><br>
+                            <strong>1. Nükleer Yakıt Tükenmesi:</strong> Yıldızın merkezindeki hidrojen ve helyum tükenir<br>
+                            <strong>2. Çekirdeğin Çöküşü:</strong> Yerçekimi, dışa doğru basıncı yener<br>
+                            <strong>3. Süpernova Patlaması:</strong> Dış katmanlar uzaya saçılır<br>
+                            <strong>4. Karadelik Oluşumu:</strong> Çekirdek kritik yoğunluğu aşar
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-balance-scale note-card-icon"></i>
+                            <span class="note-card-title">Chandrasekhar Sınırı</span>
+                        </div>
+                        <div class="note-card-content">
+                            Yaklaşık 1,4 güneş kütlesi altındaki yıldızlar beyaz cüce olur. Bu sınırın üzerindekiler nötron yıldızı veya karadelik olur. Bu sınır, Nobel ödüllü fizikçi Subrahmanyan Chandrasekhar tarafından keşfedilmiştir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Karadelik Çeşitleri Section -->
+            <section id="karadelik-cesitleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-layer-group"></i>
+                    Karadelik Çeşitleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Karadelikler, kütlelerine göre farklı kategorilere ayrılır. Her kategori, farklı oluşum süreçleri ve özelliklere sahiptir.
+                    </p>
+                    
+                    <div class="metric-display">
+                        <div class="metric-card">
+                            <div class="metric-value">3-20</div>
+                            <div class="metric-label">Yıldız Kütleli</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">100-100.000</div>
+                            <div class="metric-label">Orta Kütleli</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">Milyonlarca</div>
+                            <div class="metric-label">Süper Kütleli</div>
+                        </div>
+                    </div>
+
+                    <div class="blackhole-box">
+                        <div class="blackhole-box-content">
+                            <strong>Karadelik Türleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Yıldızsal Karadelikler:</strong> Tek yıldızdan oluşmuş</li>
+                                <li><strong>Orta Kütleli Karadelikler:</strong> Nadir, oluşumu belirsiz</li>
+                                <li><strong>Süper Kütleli Karadelikler:</strong> Galaksi merkezlerinde</li>
+                                <li><strong>Primordial Karadelikler:</strong> Teorik, Big Bang sonrası</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-bullseye note-card-icon"></i>
+                            <span class="note-card-title">Sagittarius A*</span>
+                        </div>
+                        <div class="note-card-content">
+                            Samanyolu'nun merkezindeki süper kütleli karadelik. 4 milyon güneş kütlesinde olan bu karadeliğin 2020 yılında Event Horizon Telescope ile ilk görüntüsü çekildi.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Olay Ufku Section -->
+            <section id="event-horizon" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-border-style"></i>
+                    Olay Ufku (Event Horizon)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Olay ufku</strong>, karadeliği çevreleyen ve hiçbir şeyin kaçamayacağı sınır çizgisidir. Bu sınırı aşan herhangi bir madde veya enerji, karadeliğin içine çekilir ve bir daha gözlemlenemez.
+                    </p>
+                    
+                    <div class="blackhole-box">
+                        <div class="blackhole-box-content">
+                            <strong>Olay Ufkunda Neler Olur?</strong><br>
+                            • Zaman sonsuz yavaşlar (dış gözlemci için)<br>
+                            • Işık kırmızıya kayar ve sonunda kaybolur<br>
+                            • Gel-git kuvvetleri aşırı güçlenir<br>
+                            • Bilgi paradoksu ortaya çıkar
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Schwarzschild Yarıçapı:</strong> Olay ufkunun yarıçapı, karadeliğin kütlesi ile doğru orantılıdır. 1 güneş kütleli bir karadelik için bu yarıçap yaklaşık 3 kilometredir.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-clock note-card-icon"></i>
+                            <span class="note-card-title">Zaman Genişlemesi</span>
+                        </div>
+                        <div class="note-card-content">
+                            Karadeliğe düşen bir astronot, kendi zamanında normal hızda hareket ederken, uzaktan gözleyen biri için giderek yavaşlar ve olay ufkunda durmuş gibi görünür.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hawking Radyasyonu Section -->
+            <section id="hawking-radyasyon" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-radiation"></i>
+                    Hawking Radyasyonu
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Hawking Radyasyonu</strong>, Stephen Hawking tarafından 1974'te keşfedilen teorik bir fenomendir. Bu teoriye göre, karadelikler aslında çok yavaş bir şekilde buharlaşır ve enerji yayar.
+                    </p>
+                    
+                    <div class="light-box">
+                        <div class="light-box-content">
+                            <strong>Hawking Radyasyonunun Nedeni:</strong><br>
+                            Kuantum mekaniğine göre, boş uzayda sürekli parçacık çiftleri oluşur ve yok olur. Olay ufku yakınında bir parçacık karadeliğe düşerken, diğeri kaçabilir. Bu kaçan parçacıklar radyasyonu oluşturur.
+                        </div>
+                    </div>
+
+                    <div class="blackhole-box">
+                        <div class="blackhole-box-content">
+                            <strong>İlginç Bir Paradoks:</strong> Küçük karadelikler büyüklerden daha hızlı buharlaşır. Güneş kütleli bir karadeliğin tamamen buharlaşması 10^67 yıl sürer - evrenin yaşından trilyon katı daha uzun!
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Bilgi Paradoksu:</strong> Hawking radyasyonu, karadeliğe düşen bilginin ne olduğu sorusunu gündeme getirir. Bu, modern fiziğin en büyük açık sorularından biridir.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-thermometer note-card-icon"></i>
+                            <span class="note-card-title">Karadelik Sıcaklığı</span>
+                        </div>
+                        <div class="note-card-content">
+                            Karadeliğin "sıcaklığı", kütlesi ile ters orantılıdır. Güneş kütleli bir karadeliğin sıcaklığı sadece 60 nanokelvin'dir - neredeyse mutlak sıfır!
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(138, 43, 226, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-infinity"></i>
+                    Sonsuz Evrenin Gizemi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Uzay, ışık ve karadelikler, evrenimizin en büyüleyici ve gizemli yanlarını oluşturur. Her keşif, yeni sorular doğurur ve anlayışımızı derinleştirir.
+                    </p>
+
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-telescope note-card-icon"></i>
+                            <span class="note-card-title">Gelecek Keşifler</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>James Webb Uzay Teleskobu:</strong> Evrenin ilk yıldızlarını gözlemliyor<br>
+                            <strong>Event Horizon Telescope:</strong> Daha fazla karadelik görüntüleyecek<br>
+                            <strong>Yerçekimi Dalgaları:</strong> LIGO ile yeni keşifler<br>
+                            <strong>Kuantum Fiziği:</strong> Uzay-zamanın doğasını anlama
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-rocket"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            "Uzay: Son Sınır" - Star Trek
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Animated Metric Cards
+        const metricCards = document.querySelectorAll('.metric-card');
+        metricCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'scale(1.05) rotate(2deg)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Console Easter Egg
+        console.log('%c🚀 Uzay Keşif Portalı', 'color: #8a2be2; font-size: 20px; font-weight: bold;');
+        console.log('%c> Space theme initialized', 'color: #8a2be2; font-family: monospace;');
+        console.log('%c> Cosmic modules loaded', 'color: #8a2be2; font-family: monospace;');
+        console.log('%c> Interstellar features activated', 'color: #ffd700; font-family: monospace;');
+        console.log('%c> console.log("To infinity and beyond!")', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(138, 43, 226, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+                box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Parallax effect for background elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            document.querySelector('body::before') && 
+            document.documentElement.style.setProperty('--parallax-offset', `${rate}px`);
+        });
+
+        // Dynamic title animation
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+            setInterval(() => {
+                heroTitle.style.textShadow = `
+                    0 0 10px rgba(138, 43, 226, ${Math.random() * 0.8 + 0.2}),
+                    0 0 20px rgba(138, 43, 226, ${Math.random() * 0.4 + 0.1}),
+                    0 0 30px rgba(138, 43, 226, ${Math.random() * 0.2 + 0.05})
+                `;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
