@@ -3,9 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Burak Demiröz portföyü: Python, AI/ML, siber güvenlik, otonom sistemler ve web geliştirme çalışmaları.">
     <title>Burak Demiröz | Portfolio</title>
+    <link rel="canonical" href="https://www.burakdemiroz.com.tr/">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="Burak Demiröz | Portfolio">
+    <meta property="og:description" content="Python, AI/ML, siber güvenlik ve otonom sistemler üzerine projelerim ve notlarım.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.burakdemiroz.com.tr/">
+    <meta property="og:image" content="https://www.burakdemiroz.com.tr/images/profile.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Burak Demiröz | Portfolio">
+    <meta name="twitter:description" content="Python, AI/ML, siber güvenlik ve otonom sistemler üzerine projelerim ve notlarım.">
+    <meta name="twitter:image" content="https://www.burakdemiroz.com.tr/images/profile.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="preload" as="image" href="/images/profile.jpg">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Burak Demiröz",
+      "url": "https://www.burakdemiroz.com.tr/",
+      "jobTitle": "Junior AI Specialist",
+      "sameAs": [
+        "https://github.com/Burak1320demiroz",
+        "https://www.linkedin.com/in/burak-demiroz/",
+        "https://medium.com/@burakdemirozis16"
+      ]
+    }
+    </script>
     
     <style>
         :root {
@@ -220,6 +251,17 @@
             box-shadow: var(--neon-shadow);
             color: white;
             background: var(--skin-color-hover);
+        }
+
+        /* Focus styles */
+        a:focus-visible, button:focus-visible, .btn:focus-visible {
+            outline: 2px solid var(--skin-color);
+            outline-offset: 3px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
         }
 
         /* ASIDE */
@@ -441,14 +483,7 @@
         }
         
         .home .home-img .profile-box::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid var(--skin-color);
-            border-radius: 20px;
-            animation: rotate-border 8s linear infinite;
-            box-shadow: var(--neon-shadow);
+            content: none;
         }
         
         @keyframes rotate-border {
@@ -457,34 +492,31 @@
         }
         
         .home .home-img .profile-content {
-            background: linear-gradient(135deg, var(--skin-color), var(--skin-color-hover));
+            background: transparent;
             width: 300px;
             height: 300px;
-            border-radius: 20px;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 120px;
-            font-weight: bold;
-            color: var(--bg-black900);
             position: relative;
             overflow: hidden;
         }
         
         .home .home-img .profile-content::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shine 3s infinite;
+            content: none;
         }
         
         @keyframes shine {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        .home .home-img .profile-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0;
+            display: block;
         }
         
         .social-links {
@@ -843,7 +875,8 @@
 <body>
     <div class="main-container">
         <!-- Hamburger Menu Button -->
-        <div class="nav-toggler">
+        <a class="skip-link" href="#home" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">İçeriğe atla</a>
+        <div class="nav-toggler" role="button" aria-label="Menüyü aç/kapat" aria-expanded="false" tabindex="0">
             <span></span>
         </div>
 
@@ -853,11 +886,12 @@
                 <a href="#"><span>B</span>urak</a>
             </div>
 
-            <ul class="nav">
-                <li><a href="#home" class="active"><i class="fa fa-home"></i>Ana Sayfa</a></li>
+            <ul class="nav" role="navigation" aria-label="Ana gezinme">
+                <li><a href="#home" class="active" aria-current="page"><i class="fa fa-home"></i>Ana Sayfa</a></li>
                 <li><a href="#about"><i class="fa fa-user"></i>Hakkımda</a></li>
                 <li><a href="#services"><i class="fa fa-list"></i>Yazılarım</a></li>
                 <li><a href="#portfolio"><i class="fa fa-briefcase"></i>Notlarım</a></li>
+                <li><a href="#projects"><i class="fa fa-star"></i>Projelerim</a></li>
             </ul>
         </div>
 
@@ -870,25 +904,25 @@
                         <div class="home-info padd-15">
                             <h3 class="hello">Merhaba, ben <span class="name">Burak Demiröz</span></h3>
                             <h3 class="profession"><span class="typing">Python Developer</span></h3>
-                            <p>Siber güvenlik, yapay zeka ve yazılım geliştirme alanlarında kendini geliştiren . Python, AI/ML, web güvenliği ve Otonom Sistemler konularında bilgi sahibiyim.</p>
+                            <p>Siber güvenlik, yapay zeka ve yazılım geliştirme alanlarında kendini geliştiren bir geliştiriciyim. Python, AI/ML, web güvenliği ve Otonom Sistemler konularında bilgi sahibiyim.</p>
                             
                             <div class="social-links">
-                                <a href="https://github.com/Burak1320demiroz" target="_blank">
+                                <a href="https://github.com/Burak1320demiroz" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                                     <i class="fab fa-github"></i>
                                 </a>
-                                <a href="https://www.linkedin.com/in/burak-demiroz/" target="_blank">
+                                <a href="https://www.linkedin.com/in/burak-demiroz/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                                     <i class="fab fa-linkedin"></i>
                                 </a>
-                                <a href="https://medium.com/@burakdemirozis16" target="_blank">
+                                <a href="https://medium.com/@burakdemirozis16" target="_blank" rel="noopener noreferrer" aria-label="Medium">
                                     <i class="fab fa-medium"></i>
                                 </a>
-                                <a href="https://huggingface.co/Burak1320demiroz" target="_blank">
+                                <a href="https://huggingface.co/Burak1320demiroz" target="_blank" rel="noopener noreferrer" aria-label="Hugging Face">
                                     <i class="fas fa-robot"></i>
                                 </a>
-                                <a href="https://grabcad.com/dashboard" target="_blank">
+                                <a href="https://grabcad.com/" target="_blank" rel="noopener noreferrer" aria-label="GrabCAD">
                                     <i class="fas fa-cube"></i>
                                 </a>
-                                <a href="https://play.google.com/store/apps/dev?id=7947072497341253158" target="_blank">
+                                <a href="https://play.google.com/store/apps/dev?id=7947072497341253158" target="_blank" rel="noopener noreferrer" aria-label="Google Play">
                                     <i class="fab fa-google-play"></i>
                                 </a>
                             </div>
@@ -900,7 +934,7 @@
 
                         <div class="home-img padd-15">
                             <div class="profile-box">
-                                <div class="profile-content">BD</div>
+                                <div class="profile-content"><img src="images/profile.jpg" alt="Burak Demiröz profil fotoğrafı" width="300" height="300" decoding="async" fetchpriority="high"></div>
                             </div>
                         </div>
                     </div>
@@ -922,11 +956,20 @@
                                 <div class="about-text padd-15">
                                     <h3>Ben Burak Demiröz, <span>Jr. AI Specialist</span></h3>
                                     <p>
-                                        Bursa Uludağ Üniversitesi Matematik Bölümü 4. sınıf öğrencisiyim. 
-                                        Yapay zeka, makine öğrenmesi, veri bilimi ve siber güvenlik alanlarında kendimi geliştiriyor ve projeler üretiyorum. 
-                                        Python, TensorFlow, OpenCV gibi teknolojilerle <b>görüntü işleme, derin öğrenme ve veri analizi</b> üzerine çalıştım. 
-                                        Ayrıca <b>web güvenliği, mobil güvenlik ve kriptografi</b> konularında deneyimim var. 
+                                        Bursa Uludağ Üniversitesi Matematik 4. sınıf öğrencisiyim. 
+                                        Odak alanlarım <b>AI/ML</b>, <b>Otonom Sistemler</b> ve <b>Siber Güvenlik</b>. 
+                                        Akademik birikimimi gerçek dünyadaki problemlerle birleştirerek <b>görüntü işleme</b>, <b>derin öğrenme</b> ve <b>güvenlik</b> temalı projeler geliştiriyorum.
                                     </p>
+                                    <p>
+                                        Python ekosisteminde (TensorFlow, PyTorch, OpenCV) çalışıyor; ROS tabanlı otonom sistemlerde 
+                                        algılama, izleme ve kontrol algoritmalarını deniyorum. Web tarafında ise güvenli geliştirme 
+                                        pratiklerine önem veriyorum.
+                                    </p>
+                                    <ul style="margin-top:10px; color: var(--text-black700); line-height: 1.9;">
+                                        <li><b>Güçlü yanlar:</b> Problem çözme, hızlı öğrenme, takım çalışması</li>
+                                        <li><b>Teknolojiler:</b> Python, TensorFlow, PyTorch, OpenCV, ROS, Docker, Node.js</li>
+                                        <li><b>İlgi:</b> Otonom araç algılama, LLM uygulamaları, güvenli web</li>
+                                    </ul>
                                 </div>
                             </div>
 
@@ -945,45 +988,6 @@
                                     </div>
                                 </div>
                                 
-                                <div class="skills padd-15">
-                                    <div class="row">
-                                        <div class="skill-item padd-15">
-                                            <h5>Python</h5>
-                                            <div class="progress">
-                                                <div class="progress-in" style="width: 75%;"></div>
-                                                <div class="skill-percent">80%</div>
-                                            </div>
-                                        </div>
-                                        <div class="skill-item padd-15">
-                                            <h5>Cyber Security</h5>
-                                            <div class="progress">
-                                                <div class="progress-in" style="width: 30%;"></div>
-                                                <div class="skill-percent">50%</div>
-                                            </div>
-                                        </div>
-                                        <div class="skill-item padd-15">
-                                            <h5>AI/ML</h5>
-                                            <div class="progress">
-                                                <div class="progress-in" style="width: 70%;"></div>
-                                                <div class="skill-percent">70%</div>
-                                            </div>
-                                        </div>
-                                        <div class="skill-item padd-15">
-                                            <h5>Web Development</h5>
-                                            <div class="progress">
-                                                <div class="progress-in" style="width: 45%;"></div>
-                                                <div class="skill-percent">45%</div>
-                                            </div>
-                                        </div>
-                                        <div class="skill-item padd-15">
-                                            <h5>Docker/DevOps</h5>
-                                            <div class="progress">
-                                                <div class="progress-in" style="width: 40%;"></div>
-                                                <div class="skill-percent">50%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1007,7 +1011,7 @@
                                 <div class="icon">
                                     <i class="fab fa-python"></i>
                                 </div>
-                                <h4><a href="python.html">Python Development</a></h4>
+                                <h4><a href="yazılarım/python.html">Python Development</a></h4>
                                 <p>Veri yapıları, algoritmalar, basit ve ileri seviye Python projeleri</p>
                             </div>
                         </div>
@@ -1018,7 +1022,7 @@
                                 <div class="icon">
                                     <i class="fas fa-brain"></i>
                                 </div>
-                                <h4><a href="ai-ml.html">Yapay Zeka & ML</a></h4>
+                                <h4><a href="yazılarım/ai-ml.html">Yapay Zeka & ML</a></h4>
                                 <p>Machine Learning ve Deep Learning alanlarına giriş</p>
                             </div>
                         </div>
@@ -1029,7 +1033,7 @@
                                 <div class="icon">
                                     <i class="fas fa-shield-alt"></i>
                                 </div>
-                                <h4><a href="siber-guvenlik.html">Web Güvenlii</a></h4>
+                                <h4><a href="yazılarım/siber-guvenlik.html">Web Güvenliği</a></h4>
                                 <p>Web Zafiyetlerinin tanımları</p>
                             </div>
                         </div>
@@ -1040,7 +1044,7 @@
                                 <div class="icon">
                                     <i class="fas fa-code"></i>
                                 </div>
-                                <h4><a href="web-development.html">Web Development</a></h4>
+                                <h4><a href="yazılarım/web-development.html">Web Development</a></h4>
                                 <p>HTML, CSS, JavaScript ve Node.js</p>
                             </div>
                         </div>
@@ -1062,7 +1066,7 @@
                                 <div class="icon">
                                     <i class="fas fa-square-root-alt"></i>
                                 </div>
-                                <h4><a href="math.html">Matematik</a></h4>
+                                <h4><a href="yazılarım/math.html">Matematik</a></h4>
                                 <p>Lisans Dönemimdeki Matematik Konuları</p>
                             </div>
                         </div>
@@ -1073,8 +1077,8 @@
                                 <div class="icon">
                                     <i class="fas fa-language"></i>
                                 </div>
-                                <h4><a href="ing.html">İngilizce</a></h4>
-                                <p>Başlangıc Seviye (A1 - A2)</p>
+                                <h4><a href="yazılarım/ing.html">İngilizce</a></h4>
+                                <p>Başlangıç Seviye (A1 - A2)</p>
                             </div>
                         </div>
 
@@ -1084,7 +1088,7 @@
                                 <div class="icon">
                                     <i class="fas fa-meteor"></i>
                                 </div>
-                                <h4><a href="space.html">Uzay</a></h4>
+                                <h4><a href="yazılarım/space.html">Uzay</a></h4>
                                 <p>Uzay nedir?, Işık Nedir ve Karadelikler</p>
                             </div>
                         </div>
@@ -1095,8 +1099,19 @@
                                 <div class="icon">
                                     <i class="fas fa-car-side"></i>
                                 </div>
-                                <h4><a href="teslanasılcalışır.html">Tesla Nasıl Calışır?</a></h4>
+                                <h4><a href="yazılarım/teslanasılcalışır.html">Tesla Nasıl Çalışır?</a></h4>
                                 <p>Otonom Sistem ve Arac Bilgisi</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Araçlarda Otonom Sistemler -->
+                        <div class="service-item padd-15">
+                            <div class="service-item-inner">
+                                <div class="icon">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <h4><a href="yazılarım/otonoms.html">Araçlarda Otonom Sistemler</a></h4>
+                                <p>Algoritmalar, sensör füzyonu ve ROS temelleri</p>
                             </div>
                         </div>
                     </div>
@@ -1388,31 +1403,7 @@
                         </li>
                     </ul>
                     
-                    <!-- CTF Projects Section -->
-                    <div class="section-title-with-icon">
-                        <i class="fas fa-flag"></i>
-                        <h3>CTF Projects</h3>
-                    </div>
-                    <ul class="topic-grid">
-                        <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/demiroz_bank.git" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-university topic-icon"></i>
-                                <span>Demiröz Bank (CTF)</span>
-                            </a>
-                        </li>
-                        <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/LLM_lokmanhekim.git" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-robot topic-icon"></i>
-                                <span>Lokman Hekim (CTF)</span>
-                            </a>
-                        </li>
-                        <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cve-2025-2082.git" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-car topic-icon"></i>
-                                <span>CVE-2025-2082 (Tesla CTF)</span>
-                            </a>
-                        </li>
-                    </ul>
+                    
                     
                     <!-- Mathematics Section -->
                     <div class="section-title-with-icon">
@@ -1607,6 +1598,38 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Projelerim Section -->
+            <section class="portfolio section" id="projects">
+                <div class="container">
+                    <div class="row">
+                        <div class="section-title padd-15">
+                            <h2>Projelerim</h2>
+                        </div>
+                    </div>
+
+                    <ul class="topic-grid">
+                        <li class="topic-item">
+                            <a href="https://github.com/Burak1320demiroz/cve-2025-2082" target="_blank" rel="noopener noreferrer" class="topic-link">
+                                <i class="fas fa-bug topic-icon"></i>
+                                <span>CVE-2025-2082 (Tesla CTF) — 2025</span>
+                            </a>
+                        </li>
+                        <li class="topic-item">
+                            <a href="https://github.com/Burak1320demiroz/LLM_lokmanhekim" target="_blank" rel="noopener noreferrer" class="topic-link">
+                                <i class="fas fa-robot topic-icon"></i>
+                                <span>Lokman Hekim LLM — 2024</span>
+                            </a>
+                        </li>
+                        <li class="topic-item">
+                            <a href="https://github.com/Burak1320demiroz/demiroz_bank" target="_blank" rel="noopener noreferrer" class="topic-link">
+                                <i class="fas fa-university topic-icon"></i>
+                                <span>Demiröz Bank (CTF) — 2024</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -1657,8 +1680,22 @@
         const navTogglerBtn = document.querySelector('.nav-toggler');
         const aside = document.querySelector('.aside');
         
+        function setTogglerAria(){
+            const expanded = navTogglerBtn.classList.contains('open');
+            navTogglerBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        }
+
         navTogglerBtn.addEventListener('click', () => { 
             asideSectionTogglerBtn(); 
+            setTogglerAria();
+        });
+
+        navTogglerBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                asideSectionTogglerBtn();
+                setTogglerAria();
+            }
         });
 
         function asideSectionTogglerBtn(){

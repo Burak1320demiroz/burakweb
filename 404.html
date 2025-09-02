@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayfa Bulunamadı | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon.png" sizes="32x32">
+    <meta name="robots" content="noindex">
+    <style>
+        body { margin:0; font-family: Arial, sans-serif; background:#0a0a0a; color:#fff; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+        .wrap { text-align:center; padding:20px; }
+        h1 { font-size:56px; margin-bottom:10px; color:#00d4ff; }
+        p { color:rgba(255,255,255,.75); margin:8px 0; }
+        a.btn { display:inline-block; margin-top:20px; padding:12px 24px; background:#00d4ff; color:#000; border-radius:8px; text-decoration:none; }
+        a.btn:hover { background:#00a8cc; color:#fff; }
+    </style>
+    <script>
+      (function(){
+        var loc = window.location.pathname;
+        if (loc && loc !== '/' && !loc.endsWith('.html')) {
+          var candidate = '/' + loc.replace(/^\//,'') + '.html';
+          var xhr = new XMLHttpRequest();
+          xhr.open('HEAD', candidate);
+          xhr.onload = function(){ if (xhr.status >= 200 && xhr.status < 400) window.location.replace(candidate); };
+          xhr.send();
+        }
+      })();
+    </script>
+    </head>
+<body>
+    <div class="wrap">
+        <h1>404</h1>
+        <p>Aradığınız sayfayı bulamadık.</p>
+        <p>Ana sayfaya dönerek devam edebilirsiniz.</p>
+        <a class="btn" href="/">Ana Sayfa</a>
+    </div>
+</body>
+</html>
+

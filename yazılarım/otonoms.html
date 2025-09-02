@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otonom Sistemler | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="otonomfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="otonomfavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(0, 212, 255, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #00d4ff;
+            --skin-color-hover: #00a8cc;
+            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            --text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --level-0: #6272a4;
+            --level-1: #f1fa8c;
+            --level-2: #ffb86c;
+            --level-3: #ff79c6;
+            --level-4: #bd93f9;
+            --level-5: #50fa7b;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-robot {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 300px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 212, 255, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(0, 212, 255, 0.1);
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        
+        /* SAE Level Colors */
+        .level-0 { color: var(--level-0) !important; border-left-color: var(--level-0) !important; }
+        .level-1 { color: var(--level-1) !important; border-left-color: var(--level-1) !important; }
+        .level-2 { color: var(--level-2) !important; border-left-color: var(--level-2) !important; }
+        .level-3 { color: var(--level-3) !important; border-left-color: var(--level-3) !important; }
+        .level-4 { color: var(--level-4) !important; border-left-color: var(--level-4) !important; }
+        .level-5 { color: var(--level-5) !important; border-left-color: var(--level-5) !important; }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-robot {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        /* Level Indicator */
+        .level-indicator {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* SAE Level Sections */
+        .sae-level-section {
+            border-left: 4px solid var(--skin-color);
+            position: relative;
+        }
+        
+        .sae-level-section.level-0 { border-left-color: var(--level-0); }
+        .sae-level-section.level-1 { border-left-color: var(--level-1); }
+        .sae-level-section.level-2 { border-left-color: var(--level-2); }
+        .sae-level-section.level-3 { border-left-color: var(--level-3); }
+        .sae-level-section.level-4 { border-left-color: var(--level-4); }
+        .sae-level-section.level-5 { border-left-color: var(--level-5); }
+        
+        .sae-level-badge {
+            position: absolute;
+            top: -10px;
+            left: -15px;
+            background: var(--bg-black900);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 2px solid var(--skin-color);
+        }
+        
+        .sae-level-badge.level-0 { color: var(--level-0); border-color: var(--level-0); }
+        .sae-level-badge.level-1 { color: var(--level-1); border-color: var(--level-1); }
+        .sae-level-badge.level-2 { color: var(--level-2); border-color: var(--level-2); }
+        .sae-level-badge.level-3 { color: var(--level-3); border-color: var(--level-3); }
+        .sae-level-badge.level-4 { color: var(--level-4); border-color: var(--level-4); }
+        .sae-level-badge.level-5 { color: var(--level-5); border-color: var(--level-5); }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Python';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .function { color: #50fa7b; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        
+        /* Output Blocks */
+        .output-block {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+        }
+        
+        .output-block::before {
+            content: '> Output:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Tech Stack Cards */
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tech-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .tech-card:hover::before {
+            left: 100%;
+        }
+
+        .tech-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .tech-card-icon {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+
+        .tech-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .tech-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--level-0), var(--level-1), var(--level-2), var(--level-3), var(--level-4), var(--level-5));
+            border-radius: 10px;
+            transition: width 2s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progress-shine 2s infinite;
+        }
+
+        @keyframes progress-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-0), var(--level-1), var(--level-2), var(--level-3), var(--level-4), var(--level-5));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: rgba(10, 10, 10, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--skin-color);
+            border: 2px solid var(--bg-black900);
+        }
+
+        .timeline-item.level-0::before { background: var(--level-0); }
+        .timeline-item.level-1::before { background: var(--level-1); }
+        .timeline-item.level-2::before { background: var(--level-2); }
+        .timeline-item.level-3::before { background: var(--level-3); }
+        .timeline-item.level-4::before { background: var(--level-4); }
+        .timeline-item.level-5::before { background: var(--level-5); }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+
+            .tech-stack {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>Otonom Sistemler</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#giris" class="active">Giriş</a></li>
+            <li><a href="#sae-seviyeleri">SAE Seviyeleri</a></li>
+            <li><a href="#level-0" class="level-0">Seviye 0 - Manuel</a></li>
+            <li><a href="#level-1" class="level-1">Seviye 1 - Destekli</a></li>
+            <li><a href="#level-2" class="level-2">Seviye 2 - Yarı Otonom</a></li>
+            <li><a href="#level-3" class="level-3">Seviye 3 - Koşullu Otonom</a></li>
+            <li><a href="#level-4" class="level-4">Seviye 4 - Yüksek Otonom</a></li>
+            <li><a href="#level-5" class="level-5">Seviye 5 - Tam Otonom</a></li>
+            <li><a href="#teknolojiler">Temel Teknolojiler</a></li>
+            <li><a href="#sensör-füzyon">Sensör Füzyon</a></li>
+            <li><a href="#yol-planlama">Yol Planlama</a></li>
+            <li><a href="#kontrol-algoritmalari">Kontrol Algoritmaları</a></li>
+            <li><a href="#yapay-zeka">Yapay Zeka & ML</a></li>
+            <li><a href="#deneyim">Teknofest Deneyimim</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-robot"></i>
+                    Otonom Sistemler
+                </h1>
+                <p class="hero-subtitle">
+                    SAE Seviye 0'dan Seviye 5'e kadar otonom araç teknolojileri ve gelişmiş algoritmaların kapsamlı rehberi
+                </p>
+                <div class="level-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    Seviye 0 → Seviye 5: Tam Otomasyon Yolculuğu
+                </div>
+            </section>
+
+            <!-- Giriş Section -->
+            <section id="giris" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Otonom Araçlar ve SAE Standartları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Otonom araçlar</strong>, insan müdahalesi olmadan veya minimal müdahaleyle sürüş görevlerini gerçekleştirebilen ileri teknoloji araçlardır. Society of Automotive Engineers (SAE) tarafından geliştirilen J3016 standardı, otonom sürüş seviyelerini 0'dan 5'e kadar kategorilere ayırır.
+                    </p>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                    
+                    <p>
+                        Bu sınıflandırma sistemi, sürücü ile sistemin sorumluluk dağılımını, çevresel izleme gereksinimlerini ve operasyonel tasarım alanını (ODD - Operational Design Domain) belirler. Her seviye, teknolojik karmaşıklık ve güvenlik gereksinimlerinde önemli artışları temsil eder.
+                    </p>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Önemli Not:</strong> SAE seviyeleri teknolojik kabiliyeti değil, sistemin tasarım felsefesini ve güvenlik yaklaşımını tanımlar. Seviye 3'ten sonra sorumluluk tamamen sisteme geçer.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel Kavramlar:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>ODD (Operational Design Domain):</strong> Sistemin çalışma koşulları</li>
+                                <li><strong>DDT (Dynamic Driving Task):</strong> Dinamik sürüş görevi</li>
+                                <li><strong>OEDR:</strong> Nesne ve olay algılama ve tepki</li>
+                                <li><strong>Fallback:</strong> Acil durumda geri çekilme stratejisi</li>
+                                <li><strong>MRC:</strong> Minimal risk koşulu (güvenli durma)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SAE Seviyeleri Overview -->
+            <section id="sae-seviyeleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-layer-group"></i>
+                    SAE Otonom Sürüş Seviyeleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        SAE J3016 standardı, otonom sürüş teknolojilerini altı seviyede kategoriler. Bu seviyeler, sürücü ve sistemin sorumluluklarına göre belirlenir:
+                    </p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item level-0">
+                            <h3 style="color: var(--level-0); margin-bottom: 10px;">Seviye 0 - Manuel Sürüş</h3>
+                            <p>İnsan sürücü tüm sürüş görevlerini yerine getirir. Sistem sadece uyarı verebilir.</p>
+                        </div>
+                        
+                        <div class="timeline-item level-1">
+                            <h3 style="color: var(--level-1); margin-bottom: 10px;">Seviye 1 - Sürücü Desteği</h3>
+                            <p>Sistem belirli koşullarda direksiyon VEYA hız/frenleme konusunda yardım eder.</p>
+                        </div>
+                        
+                        <div class="timeline-item level-2">
+                            <h3 style="color: var(--level-2); margin-bottom: 10px;">Seviye 2 - Kısmi Otomasyon</h3>
+                            <p>Sistem hem direksiyon hem de hız/frenleme kontrolü yapabilir, sürücü izler.</p>
+                        </div>
+                        
+                        <div class="timeline-item level-3">
+                            <h3 style="color: var(--level-3); margin-bottom: 10px;">Seviye 3 - Koşullu Otomasyon</h3>
+                            <p>Sistem tüm sürüş görevlerini yapar, sürücü müdahaleye hazır bekler.</p>
+                        </div>
+                        
+                        <div class="timeline-item level-4">
+                            <h3 style="color: var(--level-4); margin-bottom: 10px;">Seviye 4 - Yüksek Otomasyon</h3>
+                            <p>Sistem belirli koşullarda tamamen bağımsız çalışır, sürücü müdahalesi gerekmez.</p>
+                        </div>
+                        
+                        <div class="timeline-item level-5">
+                            <h3 style="color: var(--level-5); margin-bottom: 10px;">Seviye 5 - Tam Otomasyon</h3>
+                            <p>Sistem her koşulda tamamen bağımsız çalışır, direksiyon simidi bile olmayabilir.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seviye 0 -->
+            <section id="level-0" class="content-section sae-level-section level-0">
+                <div class="sae-level-badge level-0">SEVİYE 0</div>
+                <h2 class="section-title">
+                    <i class="fas fa-hand-paper"></i>
+                    Seviye 0 - Manuel Sürüş
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Seviye 0</strong>, tamamen manuel sürüş anlamına gelir. İnsan sürücü, sürüş görevinin tüm yönlerini (direksiyon, gaz, fren, çevre izleme) kendisi gerçekleştirir. Sistem sadece bilgi veya uyarı sağlayabilir.
+                    </p>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-exclamation-triangle tech-card-icon" style="color: var(--level-0);"></i>
+                                <div class="tech-card-title">Uyarı Sistemleri</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Çarpışma uyarısı, şerit çıkış uyarısı, kör nokta uyarısı gibi pasif güvenlik özellikleri.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-tachometer-alt tech-card-icon" style="color: var(--level-0);"></i>
+                                <div class="tech-card-title">Bilgi Gösterimi</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Hız, yakıt tüketimi, navigasyon bilgileri gibi sürücüye yardımcı veriler.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-user note-card-icon"></i>
+                            <span class="note-card-title">Sorumluluk</span>
+                        </div>
+                        <div class="note-card-content">
+                            Sürücü her an tam kontroldedir ve tüm sürüş kararlarından sorumludur. Sistem hiçbir zaman kontrol almaz.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Önemli:</strong> Uyarı sistemleri olsa bile, tüm sürüş sorumluluğu sürücüdedir. Bu sistemler güvenilir değildir ve her durumda çalışmayabilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seviye 1 -->
+            <section id="level-1" class="content-section sae-level-section level-1">
+                <div class="sae-level-badge level-1">SEVİYE 1</div>
+                <h2 class="section-title">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    Seviye 1 - Sürücü Desteği
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Seviye 1</strong> sistemler, belirli koşullarda sürücüye <strong>tek bir</strong> sürüş görevinde yardım eder. Bu ya direksiyon kontrolü (şerit takip) ya da hız kontrolü (adaptif cruise control) olabilir, ancak ikisi birlikte çalışmaz.
+                    </p>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-road tech-card-icon" style="color: var(--level-1);"></i>
+                                <div class="tech-card-title">Şerit Takip Desteği</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Kamera tabanlı şerit algılama ile hafif direksiyon düzeltmeleri yapar. Sürücü her an hazır olmalıdır.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-tachometer-alt tech-card-icon" style="color: var(--level-1);"></i>
+                                <div class="tech-card-title">Adaptif Cruise Control</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Öndeki araca göre hızı otomatik ayarlar. Radar/lidar ile mesafe takibi yapar.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-hand-paper tech-card-icon" style="color: var(--level-1);"></i>
+                                <div class="tech-card-title">Acil Fren Desteği</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Çarpışma riski algılandığında otomatik frenleme yapar. Kaza şiddetini azaltır.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-parking tech-card-icon" style="color: var(--level-1);"></i>
+                                <div class="tech-card-title">Park Desteği</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Park manevrasında direksiyon kontrolü. Sürücü gaz/fren pedallarını kontrol eder.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-eye note-card-icon"></i>
+                            <span class="note-card-title">Çevre İzleme</span>
+                        </div>
+                        <div class="note-card-content">
+                            Sürücü çevreyi sürekli izlemeli ve sistem arızalandığında hemen müdahale etmeye hazır olmalıdır. Sistem sadece yardım eder, sorumluluğu almaz.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seviye 2 -->
+            <section id="level-2" class="content-section sae-level-section level-2">
+                <div class="sae-level-badge level-2">SEVİYE 2</div>
+                <h2 class="section-title">
+                    <i class="fas fa-hands-helping"></i>
+                    Seviye 2 - Kısmi Otomasyon
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Seviye 2</strong>, şerit takip ve hız kontrolünün aynı anda çalıştığı seviyedir. Sistem hem direksiyon hem de gaz/fren kontrolü yapabilir, ancak sürücü her an sistemi izlemeli ve gerektiğinde müdahale etmeye hazır olmalıdır.
+                    </p>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-robot tech-card-icon" style="color: var(--level-2);"></i>
+                                <div class="tech-card-title">Tesla Autopilot</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Otoyollarda şerit takip + adaptif cruise control kombinasyonu. 8 kamera, radar ve ultrasonik sensörler.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-car tech-card-icon" style="color: var(--level-2);"></i>
+                                <div class="tech-card-title">Mercedes Drive Pilot</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Traffic jam assist özelliği. Yoğun trafikte düşük hızlarda tam kontrol sağlar.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-road tech-card-icon" style="color: var(--level-2);"></i>
+                                <div class="tech-card-title">Şerit Değiştirme</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Sinyal verildikinde güvenli şerit değiştirme manevrası. Kör nokta kontrolü ve mesafe hesaplama.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-eye tech-card-icon" style="color: var(--level-2);"></i>
+                                <div class="tech-card-title">Sürücü İzleme</div>
+                            </div>
+                            <div class="tech-card-content">
+                                İç kamera ile sürücünün dikkatini izler. Dikkatsizlik tespit edilirse uyarı verir.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Kritik Uyarı:</strong> Seviye 2 sistemler "hands-off" değildir! Sürücü her an müdahaleye hazır olmalı ve çevreyi aktif olarak izlemelidir.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Seviye 2 Sistem Mimarisi Örneği</span>
+<span class="keyword">class</span> <span class="function">Level2System</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.lane_keeping = <span class="function">LaneKeepingAssist</span>()
+        self.adaptive_cruise = <span class="function">AdaptiveCruiseControl</span>()
+        self.driver_monitor = <span class="function">DriverMonitoringSystem</span>()
+        self.is_active = <span class="keyword">False</span>
+    
+    <span class="keyword">def</span> <span class="function">update</span>(self, sensor_data):
+        <span class="comment"># Sürücü dikkatini kontrol et</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> self.driver_monitor.<span class="function">is_attentive</span>():
+            self.<span class="function">disengage_system</span>()
+            <span class="keyword">return</span>
+        
+        <span class="comment"># Her iki sistemi de çalıştır</span>
+        steering_cmd = self.lane_keeping.<span class="function">get_steering</span>(sensor_data)
+        speed_cmd = self.adaptive_cruise.<span class="function">get_speed</span>(sensor_data)
+        
+        <span class="keyword">return</span> steering_cmd, speed_cmd</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seviye 3 -->
+            <section id="level-3" class="content-section sae-level-section level-3">
+                <div class="sae-level-badge level-3">SEVİYE 3</div>
+                <h2 class="section-title">
+                    <i class="fas fa-brain"></i>
+                    Seviye 3 - Koşullu Otomasyon
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Seviye 3</strong>, otonom sürüşte kritik bir dönüm noktasıdır. Sistem, belirli koşullarda tüm sürüş görevlerini yerine getirir ve çevreyi izler. Sürücü "fallback" kullanıcısı olarak sistemin müdahale talep ettiği durumlarda devreye girer.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Seviye 3'ün Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Sistem OEDR (Nesne ve Olay Algılama) yapar</li>
+                                <li>Belirli ODD (Operasyonel Tasarım Alanı) içinde çalışır</li>
+                                <li>Sürücüden "takeover request" ile müdahale ister</li>
+                                <li>Sistem kendi sınırlarını bilir ve bildirir</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-traffic-light tech-card-icon" style="color: var(--level-3);"></i>
+                                <div class="tech-card-title">Traffic Jam Pilot</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Audi A8'in traffic jam pilot özelliği. 60 km/h altında otoyollarda tam otonom sürüş.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-satellite tech-card-icon" style="color: var(--level-3);"></i>
+                                <div class="tech-card-title">HD Maps</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Santimetre hassasiyetinde haritalar. Şerit bilgileri, trafik işaretleri ve yol geometrisi.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-microchip tech-card-icon" style="color: var(--level-3);"></i>
+                                <div class="tech-card-title">Sensor Fusion</div>
+                            </div>
+                            <div class="tech-card-content">
+                                LiDAR, kamera, radar ve GPS verilerinin gelişmiş füzyon algoritmaları ile birleştirilmesi.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-shield-alt tech-card-icon" style="color: var(--level-3);"></i>
+                                <div class="tech-card-title">Fallback Strategy</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Sistem sınırına yaklaşıldığında sürücüye bildirim ve güvenli geçiş protokolü.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Takeover Challenge:</strong> Seviye 3'te en büyük sorun, sürücünin durumsal farkındalığını kaybetmesi ve hızlı takeover yapamama riskidir.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Seviye 3 Takeover Request Sistemi</span>
+<span class="keyword">class</span> <span class="function">Level3TakeoverManager</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.takeover_time_budget = <span class="number">10</span>  <span class="comment"># saniye</span>
+        self.warning_stages = [<span class="number">10</span>, <span class="number">7</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">1</span>]
+        self.current_warning = <span class="number">0</span>
+    
+    <span class="keyword">def</span> <span class="function">request_takeover</span>(self, reason, urgency):
+        <span class="function">print</span>(<span class="string">f"Takeover İsteği: {reason}"</span>)
+        
+        <span class="keyword">if</span> urgency == <span class="string">"HIGH"</span>:
+            self.<span class="function">immediate_takeover</span>()
+        <span class="keyword">else</span>:
+            self.<span class="function">gradual_takeover</span>()
+    
+    <span class="keyword">def</span> <span class="function">gradual_takeover</span>(self):
+        <span class="keyword">for</span> warning_time <span class="keyword">in</span> self.warning_stages:
+            self.<span class="function">show_warning</span>(warning_time)
+            <span class="keyword">if</span> self.<span class="function">driver_took_control</span>():
+                <span class="keyword">return</span> <span class="string">"SUCCESS"</span>
+        
+        <span class="comment"># Sürücü müdahale etmediyse MRC'ye geç</span>
+        self.<span class="function">execute_minimal_risk_condition</span>()
+        <span class="keyword">return</span> <span class="string">"MRC_EXECUTED"</span></code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-gavel note-card-icon"></i>
+                            <span class="note-card-title">Yasal Durum</span>
+                        </div>
+                        <div class="note-card-content">
+                            Seviye 3 sistemlerin yasal sorumluluğu karmaşıktır. Sistem aktifken üretici, sürücü müdahalesi gerektiğinde sürücü sorumlu olabilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seviye 4 -->
+            <section id="level-4" class="content-section sae-level-section level-4">
+                <div class="sae-level-badge level-4">SEVİYE 4</div>
+                <h2 class="section-title">
+                    <i class="fas fa-car-side"></i>
+                    Seviye 4 - Yüksek Otomasyon
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Seviye 4</strong>, belirli operasyonel tasarım alanı (ODD) içinde tam otonom sürüş sunar. Sistem kendi fallback'ini gerçekleştirir ve sürücü müdahalelesi gerekmez. Ancak sistem, sadece tasarlandığı koşullarda çalışır.
+                    </p>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-map-marked-alt tech-card-icon" style="color: var(--level-4);"></i>
+                                <div class="tech-card-title">Geofenced Operations</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Belirli coğrafi bölgelerde işlem. Waymo Phoenix'te belirli mahallerde robotaksi hizmeti.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-eye tech-card-icon" style="color: var(--level-4);"></i>
+                                <div class="tech-card-title">360° Perception</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Çoklu LiDAR, kamera ve radar ile tam çevre algılama. Ölü nokta olmayan sensör kapsamı.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-cloud tech-card-icon" style="color: var(--level-4);"></i>
+                                <div class="tech-card-title">Fleet Management</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Bulut tabanlı filo yönetimi. Gerçek zamanlı haritalama güncellemeleri ve remote monitoring.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-shield-alt tech-card-icon" style="color: var(--level-4);"></i>
+                                <div class="tech-card-title">MRC Capability</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Minimum Risk Condition: Sistem sorun yaşadığında güvenli bir yere park edebilme kabiliyeti.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Teknofest Deneyimi:</strong> Geliştirdiğimiz sistem Seviye 4 özellikler taşıyordu. Belirli bir parkur (ODD) içinde tam otonom çalışabiliyordu ve MRC protokolüne sahipti.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Seviye 4 MRC (Minimal Risk Condition) Sistemi</span>
+<span class="keyword">class</span> <span class="function">Level4MRCController</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self):
+        self.mrc_locations = self.<span class="function">load_safe_zones</span>()
+        self.system_health = <span class="function">SystemHealthMonitor</span>()
+        
+    <span class="keyword">def</span> <span class="function">execute_mrc</span>(self, failure_reason):
+        <span class="comment"># En yakın güvenli bölgeyi bul</span>
+        safe_location = self.<span class="function">find_nearest_safe_zone</span>()
+        
+        <span class="comment"># Acil durum ışıklarını aç</span>
+        self.<span class="function">activate_hazard_lights</span>()
+        
+        <span class="comment"># Güvenli parkura yönlen</span>
+        self.<span class="function">navigate_to_safe_zone</span>(safe_location)
+        
+        <span class="comment"># Fleet management'e bildir</span>
+        self.<span class="function">notify_operations_center</span>(failure_reason)
+        
+        <span class="function">print</span>(<span class="string">"MRC executed: Vehicle safely stopped"</span>)</code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-building note-card-icon"></i>
+                            <span class="note-card-title">Gerçek Dünya Örnekleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Waymo One:</strong> Phoenix'te geofenced robotaksi<br>
+                            <strong>Cruise:</strong> San Francisco'da (askıya alındı)<br>
+                            <strong>Baidu Apollo:</strong> Beijing'de sınırlı bölgelerde<br>
+                            <strong>Nuro:</strong> Teslimat araçları için
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seviye 5 -->
+            <section id="level-5" class="content-section sae-level-section level-5">
+                <div class="sae-level-badge level-5">SEVİYE 5</div>
+                <h2 class="section-title">
+                    <i class="fas fa-rocket"></i>
+                    Seviye 5 - Tam Otomasyon
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Seviye 5</strong>, teorik olarak mükemmel otonom sürüştür. Sistem, insanın sürüş yapabileceği her yerde ve her koşulda çalışabilir. Direksiyon simidi, pedal gibi manuel kontroller bile gerekmez.
+                    </p>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Gerçeklik Kontrolü:</strong> Seviye 5 tam otomasyon henüz mevcut değildir ve ne zaman gerçekleşeceği belirsizdir. Bu seviye, teorik bir hedeftir.
+                        </div>
+                    </div>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-globe tech-card-icon" style="color: var(--level-5);"></i>
+                                <div class="tech-card-title">Universal ODD</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Sınırsız operasyonel tasarım alanı. Her iklim, yol tipi ve trafik koşulunda çalışma.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-brain tech-card-icon" style="color: var(--level-5);"></i>
+                                <div class="tech-card-title">AGI Level Intelligence</div>
+                            </div>
+                            <div class="tech-card-content">
+                                İnsan seviyesi genel zeka. Hiç görülmemiş senaryolarda bile optimal kararlar.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-network-wired tech-card-icon" style="color: var(--level-5);"></i>
+                                <div class="tech-card-title">V2X Communication</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Vehicle-to-Everything iletişim. Diğer araçlar, altyapı ve pedestrianlarla anlık veri paylaşımı.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-cogs tech-card-icon" style="color: var(--level-5);"></i>
+                                <div class="tech-card-title">Self-Maintenance</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Kendi kendine bakım ve güncelleme. Yazılım ve donanım sorunlarını otomatik çözme.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Seviye 5'e Giden Zorluklar:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Edge Cases:</strong> Nadir durumların tamamının öngörülmesi</li>
+                                <li><strong>Etik Kararlar:</strong> Dilemma durumlarında ahlaki tercihler</li>
+                                <li><strong>Yasal Çerçeve:</strong> Küresel standart ve sorumluluk dağılımı</li>
+                                <li><strong>Teknolojik Sınırlar:</strong> Sensör limitasyonları ve işlem gücü</li>
+                                <li><strong>Sosyal Kabul:</strong> Toplumsal güven ve adaptasyon</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-crystal-ball note-card-icon"></i>
+                            <span class="note-card-title">Gelecek Projeksiyonları</span>
+                        </div>
+                        <div class="note-card-content">
+                            Uzmanlar Seviye 5'in 2040-2050 arasında gerçekleşebileceğini tahmin ediyor. Ancak bu, birçok teknolojik ve sosyal faktöre bağlı.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Temel Teknolojiler -->
+            <section id="teknolojiler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-microchip"></i>
+                    Otonom Araçların Temel Teknolojileri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Otonom araçlar, birden fazla gelişmiş teknolojinin bir araya gelmesiyle çalışır. Bu bölümde, bu sistemlerin temelini oluşturan ana teknolojik bileşenleri inceleyeceğiz.
+                    </p>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-camera tech-card-icon"></i>
+                                <div class="tech-card-title">Computer Vision</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Kameralar aracılığıyla görsel algılama. Nesne tanıma, şerit tespiti, trafik işareti okuma için kullanılır.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-wave-square tech-card-icon"></i>
+                                <div class="tech-card-title">LiDAR Technology</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Lazer tabanlı mesafe ölçümü. 3D nokta bulutu oluşturarak çevrenin hassas haritasını çıkarır.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-satellite-dish tech-card-icon"></i>
+                                <div class="tech-card-title">Radar Systems</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Radyo dalgalarıyla nesne tespiti. Hava koşullarından etkilenmez, hız ölçümünde etkilidir.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-satellite tech-card-icon"></i>
+                                <div class="tech-card-title">GNSS/GPS</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Global konum belirleme. RTK-GPS ile santimetre hassasiyetinde konumlandırma sağlar.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-compass tech-card-icon"></i>
+                                <div class="tech-card-title">IMU Sensörleri</div>
+                            </div>
+                            <div class="tech-card-content">
+                                İvmeölçer, jiroskop ve magnetometre. Aracın yönelim ve hareket bilgilerini sağlar.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-brain tech-card-icon"></i>
+                                <div class="tech-card-title">AI/ML Algorithms</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Derin öğrenme modelleri. YOLO, CNN, RNN gibi ağlarla nesne tanıma ve karar verme.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sensör Füzyon -->
+            <section id="sensör-füzyon" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    Sensör Füzyon ve Veri İşleme
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Sensör füzyon, farklı sensörlerden gelen verilerin birleştirilerek daha güvenilir ve eksiksiz bir çevre algısı oluşturma sürecidir. Bu, otonom araçların güvenli çalışması için kritiktir.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Genişletilmiş Kalman Filtresi ile Sensör Füzyon</span>
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> filterpy.kalman <span class="keyword">import</span> ExtendedKalmanFilter <span class="keyword">as</span> EKF
+
+<span class="keyword">class</span> <span class="function">VehicleEKF</span>(EKF):
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, dt):
+        <span class="function">super</span>().__init__(dim_x=<span class="number">4</span>, dim_z=<span class="number">2</span>)
+        self.dt = dt
+        
+        <span class="comment"># Durum geçiş matrisi</span>
+        self.F = np.array([[<span class="number">1</span>, <span class="number">0</span>, self.dt, <span class="number">0</span>],
+                          [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, self.dt],
+                          [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>],
+                          [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]])
+        
+        <span class="comment"># Ölçüm matrisi</span>
+        self.H = np.array([[<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],
+                          [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>]])
+        
+        <span class="comment"># Gürültü matrisleri</span>
+        self.Q *= <span class="number">0.1</span>  <span class="comment"># Süreç gürültüsü</span>
+        self.R = np.eye(<span class="number">2</span>) * <span class="number">0.1</span>  <span class="comment"># Ölçüm gürültüsü</span>
+        
+    <span class="keyword">def</span> <span class="function">predict</span>(self):
+        <span class="comment"># EKF prediction step</span>
+        self.x = np.dot(self.F, self.x)
+        self.P = np.dot(self.F, np.dot(self.P, self.F.T)) + self.Q
+        
+    <span class="keyword">def</span> <span class="function">update</span>(self, gps_data, imu_data):
+        <span class="comment"># GPS ve IMU verilerini birleştir</span>
+        z = np.array([gps_data[<span class="string">'x'</span>], gps_data[<span class="string">'y'</span>]])
+        
+        <span class="comment"># EKF update step</span>
+        y = z - np.dot(self.H, self.x)
+        S = np.dot(self.H, np.dot(self.P, self.H.T)) + self.R
+        K = np.dot(self.P, np.dot(self.H.T, np.linalg.inv(S)))
+        
+        self.x = self.x + np.dot(K, y)
+        self.P = self.P - np.dot(K, np.dot(self.H, self.P))</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Teknofest Deneyimi:</strong> Projemizde GPS, IMU ve odometri verilerini EKF ile birleştirerek cm hassasiyetinde lokalizasyon elde ettik.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Sensör Füzyon Avantajları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Redundancy:</strong> Bir sensör arızalandığında diğerleri devreye girer</li>
+                                <li><strong>Accuracy:</strong> Birden fazla kaynak daha doğru sonuç verir</li>
+                                <li><strong>Robustness:</strong> Çevresel koşullara karşı dayanıklılık artar</li>
+                                <li><strong>Coverage:</strong> Her sensörün güçlü olduğu alanlar birleştirilir</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Sensör Karakteristikleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Kamera:</strong> Yüksek çözünürlük, renk bilgisi, düşük maliyet | Işık bağımlı<br>
+                            <strong>LiDAR:</strong> 3D veri, hassas mesafe, ışık bağımsız | Yüksek maliyet, hava koşulları<br>
+                            <strong>Radar:</strong> Hava koşullarından etkilenmez, hız ölçer | Düşük çözünürlük<br>
+                            <strong>GPS:</strong> Global referans, mutlak konum | Sinyal kesintileri, multipath
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Yol Planlama -->
+            <section id="yol-planlama" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-route"></i>
+                    Yol Planlama ve Navigasyon
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Yol planlama, otonom araçların başlangıç noktasından hedefe güvenli ve verimli bir şekilde ulaşması için rota oluşturma sürecidir. Bu süreç üç ana seviyede gerçekleşir: Global, lokal ve motion planning.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># D* Lite Algoritması - Dinamik Yol Planlama</span>
+<span class="keyword">import</span> heapq
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
+
+<span class="decorator">@dataclass</span>
+<span class="keyword">class</span> <span class="function">Node</span>:
+    x: <span class="keyword">int</span>
+    y: <span class="keyword">int</span>
+    g: <span class="keyword">float</span> = <span class="keyword">float</span>(<span class="string">'inf'</span>)
+    rhs: <span class="keyword">float</span> = <span class="keyword">float</span>(<span class="string">'inf'</span>)
+    
+    <span class="keyword">def</span> <span class="function">__lt__</span>(self, other):
+        <span class="keyword">return</span> <span class="keyword">False</span>
+
+<span class="keyword">class</span> <span class="function">DStarLite</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, start, goal, grid):
+        self.start = start
+        self.goal = goal
+        self.grid = grid
+        self.U = []  <span class="comment"># Priority queue</span>
+        self.nodes = {}
+        self.km = <span class="number">0</span>
+    
+    <span class="keyword">def</span> <span class="function">heuristic</span>(self, a, b):
+        <span class="keyword">return</span> <span class="function">abs</span>(a.x - b.x) + <span class="function">abs</span>(a.y - b.y)
+    
+    <span class="keyword">def</span> <span class="function">get_node</span>(self, x, y):
+        <span class="keyword">if</span> (x, y) <span class="keyword">not</span> <span class="keyword">in</span> self.nodes:
+            self.nodes[(x, y)] = <span class="function">Node</span>(x, y)
+        <span class="keyword">return</span> self.nodes[(x, y)]
+    
+    <span class="keyword">def</span> <span class="function">calculate_key</span>(self, s):
+        <span class="keyword">return</span> [
+            <span class="function">min</span>(s.g, s.rhs) + self.<span class="function">heuristic</span>(self.start, s) + self.km,
+            <span class="function">min</span>(s.g, s.rhs)
+        ]
+    
+    <span class="keyword">def</span> <span class="function">update_vertex</span>(self, u):
+        <span class="keyword">if</span> u != self.goal:
+            u.rhs = <span class="function">min</span>([
+                self.<span class="function">get_node</span>(x, y).g + <span class="number">1</span>
+                <span class="keyword">for</span> (x, y) <span class="keyword">in</span> self.<span class="function">neighbors</span>(u)
+                <span class="keyword">if</span> self.<span class="function">is_free</span>(x, y)
+            ])
+        
+        <span class="comment"># Priority queue'dan çıkar</span>
+        self.U = [item <span class="keyword">for</span> item <span class="keyword">in</span> self.U <span class="keyword">if</span> item[<span class="number">1</span>] != u]
+        
+        <span class="keyword">if</span> u.g != u.rhs:
+            <span class="function">heapq.heappush</span>(self.U, (self.<span class="function">calculate_key</span>(u), u))
+    
+    <span class="keyword">def</span> <span class="function">compute_shortest_path</span>(self):
+        <span class="keyword">while</span> self.U <span class="keyword">and</span> (
+            self.U[<span class="number">0</span>][<span class="number">0</span>] < self.<span class="function">calculate_key</span>(self.start) <span class="keyword">or</span>
+            self.start.rhs != self.start.g
+        ):
+            k_old, u = <span class="function">heapq.heappop</span>(self.U)
+            
+            <span class="keyword">if</span> k_old > self.<span class="function">calculate_key</span>(u):
+                <span class="function">heapq.heappush</span>(self.U, (self.<span class="function">calculate_key</span>(u), u))
+            <span class="keyword">elif</span> u.g > u.rhs:
+                u.g = u.rhs
+                <span class="keyword">for</span> (x, y) <span class="keyword">in</span> self.<span class="function">neighbors</span>(u):
+                    self.<span class="function">update_vertex</span>(self.<span class="function">get_node</span>(x, y))
+            <span class="keyword">else</span>:
+                u.g = <span class="keyword">float</span>(<span class="string">'inf'</span>)
+                self.<span class="function">update_vertex</span>(u)
+                <span class="keyword">for</span> (x, y) <span class="keyword">in</span> self.<span class="function">neighbors</span>(u):
+                    self.<span class="function">update_vertex</span>(self.<span class="function">get_node</span>(x, y))</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Hesaplama Karmaşıklığı:</strong> D* Lite gibi algoritmalar NP-hard problemlerdir. Gerçek zamanlı uygulamalarda heuristikler ve optimizasyonlar kritiktir.
+                        </div>
+                    </div>
+
+                    <div class="tech-stack">
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-globe tech-card-icon"></i>
+                                <div class="tech-card-title">Global Path Planning</div>
+                            </div>
+                            <div class="tech-card-content">
+                                A*, Dijkstra, D* gibi algoritmalarla coğrafi harita üzerinde optimal rota planlaması.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-map-marker-alt tech-card-icon"></i>
+                                <div class="tech-card-title">Local Path Planning</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Dynamic Window Approach (DWA), Potential Fields ile yerel engel sakınma.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-chart-line tech-card-icon"></i>
+                                <div class="tech-card-title">Motion Planning</div>
+                            </div>
+                            <div class="tech-card-content">
+                                RRT, PRM gibi sampling-based algoritmalarla kinematik kısıtlar altında hareket planlaması.
+                            </div>
+                        </div>
+                        
+                        <div class="tech-card">
+                            <div class="tech-card-header">
+                                <i class="fas fa-layer-group tech-card-icon"></i>
+                                <div class="tech-card-title">Behavioral Planning</div>
+                            </div>
+                            <div class="tech-card-content">
+                                Üst seviye karar verme. Şerit değiştirme, sollama, durakta bekleme gibi davranışlar.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kontrol Algoritmaları -->
+            <section id="kontrol-algoritmalari" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Kontrol Algoritmaları ve Araç Dinamiği
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Kontrol algoritmaları, planlanan rotanın fiziksel araç tarafından takip edilmesini sağlar. Bu süreç, araç kinematik ve dinamik modellerini dikkate alarak aktuatörlere (direksiyon, gaz, fren) komut gönderir.
+                    </p>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment"># Pure Pursuit Algoritması ve Ackermann Kinematik</span>
+<span class="keyword">import</span> math
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
+
+<span class="decorator">@dataclass</span>
+<span class="keyword">class</span> <span class="function">VehicleParams</span>:
+    L: <span class="keyword">float</span>  <span class="comment"># Dingil mesafesi (m)</span>
+    track: <span class="keyword">float</span>  <span class="comment"># İz genişliği (m)</span>
+    max_steer: <span class="keyword">float</span>  <span class="comment"># Max direksiyon açısı (rad)</span>
+
+<span class="keyword">def</span> <span class="function">pure_pursuit_steer</span>(px, py, yaw, gx, gy, params, Ld):
+    <span class="string">"""
+    Pure Pursuit yönlendirme açısı hesaplama
+    (px,py,yaw): araç pozisyonu ve yaw açısı  
+    (gx,gy): hedef nokta
+    Ld: look-ahead mesafesi
+    """</span>
+    <span class="comment"># Araca göre hedef nokta</span>
+    dx, dy = gx - px, gy - py
+    
+    <span class="comment"># Gövde çerçevesine döndür</span>
+    x_l = math.cos(yaw) * dx + math.sin(yaw) * dy
+    y_l = -math.sin(yaw) * dx + math.cos(yaw) * dy
+    
+    <span class="comment"># Alpha açısı (hedef noktaya olan açı)</span>
+    alpha = math.atan2(y_l, x_l)
+    
+    <span class="comment"># Pure Pursuit formülü</span>
+    delta = math.atan2(<span class="number">2.0</span> * params.L * math.sin(alpha), 
+                      <span class="function">max</span>(<span class="number">1e-6</span>, Ld))
+    
+    <span class="comment"># Direk

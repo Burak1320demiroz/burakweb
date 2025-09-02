@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.burakdemiroz.com.tr/sitemap.xml
+

@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Yapay zeka ve makine öğrenmesi için kapsamlı notlar, kod blokları ve görseller.">
+    <link rel="canonical" href="https://www.burakdemiroz.com.tr/ai-ml.html">
+    <meta property="og:title" content="Yapay Zeka & Machine Learning | Burak Demiröz">
+    <meta property="og:description" content="AI/ML temelleri, scikit-learn, derin öğrenme, CNN, RNN ve Transformer notları.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.burakdemiroz.com.tr/ai-ml.html">
+    <meta property="og:image" content="https://www.burakdemiroz.com.tr/images/profile.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Yapay Zeka & Machine Learning | Burak Demiröz">
+    <meta name="twitter:description" content="AI/ML temelleri, scikit-learn, derin öğrenme, CNN, RNN ve Transformer notları.">
+    <meta name="twitter:image" content="https://www.burakdemiroz.com.tr/images/profile.jpg">
     <title>Yapay Zeka & Machine Learning | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="ai-mlfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="ai-mlfavicon.png" sizes="32x32">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
@@ -1711,32 +1724,8 @@ cv_scores = <span class="function">cross_val_score</span>(pipeline, X, y, cv=<sp
             animation.onfinish = () => particle.remove();
         }
 
-        // CreateDense</span>(<span class="number">128</span>, activation=<span class="string">'relu'</span>, input_shape=(<span class="number">784</span>,)),
-    keras.layers.<span class="function">Dropout</span>(<span class="number">0.2</span>),
-    keras.layers.<span class="function">Dense</span>(<span class="number">64</span>, activation=<span class="string">'relu'</span>),
-    keras.layers.<span class="function">Dense</span>(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)
-])
-
-model.<span class="function">compile</span>(
-    optimizer=<span class="string">'adam'</span>,
-    loss=<span class="string">'sparse_categorical_crossentropy'</span>,
-    metrics=[<span class="string">'accuracy'</span>]
-)
-
-<span class="function">print</span>(model.<span class="function">summary</span>())</code></pre>
-                    </div>
-
-                    <div class="info-box">
-                        <div class="info-box-content">
-                            <strong>TensorFlow Temel Kavramları:</strong>
-                            <ul style="margin-top: 15px; margin-left: 25px;">
-                                <li><strong>Tensor:</strong> Çok boyutlu veri yapısı</li>
-                                <li><strong>Graph:</strong> Hesaplama grafiği</li>
-                                <li><strong>Session:</strong> Graf çalıştırma ortamı (TF 1.x)</li>
-                                <li><strong>Eager Execution:</strong> Anlık çalıştırma (TF 2.x varsayılan)</li>
-                            </ul>
-                        </div>
-                    </div>
+        // Opsiyonel: arka plan parçacıkları oluştur (performans için azaltılabilir)
+        // window.setInterval(createAIParticle, 4000);
                 </div>
             </section>
 

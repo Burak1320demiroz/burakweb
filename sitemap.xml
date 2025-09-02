@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/resume.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/ai-ml.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/python.html</loc>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/siber-guvenlik.html</loc>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/web-development.html</loc>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/math.html</loc>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/ing.html</loc>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/space.html</loc>
+  </url>
+  <url>
+    <loc>https://www.burakdemiroz.com.tr/teslanasılcalışır.html</loc>
+  </url>
+</urlset>
+
