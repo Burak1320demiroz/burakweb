@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Geliştirme | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon/mobiluygulamafavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon/mobiluygulamafavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Android Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(76, 175, 80, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #4CAF50;
+            --skin-color-hover: #388E3C;
+            --neon-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+            --text-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #4CAF50;
+            --error-color: #ff5555;
+            --compose-color: #6200EA;
+            --kotlin-color: #7F52FF;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(76, 175, 80, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(76, 175, 80, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fab {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(76, 175, 80, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(76, 175, 80, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(76, 175, 80, 0.1);
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fab {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Kotlin';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--kotlin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .code-block.xml::before {
+            content: 'XML';
+            color: var(--warning-color);
+        }
+        
+        .code-block.gradle::before {
+            content: 'Gradle';
+            color: var(--compose-color);
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .function { color: #50fa7b; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        .class { color: #8be9fd; }
+        .annotation { color: #f1fa8c; }
+        
+        /* Output Blocks */
+        .output-block {
+            background: rgba(76, 175, 80, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+        }
+        
+        .output-block::before {
+            content: '> Çıktı:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Special Compose Box */
+        .compose-box {
+            background: rgba(98, 0, 234, 0.1);
+            border: 1px solid rgba(98, 0, 234, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .compose-box::before {
+            content: '🚀';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(98, 0, 234, 0.5));
+        }
+        
+        .compose-box-content {
+            padding-left: 40px;
+            color: var(--compose-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fab fa-android"></i>
+                <span>Android</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#android-nedir" class="active">Android Nedir?</a></li>
+            <li><a href="#android-studio">Android Studio</a></li>
+            <li><a href="#kotlin-temelleri">Kotlin Temelleri</a></li>
+            <li><a href="#uygulama-bilesenleri">Uygulama Bileşenleri</a></li>
+            <li><a href="#jetpack-compose">Jetpack Compose</a></li>
+            <li><a href="#veri-yonetimi">Veri Yönetimi</a></li>
+            <li><a href="#network-islemleri">Network İşlemleri</a></li>
+            <li><a href="#test-etme">Test Etme</a></li>
+            <li><a href="#performans">Performans</a></li>
+            <li><a href="#yayinlama">Google Play'e Yayınlama</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fab fa-android"></i>
+                    Android Geliştirme
+                </h1>
+                <p class="hero-subtitle">
+                    Modern Android uygulamaları için Kotlin ve Jetpack Compose ile başlayın
+                </p>
+                <div class="hero-code">
+                    fun main() { println("Merhaba Android!") }
+                </div>
+            </section>
+
+            <!-- Android Nedir Section -->
+            <section id="android-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-android"></i>
+                    Android Nedir ve Neden Tercih Edilir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Android</strong>, Google tarafından geliştirilen açık kaynaklı mobil işletim sistemidir. Dünya genelinde %70'in üzerinde pazar payına sahip olan Android, milyarlarca cihazda kullanılmaktadır. Android geliştirme, çok geniş bir kullanıcı kitlesine ulaşma imkanı sağlar.
+                    </p>
+                    <p>
+                        Android uygulamaları Java veya <strong>Kotlin</strong> programlama dilleri ile geliştirilebilir. Google, 2017'den beri Kotlin'i tercih ettiğini açıkladı ve 2019'da Kotlin'i "Kotlin-first" yaklaşımıyla resmi dil ilan etti. Modern Android geliştirmede Kotlin kullanımı önerilmektedir.
+                    </p>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Pro İpucu:</strong> 2025 yılında yeni Android uygulamalar için API Level 35 (Android 15) hedeflenmesi zorunludur. Mevcut uygulamalar için de API Level 34 minimum gereklidir.
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Android'in Avantajları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Geniş kullanıcı kitlesi (%70+ pazar payı)</li>
+                                <li>• Açık kaynak ve esnek platform</li>
+                                <li>• Google Play Store ile kolay dağıtım</li>
+                                <li>• Güçlü geliştirme araçları (Android Studio)</li>
+                                <li>• Zengin kütüphane ve framework desteği</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-chart-line note-card-icon"></i>
+                            <span class="note-card-title">Pazar Durumu</span>
+                        </div>
+                        <div class="note-card-content">
+                            Android geliştiriciler için büyük bir iş fırsatı alanıdır. Mobil geliştirici maaşları diğer yazılım geliştirme alanlarına göre %10-15 daha yüksektir.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Google, Netflix, Uber, WhatsApp gibi büyük şirketler Android platformunu tercih etmektedir. Android'in Linux tabanlı açık kaynak yapısı, geliştiricilere büyük esneklik sağlar ve çeşitli cihaz türlerinde çalışabilir.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Android Studio Section -->
+            <section id="android-studio" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i>
+                    Android Studio Kurulumu ve İlk Proje
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Android Studio</strong>, Google tarafından geliştirilen resmi Android geliştirme ortamıdır. IntelliJ IDEA tabanlı olan bu IDE, Android geliştirme için özel olarak optimize edilmiştir ve 2025 sürümü ile birlikte yapay zeka destekli kod tamamlama özelliği gelmiştir.
+                    </p>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-download note-card-icon"></i>
+                            <span class="note-card-title">Kurulum Adımları</span>
+                        </div>
+                        <div class="note-card-content">
+                            1. developer.android.com'dan Android Studio'yu indirin<br>
+                            2. Kurulum sihirbazını takip edin<br>
+                            3. SDK Manager'dan gerekli API seviyelerini indirin<br>
+                            4. AVD Manager'dan emülatör kurun
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Sistem Gereksinimleri:</strong> En az 8GB RAM (16GB önerilen), 4GB disk alanı ve x86-64 CPU gereklidir. macOS, Windows ve Linux desteklenir.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        İlk projenizi oluşturmak için <strong>"Empty Activity"</strong> şablonunu seçin. Bu şablon temel Activity yapısını ve layout dosyasını otomatik oluşturur. Proje oluştururken API seviyesi olarak minimum API 24 (Android 7.0) seçmeniz önerilir.
+                    </p>
+
+                    <div class="code-block gradle">
+                        <pre><code><span class="comment">// app/build.gradle (Module: App)</span>
+android {
+    compileSdk <span class="number">35</span>
+    
+    defaultConfig {
+        applicationId <span class="string">"com.example.myapp"</span>
+        minSdk <span class="number">24</span>
+        targetSdk <span class="number">35</span>
+        versionCode <span class="number">1</span>
+        versionName <span class="string">"1.0"</span>
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> İlk başta emülatör yavaş çalışabilir. HAXM (Intel) veya Hyper-V (AMD) hızlandırma özelliklerinin aktif olduğundan emin olun.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kotlin Temelleri Section -->
+            <section id="kotlin-temelleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-language"></i>
+                    Kotlin Programlama Temelleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Kotlin</strong>, JetBrains tarafından geliştirilen ve Google tarafından Android için tercih edilen modern bir programlama dilidir. Java ile %100 uyumlu olan Kotlin, daha az kod yazmayı sağlar ve null güvenliği gibi modern özellikler sunar.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Değişken tanımlama</span>
+<span class="keyword">val</span> <span class="function">name</span> = <span class="string">"Android"</span>        <span class="comment">// Değiştirilemez (immutable)</span>
+<span class="keyword">var</span> <span class="function">version</span> = <span class="number">15</span>           <span class="comment">// Değiştirilebilir (mutable)</span>
+
+<span class="comment">// Null güvenliği</span>
+<span class="keyword">var</span> <span class="function">nullableString</span>: String? = <span class="keyword">null</span>
+<span class="keyword">val</span> <span class="function">length</span> = nullableString?.length ?: <span class="number">0</span>
+
+<span class="comment">// Fonksiyon tanımlama</span>
+<span class="keyword">fun</span> <span class="function">greetUser</span>(name: String): String {
+    <span class="keyword">return</span> <span class="string">"Merhaba, $name!"</span>
+}
+
+<span class="comment">// Tek satır fonksiyon</span>
+<span class="keyword">fun</span> <span class="function">add</span>(a: Int, b: Int) = a + b</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Kotlin vs Java:</strong> Kotlin %40 daha az kod yazmayı sağlar. Null Pointer Exception'ları büyük ölçüde ortadan kaldırır ve lambda ifadeleri ile fonksiyonel programlamayı destekler.
+                        </div>
+                    </div>
+                    
+                    <p><strong>Data Class kullanımı:</strong></p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Data class otomatik olarak equals, hashCode, toString üretir</span>
+<span class="keyword">data class</span> <span class="class">User</span>(
+    <span class="keyword">val</span> id: String,
+    <span class="keyword">val</span> name: String,
+    <span class="keyword">val</span> email: String
+)
+
+<span class="comment">// Kullanımı</span>
+<span class="keyword">val</span> user = <span class="class">User</span>(<span class="string">"1"</span>, <span class="string">"Ahmet Yılmaz"</span>, <span class="string">"ahmet@example.com"</span>)
+println(user.name) <span class="comment">// Çıktı: Ahmet Yılmaz</span></code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Kotlin'in Temel Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Null Safety:</strong> NullPointerException'ları önler</li>
+                                <li><strong>Extension Functions:</strong> Mevcut sınıflara fonksiyon ekler</li>
+                                <li><strong>Data Classes:</strong> Otomatik kod üretimi</li>
+                                <li><strong>Coroutines:</strong> Asenkron programlama desteği</li>
+                                <li><strong>Smart Cast:</strong> Otomatik tip dönüşümü</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-rocket note-card-icon"></i>
+                            <span class="note-card-title">Coroutines (Eş zamanlı İşlemler)</span>
+                        </div>
+                        <div class="note-card-content">
+                            Kotlin Coroutines, arka plan işlemlerini yönetmenin modern yoludur. Thread'lere göre daha hafif ve verimlidir.
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Coroutine kullanımı</span>
+<span class="keyword">import</span> kotlinx.coroutines.*
+
+<span class="keyword">fun</span> <span class="function">main</span>() {
+    runBlocking {
+        <span class="keyword">launch</span> {
+            delay(<span class="number">1000L</span>)
+            println(<span class="string">"Dünya!"</span>)
+        }
+        println(<span class="string">"Merhaba,"</span>)
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Uygulama Bileşenleri Section -->
+            <section id="uygulama-bilesenleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-puzzle-piece"></i>
+                    Android Uygulama Bileşenleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Android uygulamaları dört temel bileşenden oluşur: <strong>Activities</strong>, <strong>Services</strong>, <strong>Broadcast Receivers</strong> ve <strong>Content Providers</strong>. Bu bileşenler uygulamanın farklı işlevlerini yönetir ve birbirleri ile etkileşim kurar.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel Bileşenler:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Activity:</strong> Kullanıcı arayüzü ekranları</li>
+                                <li><strong>Fragment:</strong> Yeniden kullanılabilir UI parçaları</li>
+                                <li><strong>Service:</strong> Arka plan işlemleri</li>
+                                <li><strong>Intent:</strong> Bileşenler arası iletişim</li>
+                                <li><strong>Broadcast Receiver:</strong> Sistem olaylarını dinleme</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Activity Yaşam Döngüsü:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">class</span> <span class="class">MainActivity</span> : AppCompatActivity() {
+    
+    <span class="keyword">override fun</span> <span class="function">onCreate</span>(savedInstanceState: Bundle?) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        <span class="comment">// UI bileşenlerini başlat</span>
+    }
+    
+    <span class="keyword">override fun</span> <span class="function">onStart</span>() {
+        <span class="keyword">super</span>.onStart()
+        <span class="comment">// Activity görünür hale geldiğinde</span>
+    }
+    
+    <span class="keyword">override fun</span> <span class="function">onResume</span>() {
+        <span class="keyword">super</span>.onResume()
+        <span class="comment">// Kullanıcı etkileşimi başladığında</span>
+    }
+    
+    <span class="keyword">override fun</span> <span class="function">onPause</span>() {
+        <span class="keyword">super</span>.onPause()
+        <span class="comment">// Activity duraklatıldığında</span>
+    }
+    
+    <span class="keyword">override fun</span> <span class="function">onDestroy</span>() {
+        <span class="keyword">super</span>.onDestroy()
+        <span class="comment">// Activity yok edildiğinde - temizlik işlemleri</span>
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Önemli:</strong> Activity yaşam döngüsü metodlarında super.methodName() çağırısını yapmayı unutmayın. Aksi takdirde uygulama çökebilir.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-exchange-alt note-card-icon"></i>
+                            <span class="note-card-title">Intent Kullanımı</span>
+                        </div>
+                        <div class="note-card-content">
+                            Intent'ler, Activity'ler arasında geçiş yapmak ve veri aktarmak için kullanılır:<br>
+                            <code>val intent = Intent(this, SecondActivity::class.java)</code><br>
+                            <code>startActivity(intent)</code>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Fragment Kullanımı:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">class</span> <span class="class">HomeFragment</span> : Fragment() {
+    
+    <span class="keyword">override fun</span> <span class="function">onCreateView</span>(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        <span class="keyword">return</span> inflater.inflate(R.layout.fragment_home, container, <span class="keyword">false</span>)
+    }
+    
+    <span class="keyword">override fun</span> <span class="function">onViewCreated</span>(view: View, savedInstanceState: Bundle?) {
+        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState)
+        <span class="comment">// View bileşenlerini yapılandır</span>
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Modern Yaklaşım:</strong> Yeni projelerde Fragment yerine Jetpack Compose Navigation kullanmayı düşünün. Daha basit ve performanslıdır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Jetpack Compose Section -->
+            <section id="jetpack-compose" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-magic"></i>
+                    Jetpack Compose ile Modern UI
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Jetpack Compose</strong>, Android için Google'ın modern kullanıcı arayüzü geliştirme toolkit'idir. XML layout dosyalarını tamamen ortadan kaldırarak, UI'ı Kotlin kod ile tanımlamanızı sağlar. 2025'te Android uygulamalarının %60'ı Compose kullanmaktadır.
+                    </p>
+
+                    <div class="compose-box">
+                        <div class="compose-box-content">
+                            <strong>Compose'un Avantajları:</strong> Daha az kod, daha güvenli, güçlü araçlar ve hızlı geliştirme. XML yerine tamamen Kotlin ile UI oluşturabilirsiniz.
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="annotation">@Composable</span>
+<span class="keyword">fun</span> <span class="function">Greeting</span>(name: String) {
+    <span class="class">Text</span>(
+        text = <span class="string">"Merhaba, $name!"</span>,
+        modifier = <span class="class">Modifier</span>.padding(<span class="number">16</span>.dp),
+        style = <span class="class">MaterialTheme</span>.typography.headlineMedium
+    )
+}
+
+<span class="annotation">@Composable</span>
+<span class="keyword">fun</span> <span class="function">UserCard</span>(user: User) {
+    <span class="class">Card</span>(
+        modifier = <span class="class">Modifier</span>
+            .fillMaxWidth()
+            .padding(<span class="number">8</span>.dp),
+        elevation = <span class="class">CardDefaults</span>.cardElevation(defaultElevation = <span class="number">4</span>.dp)
+    ) {
+        <span class="class">Column</span>(
+            modifier = <span class="class">Modifier</span>.padding(<span class="number">16</span>.dp)
+        ) {
+            <span class="class">Text</span>(
+                text = user.name,
+                style = <span class="class">MaterialTheme</span>.typography.titleMedium
+            )
+            <span class="class">Text</span>(
+                text = user.email,
+                style = <span class="class">MaterialTheme</span>.typography.bodyMedium,
+                color = <span class="class">MaterialTheme</span>.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="output-block">
+                        Compose fonksiyonları UI bileşenlerini doğrudan oluşturur ve state değişikliklerine otomatik olarak tepki verir.
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Compose Temel Bileşenler:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Text:</strong> Metin gösterimi</li>
+                                <li><strong>Button:</strong> Tıklanabilir düğmeler</li>
+                                <li><strong>Image:</strong> Resim gösterimi</li>
+                                <li><strong>Column/Row:</strong> Dikey/yatay düzenleme</li>
+                                <li><strong>LazyColumn:</strong> Kaydırılabilir listeler</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div name="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-palette note-card-icon"></i>
+                            <span class="note-card-title">Material Design 3</span>
+                        </div>
+                        <div class="note-card-content">
+                            Compose, Material Design 3 (Material You) destekler. Dinamik renkler ve kişiselleştirilmiş temalar otomatik olarak uygulanır.
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--compose-color); margin: 20px 0;">State Yönetimi:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="annotation">@Composable</span>
+<span class="keyword">fun</span> <span class="function">Counter</span>() {
+    <span class="keyword">var</span> count <span class="keyword">by</span> <span class="function">remember</span> { mutableStateOf(<span class="number">0</span>) }
+    
+    <span class="class">Column</span>(
+        horizontalAlignment = <span class="class">Alignment</span>.CenterHorizontally,
+        modifier = <span class="class">Modifier</span>.padding(<span class="number">16</span>.dp)
+    ) {
+        <span class="class">Text</span>(
+            text = <span class="string">"Sayaç: $count"</span>,
+            style = <span class="class">MaterialTheme</span>.typography.headlineMedium
+        )
+        
+        <span class="class">Button</span>(
+            onClick = { count++ },
+            modifier = <span class="class">Modifier</span>.padding(top = <span class="number">8</span>.dp)
+        ) {
+            <span class="class">Text</span>(<span class="string">"Artır"</span>)
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Performance:</strong> remember ve derivedStateOf kullanarak gereksiz recomposition'ları önleyin. Büyük listelerde LazyColumn tercih edin.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Veri Yönetimi Section -->
+            <section id="veri-yonetimi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-database"></i>
+                    Veri Yönetimi ve Room Database
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Modern Android uygulamalarında veri yönetimi için <strong>Room Database</strong> kullanılır. Room, SQLite üzerine inşa edilmiş güçlü bir ORM (Object Relational Mapping) kütüphanesidir ve compile-time verification sağlar.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Entity (Veri modeli)</span>
+<span class="annotation">@Entity</span>(tableName = <span class="string">"users"</span>)
+<span class="keyword">data class</span> <span class="class">User</span>(
+    <span class="annotation">@PrimaryKey</span> <span class="keyword">val</span> id: String,
+    <span class="keyword">val</span> name: String,
+    <span class="keyword">val</span> email: String,
+    <span class="keyword">val</span> createdAt: Long = System.currentTimeMillis()
+)
+
+<span class="comment">// DAO (Data Access Object)</span>
+<span class="annotation">@Dao</span>
+<span class="keyword">interface</span> <span class="class">UserDao</span> {
+    
+    <span class="annotation">@Query</span>(<span class="string">"SELECT * FROM users ORDER BY createdAt DESC"</span>)
+    <span class="keyword">fun</span> <span class="function">getAllUsers</span>(): Flow&lt;List&lt;User&gt;&gt;
+    
+    <span class="annotation">@Insert</span>(onConflict = OnConflictStrategy.REPLACE)
+    <span class="keyword">suspend fun</span> <span class="function">insertUser</span>(user: User)
+    
+    <span class="annotation">@Delete</span>
+    <span class="keyword">suspend fun</span> <span class="function">deleteUser</span>(user: User)
+    
+    <span class="annotation">@Query</span>(<span class="string">"SELECT * FROM users WHERE name LIKE :searchQuery"</span>)
+    <span class="keyword">fun</span> <span class="function">searchUsers</span>(searchQuery: String): Flow&lt;List&lt;User&gt;&gt;
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Database sınıfı</span>
+<span class="annotation">@Database</span>(
+    entities = [User::<span class="keyword">class</span>],
+    version = <span class="number">1</span>,
+    exportSchema = <span class="keyword">false</span>
+)
+<span class="annotation">@TypeConverters</span>(Converters::<span class="keyword">class</span>)
+<span class="keyword">abstract class</span> <span class="class">AppDatabase</span> : RoomDatabase() {
+    
+    <span class="keyword">abstract fun</span> <span class="function">userDao</span>(): UserDao
+    
+    <span class="keyword">companion object</span> {
+        <span class="annotation">@Volatile</span>
+        <span class="keyword">private var</span> INSTANCE: AppDatabase? = <span class="keyword">null</span>
+        
+        <span class="keyword">fun</span> <span class="function">getDatabase</span>(context: Context): AppDatabase {
+            <span class="keyword">return</span> INSTANCE ?: synchronized(<span class="keyword">this</span>) {
+                <span class="keyword">val</span> instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDatabase::<span class="keyword">class</span>.java,
+                    <span class="string">"app_database"</span>
+                ).build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Repository Pattern:</strong> DAO'ları doğrudan kullanmak yerine Repository sınıfları oluşturun. Bu sayede veri kaynaklarını soyutlayabilir ve test edilebilirliği artırabilirsiniz.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Room'un Avantajları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Compile-time verification:</strong> SQL sorguları derleme zamanında kontrol edilir</li>
+                                <li><strong>Flow desteği:</strong> Reactive programming için Flow entegrasyonu</li>
+                                <li><strong>Migration desteği:</strong> Veritabanı şeması güncellemeleri</li>
+                                <li><strong>Coroutine desteği:</strong> Suspend fonksiyonlar ile async işlemler</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-cloud note-card-icon"></i>
+                            <span class="note-card-title">DataStore (SharedPreferences'ın Yerine)</span>
+                        </div>
+                        <div class="note-card-content">
+                            Basit key-value verileri için Room yerine Jetpack DataStore kullanın. Proto DataStore daha güvenli, Preferences DataStore daha basittir.
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Repository sınıfı örneği</span>
+<span class="keyword">class</span> <span class="class">UserRepository</span>(
+    <span class="keyword">private val</span> userDao: UserDao
+) {
+    <span class="keyword">fun</span> <span class="function">getAllUsers</span>(): Flow&lt;List&lt;User&gt;&gt; = userDao.getAllUsers()
+    
+    <span class="keyword">suspend fun</span> <span class="function">insertUser</span>(user: User) {
+        userDao.insertUser(user)
+    }
+    
+    <span class="keyword">suspend fun</span> <span class="function">deleteUser</span>(user: User) {
+        userDao.deleteUser(user)
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Network İşlemleri Section -->
+            <section id="network-islemleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-wifi"></i>
+                    Network İşlemleri ve API Entegrasyonu
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Android uygulamalarında API çağrıları için <strong>Retrofit</strong> kütüphanesi endüstri standardıdır. Retrofit, HTTP isteklerini Kotlin interface'leri ile kolayca yönetmenizi sağlar ve coroutine desteği sunar.
+                    </p>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// API interface tanımı</span>
+<span class="keyword">interface</span> <span class="class">ApiService</span> {
+    
+    <span class="annotation">@GET</span>(<span class="string">"users"</span>)
+    <span class="keyword">suspend fun</span> <span class="function">getUsers</span>(): Response&lt;List&lt;User&gt;&gt;
+    
+    <span class="annotation">@GET</span>(<span class="string">"users/{id}"</span>)
+    <span class="keyword">suspend fun</span> <span class="function">getUserById</span>(
+        <span class="annotation">@Path</span>(<span class="string">"id"</span>) userId: String
+    ): Response&lt;User&gt;
+    
+    <span class="annotation">@POST</span>(<span class="string">"users"</span>)
+    <span class="keyword">suspend fun</span> <span class="function">createUser</span>(
+        <span class="annotation">@Body</span> user: CreateUserRequest
+    ): Response&lt;User&gt;
+    
+    <span class="annotation">@PUT</span>(<span class="string">"users/{id}"</span>)
+    <span class="keyword">suspend fun</span> <span class="function">updateUser</span>(
+        <span class="annotation">@Path</span>(<span class="string">"id"</span>) userId: String,
+        <span class="annotation">@Body</span> user: UpdateUserRequest
+    ): Response&lt;User&gt;
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Retrofit instance oluşturma</span>
+<span class="keyword">object</span> <span class="class">ApiClient</span> {
+    <span class="keyword">private const val</span> BASE_URL = <span class="string">"https://api.example.com/"</span>
+    
+    <span class="keyword">private val</span> okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        })
+        .addInterceptor { chain ->
+            <span class="keyword">val</span> request = chain.request().newBuilder()
+                .addHeader(<span class="string">"Authorization"</span>, <span class="string">"Bearer your-token"</span>)
+                .build()
+            chain.proceed(request)
+        }
+        .connectTimeout(<span class="number">30</span>, TimeUnit.SECONDS)
+        .readTimeout(<span class="number">30</span>, TimeUnit.SECONDS)
+        .build()
+    
+    <span class="keyword">val</span> apiService: ApiService <span class="keyword">by lazy</span> {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::<span class="keyword">class</span>.java)
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Offline-First Yaklaşım:</strong> NetworkBoundResource pattern kullanarak önce yerel veritabanından veri gösterin, sonra API'den güncel veriyi çekin ve veritabanını güncelleyin.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Network Güvenliği:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>HTTPS:</strong> Her zaman güvenli bağlantı kullanın</li>
+                                <li><strong>Certificate Pinning:</strong> SSL sertifikası doğrulama</li>
+                                <li><strong>Token Yönetimi:</strong> JWT token'ları güvenli saklayın</li>
+                                <li><strong>Request/Response Şifreleme:</strong> Hassas veriler için</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-sync note-card-icon"></i>
+                            <span class="note-card-title">Hata Yönetimi</span>
+                        </div>
+                        <div class="note-card-content">
+                            Network hatalarını try-catch blokları ile yakalayın. Timeout, network unavailable gibi durumları kullanıcıya anlamlı mesajlarla bildirin.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Repository'de network çağrısı</span>
+<span class="keyword">class</span> <span class="class">UserRepository</span>(
+    <span class="keyword">private val</span> apiService: ApiService,
+    <span class="keyword">private val</span> userDao: UserDao
+) {
+    <span class="keyword">suspend fun</span> <span class="function">getUsers</span>(): Resource&lt;List&lt;User&gt;&gt; {
+        <span class="keyword">return try</span> {
+            <span class="keyword">val</span> response = apiService.getUsers()
+            <span class="keyword">if</span> (response.isSuccessful) {
+                response.body()?.let { users ->
+                    userDao.insertUsers(users)
+                    Resource.Success(users)
+                } ?: Resource.Error(<span class="string">"Veri bulunamadı"</span>)
+            } <span class="keyword">else</span> {
+                Resource.Error(<span class="string">"Sunucu hatası: ${response.code()}"</span>)
+            }
+        } <span class="keyword">catch</span> (e: Exception) {
+            Resource.Error(e.message ?: <span class="string">"Bilinmeyen hata"</span>)
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Network çağrıları asla Main Thread'de yapılmamalıdır. Coroutines veya Background Thread kullanın. ANR (Application Not Responding) hatasına neden olabilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Test Etme Section -->
+            <section id="test-etme" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-vial"></i>
+                    Test Etme ve Kalite Güvencesi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Android uygulamalarında test etme, <strong>Test Piramidi</strong> yaklaşımını takip eder: %70 Unit testler, %20 Integration testler, %10 UI testleri. Bu yapı hızlı geri bildirim ve güvenilir kod kalitesi sağlar.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Test Türleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Unit Test:</strong> Tek fonksiyon/sınıf testleri (JUnit)</li>
+                                <li><strong>Integration Test:</strong> Bileşen etkileşim testleri</li>
+                                <li><strong>UI Test:</strong> Kullanıcı arayüzü testleri (Espresso)</li>
+                                <li><strong>Performance Test:</strong> Bellek ve CPU testleri</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Unit Test örneği</span>
+<span class="annotation">@Test</span>
+<span class="keyword">fun</span> <span class="function">userRepository_insertsUser_successfully</span>() = runTest {
+    <span class="comment">// Arrange</span>
+    <span class="keyword">val</span> user = User(<span class="string">"1"</span>, <span class="string">"John Doe"</span>, <span class="string">"john@example.com"</span>)
+    
+    <span class="comment">// Act</span>
+    repository.insertUser(user)
+    <span class="keyword">val</span> result = repository.getAllUsers().first()
+    
+    <span class="comment">// Assert</span>
+    assertThat(result).contains(user)
+    assertThat(result.size).isEqualTo(<span class="number">1</span>)
+}
+
+<span class="annotation">@Test</span>
+<span class="keyword">fun</span> <span class="function">emailValidator_validEmail_returnsTrue</span>() {
+    <span class="comment">// Arrange</span>
+    <span class="keyword">val</span> email = <span class="string">"test@example.com"</span>
+    
+    <span class="comment">// Act</span>
+    <span class="keyword">val</span> result = EmailValidator.isValid(email)
+    
+    <span class="comment">// Assert</span>
+    assertThat(result).isTrue()
+}</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// UI Test (Espresso) örneği</span>
+<span class="annotation">@RunWith</span>(AndroidJUnit4::<span class="keyword">class</span>)
+<span class="keyword">class</span> <span class="class">MainActivityTest</span> {
+    
+    <span class="annotation">@get:Rule</span>
+    <span class="keyword">val</span> activityRule = ActivityScenarioRule(MainActivity::<span class="keyword">class</span>.java)
+    
+    <span class="annotation">@Test</span>
+    <span class="keyword">fun</span> <span class="function">clickButton_displaysCorrectText</span>() {
+        <span class="comment">// Düğmeye tıkla</span>
+        onView(withId(R.id.button))
+            .perform(click())
+        
+        <span class="comment">// Sonucu doğrula</span>
+        onView(withId(R.id.textView))
+            .check(matches(withText(<span class="string">"Merhaba!"</span>)))
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Mockito/MockK Kullanımı:</strong> Dependency'leri mock'layarak unit testlerinizi dış bağımlılıklardan izole edin. Bu testleri daha hızlı ve güvenilir yapar.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-robot note-card-icon"></i>
+                            <span class="note-card-title">Test Automation</span>
+                        </div>
+                        <div class="note-card-content">
+                            CI/CD pipeline'a testleri entegre edin. GitHub Actions, Bitrise veya Jenkins ile her commit'te otomatik test çalıştırın.
+                        </div>
+                    </div>
+
+                    <div class="compose-box">
+                        <div class="compose-box-content">
+                            <strong>Compose Testing:</strong> Jetpack Compose için özel test kütüphaneleri kullanın. Semantic matchers ile UI bileşenlerini test edin.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Compose UI Test örneği</span>
+<span class="annotation">@Test</span>
+<span class="keyword">fun</span> <span class="function">userCard_displaysCorrectInformation</span>() {
+    composeTestRule.setContent {
+        <span class="class">UserCard</span>(user = <span class="class">User</span>(<span class="string">"1"</span>, <span class="string">"John"</span>, <span class="string">"john@test.com"</span>))
+    }
+    
+    composeTestRule
+        .onNodeWithText(<span class="string">"John"</span>)
+        .assertIsDisplayed()
+    
+    composeTestRule
+        .onNodeWithText(<span class="string">"john@test.com"</span>)
+        .assertIsDisplayed()
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performans Section -->
+            <section id="performans" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Performans Optimizasyonu
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Android uygulamalarında performans optimizasyonu, <strong>bellek yönetimi</strong>, <strong>batarya verimliliği</strong> ve <strong>responsive UI</strong> odaklıdır. Modern cihazlarda bile kaynakları verimli kullanmak kullanıcı deneyimini önemli ölçüde iyileştirir.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Performans Alanları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Memory:</strong> Memory leak'leri önleme</li>
+                                <li><strong>CPU:</strong> Gereksiz işlemleri azaltma</li>
+                                <li><strong>Network:</strong> Veri kullanımını optimize etme</li>
+                                <li><strong>Battery:</strong> Güç tüketimini minimize etme</li>
+                                <li><strong>UI:</strong> 60 FPS smooth rendering</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Android Studio Profiler:</strong> Memory Profiler, CPU Profiler ve Network Profiler kullanarak uygulamanızın performansını sürekli izleyin ve bottleneck'leri tespit edin.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Memory leak'i önleme - WeakReference kullanımı</span>
+<span class="keyword">class</span> <span class="class">MyAsyncTask</span>(<span class="keyword">private val</span> activityRef: WeakReference&lt;Activity&gt;) {
+    
+    <span class="keyword">fun</span> <span class="function">doBackgroundWork</span>() {
+        <span class="comment">// Arka plan işlemleri</span>
+        GlobalScope.launch(Dispatchers.IO) {
+            <span class="keyword">val</span> result = performNetworkCall()
+            
+            withContext(Dispatchers.Main) {
+                activityRef.get()?.let { activity ->
+                    <span class="comment">// UI güncelleme - Activity hala alive ise</span>
+                    updateUI(result)
+                }
+            }
+        }
+    }
+}
+
+<span class="comment">// Kullanımı</span>
+<span class="keyword">val</span> task = MyAsyncTask(WeakReference(<span class="keyword">this</span>))</code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-battery-half note-card-icon"></i>
+                            <span class="note-card-title">Batarya Optimizasyonu</span>
+                        </div>
+                        <div class="note-card-content">
+                            Doze mode ve App Standby'a uyum sağlayın. WorkManager kullanarak background işlemleri sistem kısıtlamalarına uygun yapın.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Efficient image loading with Glide</span>
+Glide.with(context)
+    .load(imageUrl)
+    .placeholder(R.drawable.placeholder)
+    .error(R.drawable.error_image)
+    .diskCacheStrategy(DiskCacheStrategy.ALL)
+    .transform(CenterCrop(), RoundedCorners(<span class="number">16</span>))
+    .into(imageView)
+
+<span class="comment">// RecyclerView optimizasyonu</span>
+<span class="keyword">class</span> <span class="class">UserAdapter</span> : RecyclerView.Adapter&lt;UserViewHolder&gt;() {
+    
+    <span class="keyword">init</span> {
+        setHasStableIds(<span class="keyword">true</span>) <span class="comment">// Performance için</span>
+    }
+    
+    <span class="keyword">override fun</span> <span class="function">getItemId</span>(position: Int): Long {
+        <span class="keyword">return</span> users[position].id.hashCode().toLong()
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>ANR Önleme:</strong> Main thread'de ağır işlemler yapmayın. 5 saniyeden uzun süren işlemler Application Not Responding hatasına neden olur.
+                        </div>
+                    </div>
+
+                    <div class="compose-box">
+                        <div class="compose-box-content">
+                            <strong>Compose Performance:</strong> remember, derivedStateOf ve stable data classes kullanarak gereksiz recomposition'ları önleyin. LazyColumn'da key kullanımına dikkat edin.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Compose performans optimizasyonu</span>
+<span class="annotation">@Composable</span>
+<span class="keyword">fun</span> <span class="function">UserList</span>(users: List&lt;User&gt;) {
+    <span class="class">LazyColumn</span> {
+        items(
+            items = users,
+            key = { user -> user.id } <span class="comment">// Performance için önemli</span>
+        ) { user ->
+            <span class="class">UserItem</span>(
+                user = user,
+                onClick = remember { { onUserClick(user.id) } }
+            )
+        }
+    }
+}
+
+<span class="annotation">@Stable</span>
+<span class="keyword">data class</span> <span class="class">User</span>(
+    <span class="keyword">val</span> id: String,
+    <span class="keyword">val</span> name: String,
+    <span class="keyword">val</span> email: String
+)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Google Play'e Yayınlama Section -->
+            <section id="yayinlama" class="content-section">
+                <h2 class="section-title">
+                    <i class="fab fa-google-play"></i>
+                    Google Play Store'a Yayınlama
+                </h2>
+                <div class="section-content">
+                    <p>
+                        2025 yılında Google Play Store'a uygulama yayınlamak için <strong>App Bundle (AAB)</strong> formatı zorunludur. AAB formatı, APK'ya göre %15 daha küçük indirme boyutu sağlar ve Play Dynamic Delivery ile optimize dağıtım sunar.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>2025 Gereksinimleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Target API Level 35:</strong> Yeni uygulamalar için zorunlu</li>
+                                <li><strong>App Bundle:</strong> AAB formatı zorunlu</li>
+                                <li><strong>64-bit desteği:</strong> ARM64 ve x86-64 gerekli</li>
+                                <li><strong>Privacy Policy:</strong> Kullanıcı verisi toplayan uygulamalar için</li>
+                                <li><strong>Content Rating:</strong> IARC rating sistemi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="code-block gradle">
+                        <pre><code><span class="comment">// build.gradle (app) - Release yapılandırması</span>
+android {
+    ...
+    
+    signingConfigs {
+        release {
+            storeFile file(<span class="string">'path/to/keystore.jks'</span>)
+            storePassword <span class="string">'your_store_password'</span>
+            keyAlias <span class="string">'your_key_alias'</span>
+            keyPassword <span class="string">'your_key_password'</span>
+        }
+    }
+    
+    buildTypes {
+        release {
+            minifyEnabled <span class="keyword">true</span>
+            shrinkResources <span class="keyword">true</span>
+            proguardFiles getDefaultProguardFile(
+                <span class="string">'proguard-android-optimize.txt'</span>
+            ), <span class="string">'proguard-rules.pro'</span>
+            signingConfig signingConfigs.release
+        }
+    }
+    
+    bundle {
+        language {
+            enableSplit = <span class="keyword">true</span>
+        }
+        density {
+            enableSplit = <span class="keyword">true</span>
+        }
+        abi {
+            enableSplit = <span class="keyword">true</span>
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Play Console:</strong> Internal testing ile başlayın, sonra Open/Closed testing aşamalarını kullanın. Production'a geçmeden önce en az 20 test kullanıcısından geri bildirim alın.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-key note-card-icon"></i>
+                            <span class="note-card-title">App Signing</span>
+                        </div>
+                        <div class="note-card-content">
+                            Play App Signing'i aktif edin. Google, keystore yönetimini üstlenir ve daha güvenli dağıtım sağlar. Upload key ile signing key ayrı tutulur.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Önemli:</strong> Keystore dosyanızı güvenli bir yerde saklayın ve şifresini unutmayın. Kaybolursa uygulamanızı güncelleyemezsiniz!
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Terminal komutları - AAB oluşturma</span>
+
+<span class="comment"># Debug AAB</span>
+./gradlew bundleDebug
+
+<span class="comment"># Release AAB</span>
+./gradlew bundleRelease
+
+<span class="comment"># APK'dan AAB test etme</span>
+java -jar bundletool.jar build-apks \
+  --bundle=app-release.aab \
+  --output=app.apks \
+  --ks=keystore.jks \
+  --ks-pass=pass:your_password \
+  --ks-key-alias=your_alias \
+  --key-pass=pass:your_key_password
+
+<span class="comment"># Cihaza yükleme</span>
+java -jar bundletool.jar install-apks --apks=app.apks</code></pre>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Store Listing Optimizasyonu:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Icon:</strong> 512x512 adaptive icon</li>
+                                <li><strong>Screenshots:</strong> Minimum 2, maksimum 8 adet</li>
+                                <li><strong>Feature Graphic:</strong> 1024x500 çözünürlük</li>
+                                <li><strong>Video:</strong> YouTube tanıtım videosu</li>
+                                <li><strong>Açıklama:</strong> SEO optimizasyonu ile anahtar kelimeler</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="compose-box">
+                        <div class="compose-box-content">
+                            <strong>Play Feature Delivery:</strong> Dynamic Feature Modules kullanarak uygulamanızı modüler hale getirin. Kullanıcılar sadece ihtiyaç duydukları özellikleri indirir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Son Bölüm: İleri Konular -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-rocket"></i>
+                    İleri Seviye Konular ve Gelecek
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Android geliştirmede uzmanlaşmak için öğrenmeniz gereken ileri seviye konular ve 2025 trendleri:
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>İleri Seviye Konular:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Kotlin Multiplatform:</strong> iOS ile kod paylaşımı</li>
+                                <li><strong>Custom Gradle Plugins:</strong> Build süreçlerini özelleştirme</li>
+                                <li><strong>Security:</strong> ProGuard, SSL Pinning, Biometric Auth</li>
+                                <li><strong>CI/CD:</strong> GitHub Actions, Bitrise entegrasyonu</li>
+                                <li><strong>Machine Learning:</strong> TensorFlow Lite, ML Kit</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="compose-box">
+                        <div class="compose-box-content">
+                            <strong>2025 Trendleri:</strong> Kotlin Multiplatform Mobile (KMM) resmen stabil. Compose Multiplatform ile iOS'a genişleme. AI entegrasyonu ve on-device ML modelleri yaygınlaşıyor.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-graduation-cap note-card-icon"></i>
+                            <span class="note-card-title">Kariyer Yolu</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Junior → Mid → Senior:</strong><br>
+                            • Kotlin + Jetpack Compose mastery<br>
+                            • Architecture patterns (MVVM, Clean)<br>
+                            • Testing ve CI/CD pipeline<br>
+                            • Performance optimization<br>
+                            • Mentoring ve technical leadership
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Öğrenmeye Devam Etmek İçin:</strong><br>
+                            • Android Developer Documentation'ı takip edin<br>
+                            • Open source projelere katkıda bulunun<br>
+                            • Google I/O ve KotlinConf etkinliklerini izleyin<br>
+                            • Medium, Dev.to'da güncel içerikleri okuyun
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(76, 175, 80, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-flag-checkered"></i>
+                    Android Geliştirme Yolculuğuna Başlayın!
+                </h2>
+                <div class="section-content">
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">Son Tavsiyeler</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Pratik yapın:</strong> Her gün kod yazın, küçük projeler oluşturun<br>
+                            <strong>Topluluk:</strong> Stack Overflow, Reddit r/androiddev'e katılın<br>
+                            <strong>Güncel kalın:</strong> Android Weekly newsletter'a abone olun<br>
+                            <strong>Portfolio:</strong> GitHub'da projelerinizi sergileyín
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fab fa-android"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            // Ready to build amazing Android apps!
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Console Easter Egg
+        console.log('%c🤖 Android Geliştirme Rehberi', 'color: #4CAF50; font-size: 20px; font-weight: bold;');
+        console.log('%c> Kotlin initialized', 'color: #4CAF50; font-family: monospace;');
+        console.log('%c> Jetpack Compose loaded', 'color: #6200EA; font-family: monospace;');
+        console.log('%c> Android Studio ready', 'color: #4CAF50; font-family: monospace; font-weight: bold;');
+        console.log('%c> fun main() { println("Happy coding!") }', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(76, 175, 80, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
