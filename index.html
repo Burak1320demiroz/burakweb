@@ -89,6 +89,8 @@
             color: var(--text-black900);
             position: relative;
             overflow-x: hidden;
+            /* Prevent footer overlap */
+            padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
         }
         
         /* Animated Grid Background */
@@ -690,6 +692,90 @@
             overflow: hidden;
             cursor: pointer;
         }
+
+        /* Category badge */
+        .service .service-item .service-item-inner .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--text-black900);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+        }
+
+        /* Category themed glow bar */
+        .service .service-item .service-item-inner::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 3px;
+            opacity: 0.9;
+        }
+
+        /* Per-category styles */
+        .service .service-item .service-item-inner[data-cat="python"] {
+            background-image: linear-gradient(180deg, rgba(255, 213, 79, 0.08), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="python"]::after { background: linear-gradient(90deg, #FFD54F, #FBC02D); }
+
+        .service .service-item .service-item-inner[data-cat="ai"] {
+            background-image: linear-gradient(180deg, rgba(156, 39, 176, 0.10), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="ai"]::after { background: linear-gradient(90deg, #9C27B0, #7B1FA2); }
+
+        .service .service-item .service-item-inner[data-cat="tesla"] {
+            background-image: linear-gradient(180deg, rgba(255, 82, 82, 0.08), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="tesla"]::after { background: linear-gradient(90deg, #FF5252, #FF1744); }
+
+        .service .service-item .service-item-inner[data-cat="otonom"] {
+            background-image: linear-gradient(180deg, rgba(0, 200, 83, 0.08), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="otonom"]::after { background: linear-gradient(90deg, #00C853, #00E676); }
+
+        .service .service-item .service-item-inner[data-cat="security"] {
+            background-image: linear-gradient(180deg, rgba(3, 169, 244, 0.08), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="security"]::after { background: linear-gradient(90deg, #03A9F4, #0288D1); }
+
+        .service .service-item .service-item-inner[data-cat="web"] {
+            background-image: linear-gradient(180deg, rgba(0, 212, 255, 0.08), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="web"]::after { background: linear-gradient(90deg, #00D4FF, #00A8CC); }
+
+        .service .service-item .service-item-inner[data-cat="math"] {
+            background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="math"]::after { background: linear-gradient(90deg, #B0BEC5, #90A4AE); }
+
+        .service .service-item .service-item-inner[data-cat="mobile"] {
+            background-image: linear-gradient(180deg, rgba(0, 230, 118, 0.08), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="mobile"]::after { background: linear-gradient(90deg, #00E676, #1DE9B6); }
+
+        .service .service-item .service-item-inner[data-cat="space"] {
+            background-image: linear-gradient(180deg, rgba(63, 81, 181, 0.10), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="space"]::after { background: linear-gradient(90deg, #3F51B5, #3949AB); }
+
+        .service .service-item .service-item-inner[data-cat="devops"] {
+            background-image: linear-gradient(180deg, rgba(0, 150, 136, 0.10), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="devops"]::after { background: linear-gradient(90deg, #009688, #26A69A); }
+
+        .service .service-item .service-item-inner[data-cat="ing"] {
+            background-image: linear-gradient(180deg, rgba(255, 87, 34, 0.08), transparent);
+        }
+        .service .service-item .service-item-inner[data-cat="ing"]::after { background: linear-gradient(90deg, #FF5722, #F4511E); }
         
         .service .service-item .service-item-inner::before {
             content: '';
@@ -789,15 +875,17 @@
         .portfolio .topic-link {
             display: flex;
             align-items: center;
-            padding: 15px;
-            background: rgba(10, 10, 10, 0.5);
+            justify-content: space-between;
+            padding: 16px 16px;
+            background: rgba(10, 10, 10, 0.45);
             border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 8px;
+            border-radius: 12px;
             color: var(--text-black700);
-            transition: all 0.3s ease;
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
             text-decoration: none;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(6px);
         }
         
         .portfolio .topic-link::before {
@@ -815,23 +903,85 @@
             left: 100%;
         }
         
-        .portfolio .topic-link:hover {
+        .portfolio .topic-link:hover, .portfolio .topic-link:focus-visible {
             color: var(--skin-color);
             border-color: var(--skin-color);
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.25);
+            background: rgba(0, 212, 255, 0.06);
         }
         
         .portfolio .topic-icon {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--skin-color);
             margin-right: 12px;
             flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            border-radius: 10px;
+            background: rgba(0, 212, 255, 0.06);
         }
         
         .portfolio .topic-link span {
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
+        }
+
+        /* CTA chevron */
+        .portfolio .topic-link .cta {
+            margin-left: 12px;
+            color: var(--text-black700);
+            transition: transform .2s ease, color .2s ease;
+        }
+        .portfolio .topic-link:hover .cta { transform: translateX(3px); color: var(--skin-color); }
+
+        /* External link indicator */
+        .portfolio .topic-link[target="_blank"] span::after {
+            content: '↗';
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        /* Filter bar */
+        .portfolio .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0 30px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        .portfolio .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.06);
+            color: var(--text-black700);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all .2s ease;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .portfolio .chip:hover { border-color: var(--skin-color); color: var(--skin-color); box-shadow: 0 2px 10px rgba(0, 212, 255, 0.2); }
+        .portfolio .chip.active { background: rgba(0, 212, 255, 0.12); color: var(--text-black900); border-color: var(--skin-color); }
+        .portfolio .filter-input {
+            margin-left: auto;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            background: rgba(10,10,10,0.5);
+            color: var(--text-black900);
+            min-width: 220px;
+            flex: 1 1 240px;
         }
 
         /* Responsive */
@@ -871,6 +1021,22 @@
             .section-title h2 {
                 font-size: 32px;
             }
+            .portfolio .filter-bar {
+                gap: 8px;
+                padding-bottom: 4px;
+            }
+            .portfolio .filter-input {
+                order: 2;
+                flex: 1 0 100%;
+                min-width: 0;
+            }
+            .nav-toggler {
+                width: 52px;
+                height: 46px;
+            }
+            .portfolio .topic-link {
+                padding: 14px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -882,6 +1048,9 @@
             }
             .portfolio .topic-link span {
                 font-size: 13px;
+            }
+            .portfolio .filter-input {
+                width: 100%;
             }
         }
     </style>
@@ -988,10 +1157,11 @@
                             
                         <!-- Python Development -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="python">
                                 <div class="icon">
                                     <i class="fab fa-python"></i>
                                 </div>
+                                <div class="badge">Python</div>
                                 <h4><a href="yazılarım/python.html">Python Development</a></h4>
                                 <p>Veri yapıları, algoritmalar, basit ve ileri seviye Python projeleri</p>
                             </div>
@@ -999,10 +1169,11 @@
                             
                         <!-- AI/ML -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="ai">
                                 <div class="icon">
                                     <i class="fas fa-brain"></i>
                                 </div>
+                                <div class="badge">AI/ML</div>
                                 <h4><a href="yazılarım/ai-ml.html">Yapay Zeka & ML</a></h4>
                                 <p>Machine Learning ve Deep Learning alanlarına giriş</p>
                             </div>
@@ -1010,10 +1181,11 @@
 
                         <!-- Tesla (Otonom Arac) -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="tesla">
                                 <div class="icon">
                                     <i class="fas fa-car-side"></i>
                                 </div>
+                                <div class="badge">Tesla</div>
                                 <h4><a href="yazılarım/teslanasılcalışır.html">Tesla Nasıl Çalışır?</a></h4>
                                 <p>Otonom Sistem ve Arac Bilgisi</p>
                             </div>
@@ -1021,10 +1193,11 @@
                         
                         <!-- Araçlarda Otonom Sistemler -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="otonom">
                                 <div class="icon">
                                     <i class="fas fa-car"></i>
                                 </div>
+                                <div class="badge">Otonom</div>
                                 <h4><a href="yazılarım/otonoms.html">Araçlarda Otonom Sistemler</a></h4>
                                 <p>Algoritmalar, sensör füzyonu ve ROS temelleri</p>
                             </div>
@@ -1032,10 +1205,11 @@
 
                         <!-- Cyber Security -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="security">
                                 <div class="icon">
                                     <i class="fas fa-shield-alt"></i>
                                 </div>
+                                <div class="badge">Security</div>
                                 <h4><a href="yazılarım/siber-guvenlik.html">Web Güvenliği</a></h4>
                                 <p>Web Zafiyetlerinin tanımları</p>
                             </div>
@@ -1043,10 +1217,11 @@
                             
                         <!-- Web Development -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="web">
                                 <div class="icon">
                                     <i class="fas fa-code"></i>
                                 </div>
+                                <div class="badge">Web</div>
                                 <h4><a href="yazılarım/web-development.html">Web Development</a></h4>
                                 <p>HTML, CSS, JavaScript ve Node.js</p>
                             </div>
@@ -1054,10 +1229,11 @@
 
                         <!-- Math -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="math">
                                 <div class="icon">
                                     <i class="fas fa-square-root-alt"></i>
                                 </div>
+                                <div class="badge">Math</div>
                                 <h4><a href="yazılarım/math.html">Matematik</a></h4>
                                 <p>Lisans Dönemimdeki Matematik Konuları</p>
                             </div>
@@ -1065,10 +1241,11 @@
 
                         <!-- Mobile Development -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="mobile">
                                 <div class="icon">
                                     <i class="fas fa-mobile-alt"></i>
                                 </div>
+                                <div class="badge">Mobile</div>
                                 <h4>
                                     <a href="yazılarım/mobiluygulama.html">Mobile Development</a>
                                 </h4>
@@ -1078,10 +1255,11 @@
 
                         <!-- Space -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="space">
                                 <div class="icon">
                                     <i class="fas fa-meteor"></i>
                                 </div>
+                                <div class="badge">Space</div>
                                 <h4><a href="yazılarım/space.html">Uzay</a></h4>
                                 <p>Uzay nedir?, Işık Nedir ve Karadelikler</p>
                             </div>
@@ -1089,10 +1267,11 @@
 
                         <!-- DevOps -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="devops">
                                 <div class="icon">
                                     <i class="fab fa-docker"></i>
                                 </div>
+                                <div class="badge">DevOps</div>
                                 <h4><a href="yazılarım/devops.html">DevOps & Docker</a></h4>
                                 <p>DevOps Nedir ve Docker</p>
                             </div>
@@ -1100,10 +1279,11 @@
 
                         <!-- İng -->
                         <div class="service-item padd-15">
-                            <div class="service-item-inner">
+                            <div class="service-item-inner" data-cat="ing">
                                 <div class="icon">
                                     <i class="fas fa-language"></i>
                                 </div>
+                                <div class="badge">English</div>
                                 <h4><a href="yazılarım/ing.html">İngilizce</a></h4>
                                 <p>Başlangıç Seviye (A1 - A2)</p>
                             </div>
@@ -1122,83 +1302,58 @@
                         </div>
                     </div>
                     
+                    <!-- Filter Bar -->
+                    <div class="filter-bar" aria-label="Notlarım filtreleri">
+                        <button class="chip active" data-filter="all" type="button">Tümü</button>
+                        <button class="chip" data-filter="python" type="button">Python</button>
+                        <button class="chip" data-filter="ai" type="button">AI/ML</button>
+                        <button class="chip" data-filter="web" type="button">Web</button>
+                        <button class="chip" data-filter="security" type="button">Security</button>
+                        <button class="chip" data-filter="math" type="button">Math</button>
+                        <input class="filter-input" type="search" placeholder="Ara... (başlık)"></input>
+                    </div>
+
                     <!-- Python Section -->
                     <div class="section-title-with-icon">
                         <i class="fab fa-python"></i>
                         <h3>Python Development Projects</h3>
                     </div>
-                    <ul class="topic-grid">
+                    <ul class="topic-grid" data-cat="python">
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/data_structures" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-book topic-icon"></i>
-                                <span>Data Structures</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/data_structures" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-book topic-icon"></i><span>Data Structures</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/types_of_algorithms" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-cogs topic-icon"></i>
-                                <span>Types of Algorithms</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/types_of_algorithms" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-cogs topic-icon"></i><span>Types of Algorithms</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/basic_commands_in_python" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-terminal topic-icon"></i>
-                                <span>Basic Commands in Python</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/notes/basic_commands_in_python" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-terminal topic-icon"></i><span>Basic Commands in Python</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/advanced_projects" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-rocket topic-icon"></i>
-                                <span>Advanced Projects</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/advanced_projects" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-rocket topic-icon"></i><span>Advanced Projects</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/mid_level_project" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-laptop-code topic-icon"></i>
-                                <span>Mid-Level Projects</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/mid_level_project" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-laptop-code topic-icon"></i><span>Mid-Level Projects</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/basic_projects" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-code topic-icon"></i>
-                                <span>Basic Projects</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/basic_projects" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-code topic-icon"></i><span>Basic Projects</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/games" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-gamepad topic-icon"></i>
-                                <span>Python Games</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/games" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-gamepad topic-icon"></i><span>Python Games</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/flask" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-server topic-icon"></i>
-                                <span>Flask</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/flask" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-server topic-icon"></i><span>Flask</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/kivy" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-mobile-alt topic-icon"></i>
-                                <span>Kivy</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/kivy" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-mobile-alt topic-icon"></i><span>Kivy</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/numpy" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-superscript topic-icon"></i>
-                                <span>NumPy</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/numpy" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-superscript topic-icon"></i><span>NumPy</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/pandas" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-table topic-icon"></i>
-                                <span>Pandas</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/pandas" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-table topic-icon"></i><span>Pandas</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/matplotlib" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-chart-line topic-icon"></i>
-                                <span>Matplotlib</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/python_development_projects/tree/main/matplotlib" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-chart-line topic-icon"></i><span>Matplotlib</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                     </ul>
                     
@@ -1207,30 +1362,18 @@
                         <i class="fas fa-brain"></i>
                         <h3>Artificial Intelligence Development Projects</h3>
                     </div>
-                    <ul class="topic-grid">
+                    <ul class="topic-grid" data-cat="ai">
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/deep_learning" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-brain topic-icon"></i>
-                                <span>Deep Learning</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/deep_learning" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-brain topic-icon"></i><span>Deep Learning</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/machine_learning" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-chart-line topic-icon"></i>
-                                <span>Machine Learning</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/machine_learning" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-chart-line topic-icon"></i><span>Machine Learning</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/image_processing" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-image topic-icon"></i>
-                                <span>Image Processing</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/image_processing" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-image topic-icon"></i><span>Image Processing</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/llm_development" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-comments topic-icon"></i>
-                                <span>LLM Development</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/artificial_intelligence_projects/tree/master/llm_development" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-comments topic-icon"></i><span>LLM Development</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                     </ul>
                     
@@ -1239,41 +1382,26 @@
                         <i class="fas fa-code"></i>
                         <h3>Web App Development</h3>
                     </div>
-                    <ul class="topic-grid">
+                    <ul class="topic-grid" data-cat="web">
                         <!-- Node.js Notlar -->
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/notes" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fab fa-node-js topic-icon"></i>
-                                <span>Node.js Notlarım</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/notes" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fab fa-node-js topic-icon"></i><span>Node.js Notlarım</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <!-- Node.js Projeler -->
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/node.js" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fab fa-node-js topic-icon"></i>
-                                <span>Node.js Projelerim</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/node.js_development_projects/tree/main/node.js" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fab fa-node-js topic-icon"></i><span>Node.js Projelerim</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <!-- HTML -->
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/web_app_development/tree/master/html" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fab fa-html5 topic-icon"></i>
-                                <span>HTML</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/web_app_development/tree/master/html" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fab fa-html5 topic-icon"></i><span>HTML</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <!-- CSS -->
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/web_app_development/tree/master/css" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fab fa-css3-alt topic-icon"></i>
-                                <span>CSS</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/web_app_development/tree/master/css" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fab fa-css3-alt topic-icon"></i><span>CSS</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <!-- JavaScript -->
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/web_app_development/tree/master/js" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fab fa-js-square topic-icon"></i>
-                                <span>JavaScript</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/web_app_development/tree/master/js" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fab fa-js-square topic-icon"></i><span>JavaScript</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                     </ul>
                     
@@ -1282,48 +1410,27 @@
                         <i class="fas fa-shield-alt"></i>
                         <h3>Siber Güvenlik Mühendisliği</h3>
                     </div>
-                    <ul class="topic-grid">
+                    <ul class="topic-grid" data-cat="security">
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/web_security" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-globe topic-icon"></i>
-                                <span>Web Application Security</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/web_security" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-globe topic-icon"></i><span>Web Application Security</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/mobile_security" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-mobile-alt topic-icon"></i>
-                                <span>Mobile Application Security</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/mobile_security" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-mobile-alt topic-icon"></i><span>Mobile Application Security</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cryptography" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-key topic-icon"></i>
-                                <span>Cryptography</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cryptography" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-key topic-icon"></i><span>Cryptography</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/tools" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-tools topic-icon"></i>
-                                <span>Tools</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/tools" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-tools topic-icon"></i><span>Tools</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cisco_ccna" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-network-wired topic-icon"></i>
-                                <span>Cisco CCNA</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/cisco_ccna" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-network-wired topic-icon"></i><span>Cisco CCNA</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/docker" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fab fa-docker topic-icon"></i>
-                                <span>Docker</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/docker" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fab fa-docker topic-icon"></i><span>Docker</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/ctf_lab" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-bug topic-icon"></i>
-                                <span>PortSwigger Labs</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/cyber_security_engineer/tree/main/ctf_lab" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-bug topic-icon"></i><span>PortSwigger Labs</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                     </ul>
                     
@@ -1334,42 +1441,24 @@
                         <i class="fas fa-square-root-alt"></i>
                         <h3>Matematik</h3>
                     </div>
-                    <ul class="topic-grid">
+                    <ul class="topic-grid" data-cat="math">
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/math/tree/master/soyut_matematik" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-infinity topic-icon"></i>
-                                <span>Soyut Matematik</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/math/tree/master/soyut_matematik" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-infinity topic-icon"></i><span>Soyut Matematik</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/math/tree/master/lineer_cebir" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-stream topic-icon"></i>
-                                <span>Lineer Cebir</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/math/tree/master/lineer_cebir" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-stream topic-icon"></i><span>Lineer Cebir</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/math/tree/master/analiz" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-chart-line topic-icon"></i>
-                                <span>Analiz</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/math/tree/master/analiz" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-chart-line topic-icon"></i><span>Analiz</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/math/tree/master/diferansiyel_denklemler" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-wave-square topic-icon"></i>
-                                <span>Diferansiyel Denklemler</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/math/tree/master/diferansiyel_denklemler" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-wave-square topic-icon"></i><span>Diferansiyel Denklemler</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/math/tree/master/analitik_geometri" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-drafting-compass topic-icon"></i>
-                                <span>Analitik Geometri</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/math/tree/master/analitik_geometri" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-drafting-compass topic-icon"></i><span>Analitik Geometri</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
-                            <a href="https://github.com/Burak1320demiroz/math/tree/master/komplex_analiz" target="_blank" rel="noopener noreferrer" class="topic-link">
-                                <i class="fas fa-circle-notch topic-icon"></i>
-                                <span>Kompleks Analiz</span>
-                            </a>
+                            <a href="https://github.com/Burak1320demiroz/math/tree/master/komplex_analiz" target="_blank" rel="noopener noreferrer" class="topic-link"><span style="display:flex;align-items:center;"><i class="fas fa-circle-notch topic-icon"></i><span>Kompleks Analiz</span></span><i class="fas fa-chevron-right cta"></i></a>
                         </li>
                         <li class="topic-item">
                             <a href="https://github.com/Burak1320demiroz/math/tree/master/galois_teorisi" target="_blank" rel="noopener noreferrer" class="topic-link">
@@ -1799,6 +1888,79 @@
                     }
                 });
             });
+        })();
+
+        // Notlarım: tagging + filtering (chips + search)
+        (function notesFiltering(){
+            const portfolio = document.querySelector('#portfolio');
+            if (!portfolio) return;
+
+            const chipBar = portfolio.querySelector('.filter-bar');
+            const chips = chipBar ? chipBar.querySelectorAll('.chip') : [];
+            const searchInput = chipBar ? chipBar.querySelector('.filter-input') : null;
+
+            // Tag items by their parent grid data-cat
+            const grids = portfolio.querySelectorAll('.topic-grid');
+            const items = [];
+            grids.forEach(grid => {
+                const cat = grid.getAttribute('data-cat') || 'misc';
+                grid.querySelectorAll('.topic-item').forEach(item => {
+                    item.setAttribute('data-cat', cat);
+                    const link = item.querySelector('.topic-link');
+                    const title = link ? (link.textContent || '').trim() : '';
+                    item.setAttribute('data-title', title.toLowerCase());
+                    items.push(item);
+                });
+            });
+
+            let activeCat = 'all';
+            let query = '';
+
+            function applyFilter(){
+                const q = query.trim();
+                items.forEach(it => {
+                    const catOk = (activeCat === 'all') || (it.getAttribute('data-cat') === activeCat);
+                    const title = it.getAttribute('data-title') || '';
+                    const textOk = !q || title.includes(q);
+                    const show = catOk && textOk;
+                    it.style.display = show ? '' : 'none';
+                });
+            }
+
+            // Chip events
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    activeCat = chip.getAttribute('data-filter') || 'all';
+                    applyFilter();
+                });
+                chip.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        chip.click();
+                    }
+                });
+                chip.setAttribute('tabindex', '0');
+                chip.setAttribute('role', 'button');
+                chip.setAttribute('aria-pressed', chip.classList.contains('active') ? 'true' : 'false');
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+                    chip.setAttribute('aria-pressed', 'true');
+                });
+            });
+
+            // Search input (debounced)
+            if (searchInput) {
+                let t;
+                const handler = () => { query = (searchInput.value || '').toLowerCase(); applyFilter(); };
+                searchInput.addEventListener('input', () => {
+                    clearTimeout(t);
+                    t = setTimeout(handler, 150);
+                });
+            }
+
+            applyFilter();
         })();
 
         // Console Easter Egg
