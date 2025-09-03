@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <!--
+      Copyright © 2025 Burak Demiröz
+      All Rights Reserved. This website and its contents may not be copied,
+      distributed, or used without explicit written permission.
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Burak Demiröz portföyü: Python, AI/ML, siber güvenlik, otonom sistemler ve web geliştirme çalışmaları.">
@@ -683,6 +688,7 @@
             transition: all .3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         
         .service .service-item .service-item-inner::before {
@@ -911,21 +917,28 @@
                         <div class="home-info padd-15">
                             <h3 class="hello">Merhaba, ben <span class="name">Burak Demiröz</span></h3>
                             <h3 class="profession"><span class="typing">Python Developer</span></h3>
-                            <p>Siber güvenlik, yapay zeka ve yazılım geliştirme alanlarında kendini geliştiren bir geliştiriciyim. Python, AI/ML, web güvenliği ve Otonom Sistemler konularında bilgi sahibiyim.
-                            <b> Şehir: <span>Bursa / Türkiye</span>
-                                Email: <span>burakdemirozis16@gmail.com</span>
-                            </b>
+                            <p>
+                                <b>Siber Güvenlik</b>, <b>Yapay Zeka</b> ve <b>Yazılım Geliştirme</b> alanlarında uzmanlaşan bir geliştiriciyim. 
+                                Özellikle <b>web güvenliği</b> ve <b>güvenli yazılım geliştirme pratikleri</b> üzerine yoğunlaşıyor, aynı zamanda 
+                                <b>web geliştirme</b> (HTML, CSS, JavaScript, Node.js) ve <b>mobil uygulama geliştirme</b> alanlarında projeler üretiyorum.
                             </p>
                             <p>
-                                Bursa Uludağ Üniversitesi Matematik 4. sınıf öğrencisiyim. 
-                                Odak alanlarım <b>AI/ML</b>, <b>Otonom Sistemler</b> ve <b>Siber Güvenlik</b>. 
-                                Akademik birikimimi gerçek dünyadaki problemlerle birleştirerek <b>görüntü işleme</b>, <b>derin öğrenme</b> ve <b>güvenlik</b> temalı projeler geliştiriyorum.
+                                Yapay zeka tarafında <b>Makine Öğrenmesi</b>, <b>Derin Öğrenme</b>, <b>Büyük Dil Modelleri (LLM)</b>, 
+                                <b>Fine-Tuning</b> ve <b>RAG (Retrieval-Augmented Generation)</b> konularında deneyim sahibiyim. 
+                                Python ekosisteminde (TensorFlow, PyTorch, OpenCV) etkin olarak çalışıyor, 
+                                sıfırdan model geliştirme ve özelleştirme süreçlerini yürütüyorum.
                             </p>
                             <p>
-                                Python ekosisteminde (TensorFlow, PyTorch, OpenCV) çalışıyor; ROS tabanlı otonom sistemlerde 
-                                algılama, izleme ve kontrol algoritmalarını deniyorum. Web tarafında ise güvenli geliştirme 
-                                pratiklerine önem veriyorum.
+                                Otonom sistemlerde ROS tabanlı uygulamalara odaklanıyor; algılama, izleme, kontrol algoritmaları ve 
+                                gerçek zamanlı karar verme mekanizmaları geliştiriyorum. 
+                                Akademik altyapımı gerçek dünya uygulamalarıyla birleştirerek, <b>yapay zeka destekli otonom araç teknolojileri</b> 
+                                ve <b>web güvenliği</b> ekseninde yenilikçi çözümler üretmeye çalışıyorum.
                             </p>
+                            <p>
+                                <b>Şehir:</b> <span>Bursa / Türkiye</span><br>
+                                <b>Email:</b> <span>burakdemirozis16@gmail.com</span>
+                            </p>                            
+                            
                             
                             <div class="social-links">
                                 <a href="https://github.com/Burak1320demiroz" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
@@ -1755,6 +1768,39 @@
             }
         }
 
+        // Make entire Yazılarım cards clickable
+        (function enableServiceCardClicks(){
+            const serviceSection = document.querySelector('#services');
+            if (!serviceSection) return;
+            const cards = serviceSection.querySelectorAll('.service-item-inner');
+            cards.forEach((card) => {
+                const anchor = card.querySelector('h4 a');
+                if (!anchor) return;
+                // Accessibility
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('role', 'link');
+                const label = anchor.textContent ? anchor.textContent.trim() : '';
+                if (label) card.setAttribute('aria-label', label);
+
+                const navigate = () => {
+                    window.location.href = anchor.href;
+                };
+
+                card.addEventListener('click', (e) => {
+                    // If an inner link was clicked, let it work normally
+                    if (e.target && (e.target.closest && e.target.closest('a'))) return;
+                    navigate();
+                });
+
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        navigate();
+                    }
+                });
+            });
+        })();
+
         // Console Easter Egg
         console.log('%c🚀 Welcome to Burak Demiröz Portfolio', 'color: #00d4ff; font-size: 20px; font-weight: bold;');
         console.log('%c> Initializing Grok Theme...', 'color: #00d4ff; font-family: monospace;');
@@ -1762,5 +1808,10 @@
         console.log('%c> AI systems online', 'color: #00d4ff; font-family: monospace;');
         console.log('%c> Ready.', 'color: #00ff00; font-family: monospace; font-weight: bold;');
     </script>
+
+    <!-- Visible Footer Notice -->
+    <footer style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,10,10,0.9); border-top: 1px solid rgba(0, 212, 255, 0.2); color: rgba(255,255,255,0.8); font-family: 'JetBrains Mono', monospace; font-size: 12px; text-align: center; padding: 8px 10px; z-index: 1000;">
+        © 2025 Burak Demiröz — All Rights Reserved
+    </footer>
 </body>
 </html>
