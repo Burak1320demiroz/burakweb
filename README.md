@@ -1,13 +1,8 @@
 # Burak Demiröz | Portfolio
 
-
 ## Canlı
 - Alan adı: https://www.burakdemiroz.com.tr
 - Barındırma: GitHub Pages
-
-
-
-
 
 ## Lisans
 Bu proje All Rights Reserved lisansı altındadır. Ayrıntılar için `LICENSE` dosyasına bakın.

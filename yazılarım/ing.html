@@ -2048,6 +2048,24 @@
         const menuItems = document.querySelectorAll('.sidebar-menu a');
         const sections = document.querySelectorAll('.content-section');
 
+        // Reorder sections to match sidebar menu order
+        (function reorderSectionsToMenu() {
+            const wrapper = document.querySelector('.content-wrapper');
+            if (!wrapper) return;
+            const order = Array.from(menuItems)
+                .map(a => a.getAttribute('href'))
+                .filter(Boolean)
+                .map(href => href.trim())
+                .filter(href => href.startsWith('#'))
+                .map(href => href.slice(1));
+            order.forEach(id => {
+                const section = document.getElementById(id);
+                if (section && section.classList.contains('content-section')) {
+                    wrapper.appendChild(section);
+                }
+            });
+        })();
+
         window.addEventListener('scroll', () => {
             let current = '';
             sections.forEach(section => {
