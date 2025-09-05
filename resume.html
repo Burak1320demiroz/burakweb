@@ -39,19 +39,27 @@
         }
         
         :root {
-            --primary: #2563eb;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --bg-white: #ffffff;
-            --bg-gray: #f9fafb;
-            --border: #e5e7eb;
+            /* Grok-inspired dark space palette */
+            --primary: #8ab4ff;           /* soft electric blue */
+            --primary-accent: #7c3aed;    /* deep violet accent */
+            --text-primary: #e6e6e6;      /* light text */
+            --text-secondary: #a3a3a3;    /* muted text */
+            --bg-white: #0b0b0e;          /* cosmic near-black */
+            --bg-gray: #13141a;           /* section contrast */
+            --border: #262737;            /* subtle border */
+            --glow: 0 0 40px rgba(124, 58, 237, 0.15), 0 0 80px rgba(138, 180, 255, 0.08);
         }
         
         body {
             font-family: 'Inter', sans-serif;
             color: var(--text-primary);
             line-height: 1.6;
-            background: var(--bg-white);
+            background:
+                radial-gradient(1200px 600px at 50% -10%, rgba(124, 58, 237, 0.15), transparent 60%),
+                radial-gradient(800px 400px at 90% 10%, rgba(138, 180, 255, 0.12), transparent 55%),
+                radial-gradient(700px 350px at 10% 0%, rgba(0, 0, 0, 0.35), transparent 60%),
+                var(--bg-white);
+            background-attachment: fixed;
         }
         
         .container {
@@ -66,13 +74,15 @@
             padding: 3rem 0;
             border-bottom: 2px solid var(--border);
             margin-bottom: 3rem;
+            box-shadow: var(--glow);
         }
         
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            color: var(--primary);
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(138, 180, 255, 0.25);
         }
         
         .subtitle {
@@ -122,6 +132,7 @@
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--border);
+            text-shadow: 0 0 6px rgba(124, 58, 237, 0.25);
         }
         
         /* Experience & Education Items */
@@ -139,8 +150,9 @@
             top: 6px;
             width: 10px;
             height: 10px;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-accent));
             border-radius: 50%;
+            box-shadow: 0 0 12px rgba(138, 180, 255, 0.4);
         }
         
         .timeline-header {
@@ -160,10 +172,12 @@
         
         .timeline-date {
             font-size: 0.875rem;
-            color: var(--text-secondary);
-            background: var(--bg-gray);
+            color: #d1d5db;
+            background: rgba(38, 39, 55, 0.7);
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
         }
         
         .timeline-subtitle {
@@ -264,14 +278,40 @@
             text-decoration: none;
             padding: 0.5rem 1rem;
             border: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(38, 39, 55, 0.6), rgba(19, 20, 26, 0.6));
             border-radius: 8px;
             transition: all 0.3s;
         }
         
         .social-link:hover {
-            color: var(--primary);
+            color: #ffffff;
             border-color: var(--primary);
             transform: translateY(-2px);
+            box-shadow: 0 0 16px rgba(138, 180, 255, 0.25);
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0 0.5rem 0;
+        }
+        
+        .print-button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-accent));
+            color: #ffffff;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.25);
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        
+        .print-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
         
         /* Print Styles */
@@ -300,6 +340,8 @@
             .social-links {
                 display: none;
             }
+            
+            .controls { display: none; }
         }
         
         /* Mobile Responsive */
@@ -346,7 +388,7 @@
         <!-- Header -->
         <header>
             <h1>Burak Demiröz</h1>
-            <p class="subtitle">Junior AI Specialist  </p>
+            <p class="subtitle">Junior AI Specialist</p>
             <div class="contact-info">
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
@@ -359,6 +401,10 @@
                 <div class="contact-item">
                     <i class="fas fa-language"></i>
                     <span>English (B1)</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-globe"></i>
+                    <a href="https://www.burakdemiroz.com.tr" target="_blank" rel="noopener noreferrer">burakdemiroz.com.tr</a>
                 </div>
             </div>
         </header>
@@ -385,14 +431,26 @@
                 <p class="timeline-subtitle">Multiple Roles</p>
                 <div class="timeline-content">
                     <ul>
-                        <li><strong>Image Processing Team Member</strong> (Oct 2024 - Sep 2025)<br>
-                            ...</li>
-                        <li><strong>Algorithm Team Member</strong> (Oct 2023 - Sep 2024)<br>
-                            ...</li>
-                        <li><strong>Project Coordination Team</strong> (Oct 2024 - Present)<br>
-                            ...</li>
-                        <li><strong>Cyber Security Team Captain</strong> (Dec 2024 - jun 2025)<br>
-                            ...</li>
+                        <li>
+                            <strong>Volunteer Image Processing Team Member</strong>
+                            <span class="timeline-date" style="margin-left: 0.5rem;">Oct 2024 - Sep 2025</span><br>
+                            Contributed to computer vision tasks using OpenCV and PyTorch; supported dataset curation and model evaluation.
+                        </li>
+                        <li>
+                            <strong>Volunteer Algorithm Development Team Member</strong>
+                            <span class="timeline-date" style="margin-left: 0.5rem;">Oct 2023 - Sep 2024</span><br>
+                            Implemented algorithms for perception and planning; wrote modular Python utilities to improve experimentation.
+                        </li>
+                        <li>
+                            <strong>Project Coordination Team</strong>
+                            <span class="timeline-date" style="margin-left: 0.5rem;">Oct 2024 - Jun 2025</span><br>
+                            Coordinated timelines, documentation, and cross-team communication for student projects.
+                        </li>
+                        <li>
+                            <strong>Cyber Security Team Captain</strong>
+                            <span class="timeline-date" style="margin-left: 0.5rem;">Dec 2024 - Jun 2025</span><br>
+                            Led CTF practice sessions and incident response drills; organized knowledge-sharing.
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -402,7 +460,7 @@
                     <h3 class="timeline-title">IT Intern</h3>
                     <span class="timeline-date">Apr 2025 - May 2025</span>
                 </div>
-                <p class="timeline-subtitle">TNC-GRUP
+                <p class="timeline-subtitle">TNC-GRUP</p>
                 <div class="timeline-content">
                     ...
                 </div>
@@ -455,12 +513,54 @@
         <!-- Skills -->
         <section>
             <h2>Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Programming</h3>
+                    <ul class="skill-list">
+                        <li>Python</li>
+                        <li>JavaScript</li>
+                        <li>HTML, CSS</li>
+                        <li>Node.js</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>AI/ML</h3>
+                    <ul class="skill-list">
+                        <li>PyTorch, TensorFlow</li>
+                        <li>OpenCV</li>
+                        <li>Model training & evaluation</li>
+                        <li>Data preprocessing</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Security & Systems</h3>
+                    <ul class="skill-list">
+                        <li>Basic cyber security practices</li>
+                        <li>Linux, Bash</li>
+                        <li>Git & GitHub</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Web & Tools</h3>
+                    <ul class="skill-list">
+                        <li>Docker (basic)</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <!-- Certifications -->
         <section>
             <h2>Certifications</h2>
             <ul class="cert-list">
+                <li>
+                    <span class="cert-name">Yapay Zeka Gelişim Kampı'25 Senior</span>
+                    <span class="cert-issuer">Yapay Zeka Topluluğu</span>
+                </li>
+                <li>
+                    <span class="cert-name">AI Specialist Training</span>
+                    <span class="cert-issuer">Acık Atolye</span>
+                </li>
                 <li>
                     <span class="cert-name">Python Development</span>
                     <span class="cert-issuer">Samsung Innovation Campus</span>
@@ -493,10 +593,6 @@
             <a href="https://huggingface.co/Burak1320demiroz" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Hugging Face">
                 <i class="fas fa-robot"></i>
                 <span>Hugging Face</span>
-            </a>
-            <a href="https://grabcad.com/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GrabCAD">
-                <i class="fas fa-cube"></i>
-                <span>GrabCAD</span>
             </a>
             <a href="https://play.google.com/store/apps/dev?id=7947072497341253158" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Google Play">
                 <i class="fab fa-google-play"></i>
