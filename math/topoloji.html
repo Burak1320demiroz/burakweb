@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!--
+      Copyright © 2025 Burak Demiröz
+      All Rights Reserved. This page and its contents may not be copied,
+      distributed, or used without explicit written permission.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topoloji | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon/topologyfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon/topologyfavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors - Adjusted for Topology */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(138, 43, 226, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #8a2be2;
+            --skin-color-hover: #7b68ee;
+            --neon-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            --text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(138, 43, 226, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-infinity {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 300px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(138, 43, 226, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.1);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-infinity {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .subsection-title {
+            font-size: 22px;
+            color: var(--skin-color);
+            margin: 30px 0 20px 0;
+            padding-left: 15px;
+            border-left: 4px solid var(--skin-color);
+            text-shadow: var(--text-shadow);
+            position: relative;
+            font-weight: 600;
+        }
+        
+        .subsection-title i {
+            margin-right: 10px;
+            color: var(--skin-color-hover);
+            filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.4));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Math Notation */
+        .math-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'JetBrains Mono', monospace;
+            color: #f8f8f2;
+        }
+        
+        .math-block::before {
+            content: 'Mathematics';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        /* Definition Boxes */
+        .definition-box {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .definition-box::before {
+            content: '\f02d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .definition-box-content {
+            padding-left: 40px;
+        }
+
+        /* Theorem Boxes */
+        .theorem-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .theorem-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .theorem-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Example Boxes */
+        .example-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .example-box::before {
+            content: '\f0c0';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .example-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .subsection-title {
+                font-size: 20px;
+                margin: 25px 0 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-infinity"></i>
+                <span>Topoloji</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#topoloji-nedir" class="active">Topoloji Nedir?</a></li>
+            <li><a href="#acik-kume-aksiyomlari">Açık Küme Aksiyomları</a></li>
+            <li><a href="#temel-tanimlar">Temel Tanımlar</a></li>
+            <li><a href="#ornekler">Örnekler</a></li>
+            <li><a href="#real-topoloji">R Üzerinde Topolojiler</a></li>
+            <li><a href="#alisikis-uzayi">Alışılmış Uzay</a></li>
+            <li><a href="#sag-sol-isin">Sağ/Sol Işın Uzayları</a></li>
+            <li><a href="#karsilastirma">Topolojilerin Karşılaştırılması</a></li>
+            <li><a href="#komsuluk">Komşuluk Kavramı</a></li>
+            <li><a href="#taban">Topoloji Tabanı</a></li>
+            <li><a href="#alt-uzay">Alt Uzay</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-infinity"></i>
+                    Topoloji
+                </h1>
+                <p class="hero-subtitle">
+                    Matematiğin açık kümeler, süreklilik ve uzay yapılarını inceleyen dalı
+                </p>
+                <div class="hero-code">
+                    τ = {∅, X, U₁, U₂, ...}
+                </div>
+            </section>
+
+            <!-- Topoloji Nedir Section -->
+            <section id="topoloji-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Topoloji Nedir ve Neden Önemlidir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Topoloji</strong>, matematikte "limitler", "süreklilik", "bağlantılılık", "kompaktlık" gibi çoğu önemli kavramın açık kümeler kavramıyla açıklanabilmesini sağlayan daldır. Felix Hausdorff'un (1914) açık kümelerin temel özelliklerini soyutlayarak bu kavramlar hakkında metrik kavramından bağımsız uygun bir çerçeve oluşturması ile gelişmiştir.
+                    </p>
+                    <p>
+                        Topoloji, geometrik şekillerin deformasyon altında değişmeyen özelliklerini inceler. Bir fincanın çörek şeklinde deformasyonu gibi sürekli dönüşümler topolojinin ilgi alanındadır.
+                    </p>
+                    
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Topolojinin Uygulama Alanları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Analiz ve fonksiyonların sürekliliği</li>
+                                <li>• Diferansiyel geometri ve manifoldlar</li>
+                                <li>• Cebirsel topoloji</li>
+                                <li>• Bilgisayar grafikleri ve görüntü işleme</li>
+                                <li>• Fizik ve genel görelilik teorisi</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">Tarihçe</span>
+                        </div>
+                        <div class="note-card-content">
+                            Topoloji, Leonhard Euler'in Königsberg köprüleri problemi (1736) ile başlayarak, Henri Poincaré ve Felix Hausdorff'un çalışmaları ile modern şeklini almıştır.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Modern matematik analizinin temel kavramları olan limit, süreklilik ve türev gibi kavramlar topolojik yapılar kullanılarak tanımlanır ve incelenir.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Açık Küme Aksiyomları Section -->
+            <section id="acik-kume-aksiyomlari" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i>
+                    Açık Küme Aksiyomları ve Topoloji Tanımı
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Bir topolojik uzay, açık kümelerin belirli aksiyomları sağladığı matematik yapıdır.
+                    </p>
+                    
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 1.1.1:</strong> X boş kümeden farklı bir küme ve τ ailesi P(X) kuvvet kümesinin bir alt kümesi olmak üzere, τ ailesi aşağıdaki şartları sağlıyorsa τ ailesine X kümesi üzerinde bir <strong>topoloji</strong> denir:
+                        </div>
+                    </div>
+                    
+                    <div class="math-block">
+                        <div style="text-align: center; margin: 20px 0;">
+                            <strong>T₁:</strong> ∅, X ∈ τ<br><br>
+                            <strong>T₂:</strong> τ ailesine ait herhangi sayıda elemanların birleşimi τ ailesine aittir<br><br>
+                            <strong>T₃:</strong> τ ailesine ait sonlu sayıda elemanların kesişimi τ ailesine aittir
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Açık Küme Aksiyomları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>T₁:</strong> Boş küme ve evrensel küme her zaman açıktır<br>
+                            <strong>T₂:</strong> Açık kümelerin herhangi birleşimi açıktır<br>
+                            <strong>T₃:</strong> Açık kümelerin sonlu kesişimi açıktır
+                        </div>
+                    </div>
+                    
+                    <p>
+                        τ ailesinin elemanlarına <strong>τ topolojisine göre açık küme</strong> denir. (X, τ) ikilisine <strong>topolojik uzay</strong> denir.
+                    </p>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Dikkat:</strong> Sonlu bir I ailesinin arakesit özelliğini göstermek için, bu ailede bulunan iki kümenin arakesitinin bu ailede olduğunu göstermek yeterlidir. Tümevarım yöntemiyle sonlu sayıda kümenin arakesiti elde edilebilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Temel Tanımlar Section -->
+            <section id="temel-tanimlar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-database"></i>
+                    Temel Tanımlar ve Kavramlar
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 1.1.3:</strong> X topolojik uzayında bir F ⊂ X kümesinin tümleyeni açık küme ise F kümesine X uzayında <strong>kapalı küme</strong> denir.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        De Morgan kuralları kullanılarak herhangi bir topolojik uzayda kapalı kümelerin özellikleri:
+                    </p>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Önerme 1.1.4:</strong> X bir topolojik uzay olsun. Bu durumda:
+                            <br><br>
+                            <strong>T₁':</strong> X ve ∅ kapalı kümelerdir<br>
+                            <strong>T₂':</strong> Sonlu sayıda kapalı kümenin birleşimi kapalı bir kümedir<br>
+                            <strong>T₃':</strong> Kapalı kümelerin herhangi bir ailesinin kesişimi kapalı bir kümedir
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-exclamation-triangle note-card-icon"></i>
+                            <span class="note-card-title">Önemli Not</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bir kümenin kapalı olmaması, açık olması anlamına gelmez. Bir küme hem açık hem kapalı olabilir veya ne açık ne de kapalı olabilir.
+                        </div>
+                    </div>
+
+                    <div class="math-block">
+                        <div style="text-align: center;">
+                            Açık ⟺ Tümleyeni Kapalı<br>
+                            Kapalı ⟺ Tümleyeni Açık
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Örnekler Section -->
+            <section id="ornekler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Temel Topoloji Örnekleri
+                </h2>
+                <div class="section-content">
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Örnek 1.1.7:</strong> X herhangi bir küme olmak üzere:
+                            <br><br>
+                            <strong>Ayrık Topoloji:</strong> τ = P(X) (tüm alt kümeler açık)<br>
+                            <strong>Kaba Topoloji:</strong> τ = {∅, X} (sadece boş küme ve X açık)
+                        </div>
+                    </div>
+
+                    <p>
+                        Bu iki topoloji her küme üzerinde tanımlanabilir ve ekstrem örneklerdir:
+                    </p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-shapes note-card-icon"></i>
+                            <span class="note-card-title">Topoloji Çeşitleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Ayrık Uzay:</strong> Her küme hem açık hem kapalı<br>
+                            <strong>Kaba Uzay:</strong> Sadece ∅ ve X hem açık hem kapalı<br>
+                            <strong>Sonlu Tümleyen:</strong> A açık ⟺ A = ∅ veya X-A sonlu<br>
+                            <strong>Sayılabilir Tümleyen:</strong> A açık ⟺ A = ∅ veya X-A sayılabilir
+                        </div>
+                    </div>
+
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Sonlu Tümleyen Topoloji:</strong><br>
+                            τ_sonlu = {A ⊂ X : A = ∅ ya da X - A sonlu}
+                        </div>
+                    </div>
+
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Sayılabilir Tümleyen Topoloji:</strong><br>
+                            τ_sayılabilir = {A ⊂ X : A = ∅ ya da X - A sayılabilir}
+                        </div>
+                    </div>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 1.1.24:</strong> X kümesi üzerindeki topolojilerin ailesi (τᵢ)ᵢ∈I olsun. Bu durumda ⋂ᵢ∈I τᵢ ailesi X kümesi üzerinde bir topoloji belirtir.
+                            <br><br>
+                            <strong>Önemli:</strong> Topolojilerin birleşimi genellikle topoloji olmaz!
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- R Üzerinde Topolojiler Section -->
+            <section id="real-topoloji" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    R Üzerinde Topolojiler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Reel sayılar kümesi R üzerinde çeşitli önemli topolojiler tanımlanabilir. Bu topolojiler matematik analizinin temelini oluşturur.
+                    </p>
+
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Öklidyen Metrik:</strong> R kümesi üzerinde her x, y ∈ R için
+                            <br><br>
+                            d(x, y) = |x - y|
+                            <br><br>
+                            Bu mesafe fonksiyonu standart (alışılmış) metrik olarak adlandırılır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-ruler note-card-icon"></i>
+                            <span class="note-card-title">Aralık Notasyonları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>[a, b]:</strong> Kapalı aralık {x ∈ R : a ≤ x ≤ b}<br>
+                            <strong>]a, b[:</strong> Açık aralık {x ∈ R : a < x < b}<br>
+                            <strong>]a, b]:</strong> Yarı açık aralık {x ∈ R : a < x ≤ b}<br>
+                            <strong>[a, b[:</strong> Yarı açık aralık {x ∈ R : a ≤ x < b}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alışılmış Uzay Section -->
+            <section id="alisikis-uzayi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-home"></i>
+                    (R, U) Reel Sayıların Alışılmış Uzayı
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 1.2.2:</strong> R reel sayıların bir X alt kümesinin her x ∈ X noktası için x ∈]a, b[⊂ X olacak şekilde a < b olmak üzere a, b ∈ R noktaları varsa, X alt kümesine reel sayıların alışılmış uzayına göre <strong>açık küme</strong> denir.
+                        </div>
+                    </div>
+
+                    <p>
+                        Bu tanımı "nefes alma alanı" kavramı ile açıklayabiliriz: Açık bir kümedeki her nokta, kendi etrafında küme içinde kalan bir aralığa sahiptir.
+                    </p>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Alışılmış Uzayda Açık Kümeler:</strong>
+                            <br><br>
+                            • ∅ ve R<br>
+                            • ]a, b[ açık aralıkları<br>
+                            • ]a, +∞[ ve ]-∞, b[ sonsuz açık aralıkları<br>
+                            • Açık aralıkların herhangi birleşimi
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Alışılmış Uzayda Kapalı Kümeler:</strong>
+                            <br><br>
+                            • ∅ ve R<br>
+                            • [a, b] kapalı aralıkları<br>
+                            • [a, +∞[ ve ]-∞, b] sonsuz kapalı aralıkları<br>
+                            • {x} tek nokta kümeleri<br>
+                            • Sonlu kümeler<br>
+                            • N, Z gibi sayılabilir ayrık kümeler
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-exclamation-circle note-card-icon"></i>
+                            <span class="note-card-title">Önemli Örnekler</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Q (Rasyoneller):</strong> Ne açık ne kapalı<br>
+                            <strong>Q^c (İrrasyoneller):</strong> Ne açık ne kapalı<br>
+                            <strong>]a, b] yarı açık:</strong> Ne açık ne kapalı
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sağ/Sol Işın Section -->
+            <section id="sag-sol-isin" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-arrows-alt-h"></i>
+                    Sağ Işın ve Sol Işın Uzayları
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Sağ Işın Topolojisi:</strong><br>
+                            D→ = {A_λ = ]λ, +∞[ : λ ∈ R} ∪ {∅, R}
+                            <br><br>
+                            <strong>Sol Işın Topolojisi:</strong><br>
+                            ←D = {A_λ = ]-∞, λ[ : λ ∈ R} ∪ {∅, R}
+                        </div>
+                    </div>
+
+                    <p>
+                        Bu topolojiler R üzerinde tanımlanan özel topoloji örnekleridir ve geometrik sezgiye dayanır.
+                    </p>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Sağ Işın Uzayında:</strong>
+                            <br><br>
+                            • Açık kümeler: ∅, R, ]λ, +∞[<br>
+                            • Kapalı kümeler: ∅, R, ]-∞, λ]<br>
+                            <br>
+                            <strong>Sol Işın Uzayında:</strong>
+                            <br><br>
+                            • Açık kümeler: ∅, R, ]-∞, λ[<br>
+                            • Kapalı kümeler: ∅, R, [λ, +∞[
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-balance-scale note-card-icon"></i>
+                            <span class="note-card-title">Karşılaştırma</span>
+                        </div>
+                        <div class="note-card-content">
+                            Sağ ışın ve sol ışın topolojileri birbirleri ile karşılaştırılamaz, ancak her ikisi de alışılmış topolojiden daha kabadır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Karşılaştırma Section -->
+            <section id="karsilastirma" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-balance-scale"></i>
+                    Topolojilerin Karşılaştırılması
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 1.3.1:</strong> Bir X kümesi üzerinde τ₁ ve τ₂ topolojileri verilsin. Eğer τ₁ topolojisine göre açık olan her küme τ₂ topolojisine göre de açık küme oluyorsa:
+                            <br><br>
+                            • τ₁ topolojisine τ₂'den <strong>daha kaba</strong><br>
+                            • τ₂ topolojisine τ₁'den <strong>daha ince</strong> denir<br>
+                            <br>
+                            Notasyon: τ₁ ⊂ τ₂
+                        </div>
+                    </div>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>R Üzerindeki Topolojilerin Sıralaması:</strong>
+                            <br><br>
+                            {∅, R} ⊂ τ_sonlu ⊂ τ_sayılabilir ⊂ P(R)
+                            <br><br>
+                            {∅, R} ⊂ D→ ⊂ U ⊂ P(R)
+                            <br><br>
+                            {∅, R} ⊂ ←D ⊂ U ⊂ P(R)
+                        </div>
+                    </div>
+
+                    <p>
+                        Ancak her iki topoloji karşılaştırılabilir değildir. Örneğin D→ ve ←D karşılaştırılamaz.
+                    </p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-sitemap note-card-icon"></i>
+                            <span class="note-card-title">Karşılaştırılabilirlik</span>
+                        </div>
+                        <div class="note-card-content">
+                            İki topoloji τ₁ ⊂ τ₂ veya τ₂ ⊂ τ₁ ise karşılaştırılabilir, aksi halde karşılaştırılamaz topolojilerdir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Komşuluk Section -->
+            <section id="komsuluk" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Topolojide Komşuluk Kavramı
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 1.4.1:</strong> (X, τ) topolojik uzayı ve bir x ∈ X noktası verilsin. V ⊂ X alt kümesi x noktasını içeren bir açık kümeyi kapsıyorsa V kümesine x noktasının bir <strong>komşuluğu</strong> denir.
+                            <br><br>
+                            V ∈ ϑ(x) ⟺ ∃A ∈ τ, x ∈ A ⊂ V
+                        </div>
+                    </div>
+
+                    <p>
+                        Komşuluk kavramı, bir noktanın "yakın çevresini" tanımlamak için kullanılır ve süreklilik gibi kavramların temelini oluşturur.
+                    </p>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 1.4.13:</strong> (X, τ) topolojik uzayında bir A ⊂ X alt kümesinin açık küme olması için gerek ve yeter şart A kümesinin, içerdiği her noktanın bir komşuluğu olmasıdır.
+                            <br><br>
+                            A ∈ τ ⟺ ∀x ∈ A, A ∈ ϑ(x)
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R, U) Uzayında Komşuluklar:</strong>
+                            <br><br>
+                            x ∈ R noktası için V ∈ ϑ(x) ⟺ ∃ε, δ > 0, ]x-ε, x+δ[ ⊂ V
+                            <br><br>
+                            Yani x noktasını içeren her aralık o noktanın komşuluğudur.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-home note-card-icon"></i>
+                            <span class="note-card-title">Komşuluk Çeşitleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Açık komşuluk:</strong> V ∈ ϑ(x) ∧ V ∈ τ<br>
+                            <strong>Kapalı komşuluk:</strong> V ∈ ϑ(x) ∧ V ∈ τᶜ<br>
+                            <strong>Komşuluk tabanı:</strong> Her komşuluğu kapsayan alt aile
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Taban Section -->
+            <section id="taban" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-building"></i>
+                    Topoloji Tabanı ve Alt Taban
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 1.5.1:</strong> (X, τ) topolojik uzayının bir tabanı B ailesi, (X, τ) uzayının her açık kümesinin B ailesinin elemanlarının birleşimi olarak ifade edilebilme özelliğine sahip P(X) kuvvet kümesinin alt kümesidir.
+                            <br><br>
+                            ⟨B⟩ = τ ⟺ ∀A ∈ τ, A = ⋃_{B∈I} B, I ⊂ B
+                        </div>
+                    </div>
+
+                    <p>
+                        Taban kavramı, topoloji tanımlamak için tüm açık kümeleri belirtmek yerine daha kolay bir yol sağlar.
+                    </p>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 1.5.16:</strong> B ⊂ P(X) ailesi aşağıdaki şartları sağlıyorsa B ailesinin ürettiği ⟨B⟩ ailesi X kümesi üzerinde bir topoloji belirtir:
+                            <br><br>
+                            (i) X = ⋃_{B∈B} B<br>
+                            (ii) Her A, B ∈ B ve her x ∈ A ∩ B için ∃C ∈ B, x ∈ C ⊂ A ∩ B
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R, U) Uzayının Tabanları:</strong>
+                            <br><br>
+                            • B₁ = {]a, b[ : a, b ∈ R, a < b}<br>
+                            • B₂ = {]a, b[ : a, b ∈ Q, a < b}<br>
+                            • B₃ = {]x-1/n, x+1/n[ : x ∈ R, n ∈ ℕ}
+                        </div>
+                    </div>
+
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Alt Taban:</strong> S ⊂ P(X) ailesi verilsin. S ailesinin sonlu arakesitlerinin oluşturduğu aile τ topolojisini üretiyorsa S ailesine τ topolojisinin bir <strong>alt tabanı</strong> denir.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-layer-group note-card-icon"></i>
+                            <span class="note-card-title">Sayılabilirlik</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>İkinci sayılabilir:</strong> Sayılabilir tabanı olan uzay<br>
+                            <strong>Birinci sayılabilir:</strong> Her noktada sayılabilir komşuluk tabanı olan uzay<br>
+                            <br>
+                            İkinci sayılabilir ⟹ Birinci sayılabilir
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Türev Kümeleri Section -->
+            <section id="turev-kumeler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    Türev Kümeleri - Giriş
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Topolojik uzaylarda bir kümenin çeşitli türev kümeleri tanımlanabilir. Bu türev kümeler, kümenin geometrik ve topolojik özelliklerini anlamamızı sağlar.
+                    </p>
+                    
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Bir A⊂X kümesinin türev kümeleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>İç (A°):</strong> A'nın iç noktalarının kümesi</li>
+                                <li><strong>Kapanış (Ā):</strong> A'nın kapanış noktalarının kümesi</li>
+                                <li><strong>Dış:</strong> A'nın dış noktalarının kümesi</li>
+                                <li><strong>Sınır (A^s):</strong> A'nın sınır noktalarının kümesi</li>
+                                <li><strong>Yığılma (A'):</strong> A'nın yığılma noktalarının kümesi</li>
+                                <li><strong>İzole:</strong> A'nın izole noktalarının kümesi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Geometrik Sezgi</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bu türev kümeler, bir şeklin "içi", "kenarı", "dışı" gibi sezgisel kavramları matematiksel olarak kesin hale getirir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- İç Nokta Section -->
+            <section id="ic-nokta" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-dot-circle"></i>
+                    Bir Kümenin İçi
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 2.1.1:</strong> (X,τ) topolojik uzay ve A⊂X olmak üzere A kümesi x noktasının bir komşuluğu ise x noktasına A kümesinin bir <strong>iç noktası</strong> denir. A kümesinin bütün iç noktalarından oluşan kümeye A kümesinin <strong>içi</strong> denir ve A° ile gösterilir.
+                            <br><br>
+                            x ∈ A° ⟺ ∃U ∈ τ, x ∈ U ⊂ A ⟺ A ∈ ϑ(x)
+                        </div>
+                    </div>
+
+                    <p>
+                        İç nokta kavramı, bir noktanın küme içinde "nefes alma alanına" sahip olması olarak düşünülebilir.
+                    </p>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R,U) uzayında örnekler:</strong>
+                            <br><br>
+                            • ]1,2[° = ]1,2[ (açık aralığın içi kendisi)<br>
+                            • [1,2]° = ]1,2[ (kapalı aralığın içi açık aralık)<br>
+                            • {1,2}° = ∅ (sonlu kümenin içi boş)<br>
+                            • Q° = ∅ (rasyonel sayıların içi boş)
+                        </div>
+                    </div>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 2.1.18:</strong> (X,τ) bir topolojik uzay ve A⊂X olmak üzere:
+                            <br><br>
+                            (i) A° = A kümesinin kapsadığı bütün açık kümelerin birleşimi<br>
+                            (ii) A° ⊂ A<br>
+                            (iii) A° ∈ τ (iç her zaman açık küme)<br>
+                            (iv) A° kümesi A'yı kapsayan en büyük açık küme<br>
+                            (v) A ∈ τ ⟺ A = A°
+                        </div>
+                    </div>
+
+                    <div class="math-block">
+                        <div style="text-align: center;">
+                            İç alma işleminin özellikleri:<br><br>
+                            X° = X, ∅° = ∅<br>
+                            (A°)° = A°<br>
+                            A ⊂ B ⟹ A° ⊂ B°<br>
+                            (A ∩ B)° = A° ∩ B°<br>
+                            A° ∪ B° ⊂ (A ∪ B)°
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kapanış Section -->
+            <section id="kapanis" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-compress-arrows-alt"></i>
+                    Bir Kümenin Kapanışı
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 2.2.1:</strong> (X,τ) topolojik uzay ve A⊂X alt küme olmak üzere, bir x∈X noktasının her komşuluğunda A kümesine ait en az bir eleman varsa x∈X noktasına A kümesinin <strong>kapanış noktası</strong> (değme noktası) denir. A kümesinin kapanış noktalarının kümesine A kümesinin <strong>kapanışı</strong> denir ve Ā ile gösterilir.
+                            <br><br>
+                            x ∈ Ā ⟺ ∀V ∈ ϑ(x), A ∩ V ≠ ∅
+                        </div>
+                    </div>
+
+                    <p>
+                        Kapanış noktası, kümeye "değen" veya kümeye "sınırsız yaklaşabilen" noktalardır.
+                    </p>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R,U) uzayında örnekler:</strong>
+                            <br><br>
+                            • ]1,2[̄ = [1,2] (açık aralığın kapanışı kapalı aralık)<br>
+                            • [1,2]̄ = [1,2] (kapalı aralığın kapanışı kendisi)<br>
+                            • {1,2}̄ = {1,2} (sonlu kümenin kapanışı kendisi)<br>
+                            • Q̄ = R (rasyonellerin kapanışı bütün reel sayılar)
+                        </div>
+                    </div>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 2.2.6:</strong> (X,τ) bir topolojik uzay ve A⊂X olmak üzere:
+                            <br><br>
+                            (i) Ā = A'yı kapsayan bütün kapalı kümelerin arakesiti<br>
+                            (ii) A ⊂ Ā<br>
+                            (iii) Ā ∈ τᶜ (kapanış her zaman kapalı küme)<br>
+                            (iv) Ā kümesi A'yı kapsayan en küçük kapalı küme<br>
+                            (v) A ∈ τᶜ ⟺ A = Ā
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-link note-card-icon"></i>
+                            <span class="note-card-title">İç ve Kapanış İlişkisi</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Duality:</strong> (X-A)° = X - Ā<br>
+                            <strong>Yani:</strong> Tümleyenin içi = Kapanışın tümleyeni
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sınır Section -->
+            <section id="sinir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-border-style"></i>
+                    Bir Kümenin Sınırı
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 2.3.1:</strong> (X,τ) topolojik uzay ve A⊂X alt küme olmak üzere, A kümesinin içine ve dışına ait olmayan noktaların oluşturduğu kümeye A kümesinin <strong>sınırı</strong> denir ve A^s ile gösterilir.
+                            <br><br>
+                            x ∈ A^s ⟺ x ∉ A° ve x ∉ (X-A)°
+                        </div>
+                    </div>
+
+                    <p>
+                        Sınır noktaları, kümenin "kenarında" bulunan, ne tamamen içinde ne de tamamen dışında olan noktalardır.
+                    </p>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 2.3.2:</strong> (X,τ) topolojik uzay ve A⊂X olmak üzere:
+                            <br><br>
+                            (i) X^s = ∅ ve ∅^s = ∅<br>
+                            (ii) A^s = Ā - A°<br>
+                            (iii) A^s = Ā ∩ (X-A)̄<br>
+                            (iv) A^s ∈ τᶜ (sınır her zaman kapalı)<br>
+                            (v) A^s = (X-A)^s (simetrik özellik)
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R,U) uzayında örnekler:</strong>
+                            <br><br>
+                            • ]1,2[^s = {1,2} (açık aralığın sınırı uç noktalar)<br>
+                            • [1,2]^s = {1,2} (kapalı aralığın sınırı uç noktalar)<br>
+                            • {1,2}^s = {1,2} (sonlu kümenin sınırı kendisi)<br>
+                            • Q^s = R (rasyonellerin sınırı bütün reel sayılar)
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-puzzle-piece note-card-icon"></i>
+                            <span class="note-card-title">Uzayın Parçalanması</span>
+                        </div>
+                        <div class="note-card-content">
+                            Her topolojik uzay üç ayrık kümenin birleşimi olarak yazılabilir:<br>
+                            X = A° ∪ (X-A)° ∪ A^s
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Yığılma Section -->
+            <section id="yigilma" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-compress"></i>
+                    Bir Kümenin Yığılma Noktaları
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 2.4.1:</strong> (X,τ) topolojik uzay ve A⊂X alt küme olmak üzere, bir x∈X noktasının her komşuluğunda A kümesine ait x noktasından farklı en az bir eleman varsa x∈X noktasına A kümesinin <strong>yığılma noktası</strong> denir. A kümesinin yığılma noktalarının kümesine A kümesinin <strong>yığılma noktaları kümesi</strong> denir ve A' ile gösterilir.
+                            <br><br>
+                            x ∈ A' ⟺ ∀V ∈ ϑ(x), A ∩ (V - {x}) ≠ ∅
+                        </div>
+                    </div>
+
+                    <p>
+                        Yığılma noktası, kümenin elemanlarının "yığıldığı", "kümelendiği" noktalardır.
+                    </p>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R,U) uzayında örnekler:</strong>
+                            <br><br>
+                            • ]1,2[' = [1,2] (açık aralığın yığılma noktaları)<br>
+                            • {1,2}' = ∅ (sonlu kümenin yığılma noktası yok)<br>
+                            • N' = ∅ (doğal sayıların yığılma noktası yok)<br>
+                            • Q' = R (rasyonellerin yığılma noktaları bütün gerçekler)
+                        </div>
+                    </div>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 2.4.21:</strong> (X,τ) topolojik uzay ve A⊂X alt küme olmak üzere:
+                            <br><br>
+                            A ∪ A' = Ā
+                            <br><br>
+                            Yani: Kapanış = Küme ∪ Yığılma Noktaları
+                        </div>
+                    </div>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 2.4.22:</strong> A kümesinin kapalı küme olması için gerek ve yeter şart A' ⊂ A olmasıdır.
+                            <br><br>
+                            A ∈ τᶜ ⟺ A' ⊂ A
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-info-circle note-card-icon"></i>
+                            <span class="note-card-title">Önemli Özellik</span>
+                        </div>
+                        <div class="note-card-content">
+                            Her yığılma noktası bir kapanış noktasıdır, ancak tersi doğru değildir:<br>
+                            A' ⊂ Ā
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- İzole Section -->
+            <section id="izole" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-user"></i>
+                    Bir Kümenin İzole Noktaları
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 2.5.1:</strong> (X,τ) topolojik uzay ve A⊂X alt küme olmak üzere bir x∈A noktasının en az bir komşuluğunda A kümesine ait x noktasından farklı bir elemanı bulunmuyorsa x∈A noktasına A kümesinin <strong>izole noktası</strong> denir.
+                            <br><br>
+                            x ∈ izole(A) ⟺ ∃V ∈ ϑ(x), A ∩ V = {x}
+                        </div>
+                    </div>
+
+                    <p>
+                        İzole noktalar, kümenin diğer elemanlarından "yalıtılmış", "ayrı" duran noktalardır.
+                    </p>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Önerme 2.5.3:</strong> (X,τ) topolojik uzay ve A⊂X alt küme olmak üzere:
+                            <br><br>
+                            izole(A) = A - A'
+                            <br><br>
+                            Yani: İzole Noktalar = Küme - Yığılma Noktaları
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R,U) uzayında örnekler:</strong>
+                            <br><br>
+                            • ]1,2[∪{3,5} kümesinde: izole = {3,5}<br>
+                            • {1,2,3} kümesinde: izole = {1,2,3}<br>
+                            • [1,2] kümesinde: izole = ∅<br>
+                            • N kümesinde: izole = N (her doğal sayı izole)
+                        </div>
+                    </div>
+
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Mükemmel Küme:</strong> Hiçbir izole noktası olmayan kapalı kümeye mükemmel küme denir.
+                            <br><br>
+                            Örnek: (R,U) uzayında her [a,b] kapalı aralığı mükemmel kümedir.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-balance-scale note-card-icon"></i>
+                            <span class="note-card-title">Topoloji Etkisi</span>
+                        </div>
+                        <div class="note-card-content">
+                            Topoloji inceldikçe izole noktalar artar:<br>
+                            τ₁ ⊂ τ₂ ⟹ izole(A)τ₁ ⊂ izole(A)τ₂
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Yoğun Küme Section -->
+            <section id="yogun-kume" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-grip-horizontal"></i>
+                    Yoğun Kümeler
+                </h2>
+                <div class="section-content">
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 2.7.1:</strong> (X,τ) topolojik uzay ve A,B⊂X alt kümeleri için yoğun küme tanımları:
+                            <br><br>
+                            • <strong>Yoğun:</strong> (Ā)° ≠ ∅ ⟺ A kümesi (X,τ) uzayı içinde yoğun<br>
+                            • <strong>B'de yoğun:</strong> B̄ ⊂ A ⟺ A kümesi B kümesi içinde yoğun<br>
+                            • <strong>Her yerde yoğun:</strong> Ā = X ⟺ A kümesi (X,τ) uzayında her yerde yoğun<br>
+                            • <strong>Hiçbir yerde yoğun değil:</strong> (Ā)° = ∅
+                        </div>
+                    </div>
+
+                    <p>
+                        Yoğun kümeler, uzayın her yerinde "iz" bırakan, her açık kümeyi "kesen" kümelerdir.
+                    </p>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>(R,U) uzayında örnekler:</strong>
+                            <br><br>
+                            • <strong>Her yerde yoğun:</strong> Q, Q^c (rasyoneller ve irrasyoneller)<br>
+                            • <strong>Hiçbir yerde yoğun değil:</strong> Z, N (tam sayılar, doğal sayılar)<br>
+                            • <strong>Yoğun:</strong> ]2,3[∪{4,5} (içi boş olmayan küme)<br>
+                            • <strong>[0,1]'de yoğun:</strong> Q∩[0,1] (aralıktaki rasyoneller)
+                        </div>
+                    </div>
+
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Karakterizasyon:</strong> A kümesinin (X,τ) uzayında her yerde yoğun olması için gerek ve yeter şart her boş kümeden farklı açık küme T için A∩T ≠ ∅ olmasıdır.
+                            <br><br>
+                            Ā = X ⟺ ∀T∈τ (T≠∅), A∩T ≠ ∅
+                        </div>
+                    </example>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-surprise note-card-icon"></i>
+                            <span class="note-card-title">İlginç Örnekler</span>
+                        </div>
+                        <div class="note-card-content">
+                            • İçi boş olan küme her yerde yoğun olabilir (örn: Q)<br>
+                            • Hiçbir yerde yoğun olmayan kümelerin sayılabilir birleşimi her yerde yoğun olabilir<br>
+                            • İki her yerde yoğun kümenin arakesiti boş olabilir (Q∩Q^c = ∅)
+                        </div>
+                    </div>
+
+                    <div class="math-block">
+                        <div style="text-align: center;">
+                            Yoğun kümelerin özellikleri:<br><br>
+                            A,B her yerde yoğun ⟹ A∪B her yerde yoğun<br>
+                            A hiçbir yerde yoğun değil ⟺ Ā hiçbir yerde yoğun değil<br>
+                            ⟺ (X-A)° her yerde yoğun
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Türev Kümeleri Uygulamaları Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Türev Kümeleri Uygulamaları ve Örnekler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Türev kümeleri incelerken dikkat edilmesi gereken temel kontrollar ve pratik uygulamalar:
+                    </p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-check-circle note-card-icon"></i>
+                            <span class="note-card-title">Kontrol Listesi</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>İç (A°):</strong> Her zaman açık, A°∈τ ve A°⊂A<br>
+                            <strong>Kapanış (Ā):</strong> Her zaman kapalı, Ā∈τᶜ ve A⊂Ā<br>
+                            <strong>Sınır (A^s):</strong> Her zaman kapalı, A^s∈τᶜ<br>
+                            <strong>Yığılma (A'):</strong> A'⊂Ā ve A∪A'=Ā<br>
+                            <strong>İzole:</strong> izole(A)⊂A ve izole(A)∩A'=∅
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Kapsamlı Örnek - (R,U) uzayında B = {1/n : n∈ℕ} ∪ ]2,3]:</strong>
+                            <br><br>
+                            • <strong>İç:</strong> B° = ]2,3[<br>
+                            • <strong>Kapanış:</strong> B̄ = {0} ∪ {1/n : n∈ℕ} ∪ [2,3]<br>
+                            • <strong>Sınır:</strong> B^s = {1/n : n∈ℕ} ∪ {0,2,3}<br>
+                            • <strong>Yığılma:</strong> B' = {0} ∪ [2,3]<br>
+                            • <strong>İzole:</strong> izole(B) = {1/n : n∈ℕ}
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Farklı Topolojilerde Aynı Küme:</strong>
+                            <br><br>
+                            A = ]2,3[ kümesi için:<br>
+                            • <strong>(R,U):</strong> Ā = [2,3], A° = ]2,3[<br>
+                            • <strong>(R,D→):</strong> Ā = ]-∞,3], A° = ∅<br>
+                            • <strong>(R,←D):</strong> Ā = [2,+∞[, A° = ]-∞,3[
+                        </div>
+                    </div>
+
+                    <div class="math-block">
+                        <div style="text-align: center;">
+                            Türev kümeleri arasındaki temel ilişkiler:<br><br>
+                            A° ⊂ A ⊂ Ā<br>
+                            A^s = Ā - A°<br>
+                            A' ⊂ Ā<br>
+                            A ∪ A' = Ā<br>
+                            izole(A) = A - A'
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(138, 43, 226, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Topoloji Öğrenmeye Devam Et!
+                </h2>
+                <div class="section-content">
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">İleri Konular</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Süreklilik:</strong> Fonksiyonların topolojik özellikleri<br>
+                            <strong>Bağlantılılık:</strong> Uzayın tek parça olma özelliği<br>
+                            <strong>Kompaktlık:</strong> Sonlu alt örtü özelliği<br>
+                            <strong>Ayrılabilirlik:</strong> Hausdorff ve diğer ayrılma aksiyomları<br>
+                            <strong>Metrik Uzaylar:</strong> Mesafe fonksiyonlu uzaylar<br>
+                            <strong>Homotopi:</strong> Sürekli deformasyonlar<br>
+                            <strong>Cebirsel Topoloji:</strong> Homoloji ve kohomoloji
+                        </div>
+                    </div>
+
+                    <div class="note-card" style="margin-top: 20px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-book note-card-icon"></i>
+                            <span class="note-card-title">Önerilen Kaynaklar</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Kitaplar:</strong><br>
+                            • Munkres - Topology (2nd Edition)<br>
+                            • Willard - General Topology<br>
+                            • Kelley - General Topology<br>
+                            <br>
+                            <strong>Türkçe Kaynaklar:</strong><br>
+                            • Genel Topoloji ders notları<br>
+                            • Matematik bölümü topoloji dersleri
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-infinity"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            "Topoloji, matematik bahçesinin en güzel çiçeklerinden biridir"
+                        </p>
+                        <p style="margin-top: 10px; color: var(--text-black700); font-size: 14px;">
+                            - Henri Poincaré'den esinlenilerek
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Süreklilik Section -->
+            <section id="sureklilik" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-infinity"></i>
+                    Süreklilik
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Sürekli fonksiyon kavramı, genellikle kalkülüs veya analiz kitaplarında ilk olarak karşımıza çıkar. Bir fonksiyonun reel eksen üzerindeki sürekliliği ε − δ tanımı kullanılarak ilk kez Bolzano tarafından 1817 yılında verilmiştir. Metrik yapısını kullanmadan genelleştirerek, topolojik uzaylar arasındaki sürekli fonksiyonları tanımlamak mümkündür.
+                    </p>
+                    
+                    <div class="math-block">
+                        <p><strong>f : X → Y</strong></p>
+                        <p><strong>x ↦ f(x) = y</strong></p>
+                    </div>
+                    
+                    <p>
+                        fonksiyonunun sürekliliği fonksiyonun f(x) = y tanımından bağımsız olarak (sabit fonksiyon hariç) X ve Y kümeleri üzerindeki topolojilere bağlıdır.
+                    </p>
+                    
+                    <div class="quote-box">
+                        <div class="quote-content">
+                            <i class="fas fa-quote-left"></i>
+                            "Gutta cavat lapidem non vi sed saepe cadendo."
+                            <br>
+                            <em>(Taşı delen suyun gücü değil damlaların sürekliliğidir.)</em>
+                            <br>
+                            <strong>— Publius Ovidius Naso</strong>
+                        </div>
+                    </div>
+
+                    <!-- Bir Noktada Süreklilik -->
+                    <h3 class="subsection-title">
+                        <i class="fas fa-circle"></i>
+                        Bir Noktada Süreklilik
+                    </h3>
+                    
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 3.1.1:</strong> (X, τ) ve (Y, σ) topolojik uzayları, f : X → Y fonksiyonu ve bir x ∈ X noktası verilsin. Eğer f(x) noktasının her V ⊂ Y komşuluğu için, f(U) ⊂ V olacak şekilde x noktasının bir U ⊂ X komşuluğu varsa, f fonksiyonuna x noktasında süreklidir denir.
+                        </div>
+                    </div>
+                    
+                    <div class="math-block">
+                        <p><strong>f, x ∈ X noktasında süreklidir ⇐⇒ ∀V ∈ ϑ(f(x)) için, ∃U ∈ ϑ(x) ϶ f(U) ⊂ V</strong></p>
+                    </div>
+                    
+                    <div class="math-block">
+                        <p><strong>f fonksiyonu, x ∈ X noktasında sürekli değil</strong></p>
+                        <p><strong>⇐⇒ ∃V ∈ ϑ(f(x)) ∀U ∈ ϑ(x) için f(U) ⊈ V</strong></p>
+                        <p><strong>⇐⇒ ∃V ∈ ϑ(f(x)) ϶ f⁻¹(V) ∉ ϑ(x)</strong></p>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <span class="note-card-title">Notasyon</span>
+                        </div>
+                        <div class="note-card-content">
+                            İşlemlerde kolaylık olması açısından ispatlarda ve çözümlerde bu notdan itibaren:<br>
+                            • "Bir f fonksiyonu x ∈ X noktasında süreklidir" → <strong>f, x ∈ X, (c)</strong><br>
+                            • "Bir f fonksiyonu x ∈ X noktasında sürekli değildir" → <strong>f, x ∈ X, ~(c)</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 3.1.2:</strong> Bir f : (X, τ) → (Y, σ) fonksiyonu verilsin. Bu takdirde, aşağıdaki ifadeler eşdeğerdir:
+                            <br><br>
+                            <strong>(i)</strong> f fonksiyonu x ∈ X noktasında süreklidir.<br>
+                            <strong>(ii)</strong> ∀V ∈ ϑ(f(x)) için, ∃U ∈ ϑ(x) ϶ x ∈ U ⟹ f(x) ∈ V dir.<br>
+                            <strong>(iii)</strong> ∀V ∈ ϑ(f(x)) için, ∃U ∈ ϑ(x) ϶ U ⊂ f⁻¹(V) dir.<br>
+                            <strong>(iv)</strong> ∀V ∈ ϑ(f(x)) için, f⁻¹(V) ∈ ϑ(x) dir.<br>
+                            <strong>(v)</strong> G(f(x)) ailesi, f(x) noktasının komşuluklar tabanı olmak üzere ∀W ∈ G(f(x)) için, f⁻¹(W) ∈ ϑ(x)
+                        </div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Örnek 3.1.3:</strong> X = {a, b, c} kümesi üzerinde τ = {X, ∅, {a}, {a, b}} topolojisi verilsin. f : X → X fonksiyonu, f(a) = b, f(b) = c ve f(c) = a şeklinde tanımlansın. Bu takdirde f fonksiyonu, (X, τ) uzayının hangi noktalarında sürekli olduğunu araştıralım.
+                            <br><br>
+                            <strong>Çözüm:</strong> Noktaların komşuluklarını yazalım:
+                            <br><br>
+                            ϑ(a) = {X, {a}, {a, b}, {a, c}}<br>
+                            ϑ(b) = {X, {a, b}}<br>
+                            ϑ(c) = {X}
+                            <br><br>
+                            <strong>a ∈ X noktası için:</strong> f(a) = b noktasının bütün komşulukları X ve {a, b} için f⁻¹(X) = X ∈ ϑ(a) ve f⁻¹({a, b}) = {a, c} ∈ ϑ(a) olduğundan, f fonksiyonu a ∈ X noktasında süreklidir.
+                            <br><br>
+                            <strong>b ∈ X noktası için:</strong> f(b) = c noktasının bütün komşulukları X için f⁻¹(X) = X ∈ ϑ(b) olduğundan, f fonksiyonu b ∈ X noktasında süreklidir.
+                            <br><br>
+                            <strong>c ∈ X noktası için:</strong> f(c) = a noktasının {a} komşuluğu için f⁻¹({a}) = {c} ∉ ϑ(c) olduğundan f fonksiyonu, c ∈ X noktasında sürekli değildir.
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <div class="warning-content">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Uyarı 3.1.4:</strong> Süreklilik kavramı, lokal bir özelliktir. Bir noktada sürekli olan bir fonksiyon, diğer bir noktada sürekli olmayabilir.
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 3.1.5:</strong> f : (X, τ) → (Y, σ) fonksiyonu ve bir A ⊂ X alt kümesi verilsin. Eğer f fonksiyonu, x ∈ X noktasında sürekli ve x ∈ A ise f(x) ∈ f(A) olur.
+                            <br><br>
+                            <strong>f, x ∈ X, (c) ∧ x ∈ A ⟹ f(x) ∈ f(A)</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 3.1.6:</strong> f : (X, τ₁) → (Y, τ₂) ve g : (Y, τ₂) → (Z, τ₃) fonksiyonları verilsin. Eğer f fonksiyonu, x ∈ X noktasında sürekli ve g fonksiyonu da f(x) noktasında sürekli ise, g ∘ f : X → Z fonksiyonu, x ∈ X noktasında süreklidir.
+                        </div>
+                    </div>
+
+                    <!-- Her Noktada Süreklilik -->
+                    <h3 class="subsection-title">
+                        <i class="fas fa-globe"></i>
+                        Her Noktada Süreklilik
+                    </h3>
+                    
+                    <div class="definition-box">
+                        <div class="definition-box-content">
+                            <strong>Tanım 3.2.1:</strong> f : (X, τ) → (Y, σ) bir fonksiyonu her x ∈ X noktasında sürekli ise, f fonksiyonuna X kümesi üzerinde süreklidir denir.
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <div class="warning-content">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Uyarı 3.2.2:</strong> Eğer f fonksiyonunun tanım ya da değer kümesi üzerinde birden çok topolojik yapıyı aynı zamanda düşünüyorsak, f fonksiyonunun hangi topolojiye göre sürekli olduğunu belirtmek gerekir. Bunun için "f : (X, τ) → (Y, σ) süreklidir" ya da "f fonksiyonu τ − σ süreklidir" şeklinde ifade edilir.
+                        </div>
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <span class="note-card-title">Notasyon</span>
+                        </div>
+                        <div class="note-card-content">
+                            İşlemlerde kolaylık olması açısından:<br>
+                            • "Bir f fonksiyonu X uzayının her noktasında süreklidir" → <strong>f, (c)</strong><br>
+                            • "Bir f fonksiyonu X uzayının her noktasında sürekli değildir" → <strong>f, ~(c)</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 3.2.3:</strong> f : (X, τ) → (Y, σ) fonksiyonu için, aşağıdaki ifadeler eşdeğerdir:
+                            <br><br>
+                            <strong>(i)</strong> f fonksiyonu süreklidir.<br>
+                            <strong>(ii)</strong> ∀A ⊂ X, f(A) ⊂ f(A) olur.<br>
+                            <strong>(iii)</strong> ∀F ⊂ Y kapalı alt kümesi için f⁻¹(F) ⊂ X alt kümesi (X, τ) uzayında kapalı küme olur.<br>
+                            <strong>(iv)</strong> ∀A ⊂ Y açık alt kümesi için f⁻¹(A) ⊂ X alt kümesi (X, τ) uzayında açık küme olur.
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <div class="warning-content">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Uyarı 3.2.4:</strong> f : (X, τ) → (Y, σ) fonksiyonunun her noktada sürekli olduğunu göstermek için en sık kullanılan kriterler açık ve kapalı kümelerin kullanıldığı kriterlerdir.
+                            <br><br>
+                            <strong>f, (c) ⇔ ∀U ∈ σ için f⁻¹(U) ∈ τ</strong><br>
+                            <strong>f, (c) ⇔ ∀F ∈ σᵗ için f⁻¹(F) ∈ τᵗ</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 3.2.6:</strong> f : (X, τ) → (Y, σ) fonksiyonu ve B ⊂ σ tabanı verilsin. Bu durumda f fonksiyonunun sürekli olması için gerek ve yeter şart her B ∈ B için f⁻¹(B) ∈ τ olmasıdır.
+                            <br><br>
+                            <strong>f, (c) ⇐⇒ ∀B ∈ B, f⁻¹(B) ∈ τ</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 3.2.7:</strong> f : (X, τ) → (Y, σ) fonksiyonu verilsin. S ⊂ σ alt taban olmak üzere, f fonksiyonunun sürekli olması için gerek ve yeter şart her S için f⁻¹(S) ∈ τ olmasıdır.
+                            <br><br>
+                            <strong>f, (c) ⇐⇒ ∀s ∈ S, f⁻¹(S) ∈ τ</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Teorem 3.2.8:</strong> f : (X, τ₁) → (Y, τ₂) ve g : (Y, τ₂) → (Z, τ₃) fonksiyonları sürekli ise g ∘ f : X → Z fonksiyonu da sürekli olur.
+                        </div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Örnek 3.2.9:</strong> Tanım kümesi üzerinde ayrık uzay tanımlı olan f : (X, P(X)) → (Y, σ) fonksiyon görüntü kümesi üzerindeki topolojiden bağımsız olarak her zaman süreklidir.
+                            <br><br>
+                            <strong>Çözüm:</strong> Her A ∈ σ açık kümesi için A ∈ σ ⟹ f⁻¹(A) ⊂ X ⟹ f⁻¹(A) ∈ P(X) (Ayrık uzayda her alt küme açık küme olur) ⟹ f, (c)
+                        </div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Örnek 3.2.10:</strong> Görüntü kümesi üzerinde kaba uzay tanımlı olan f : (X, τ) → (Y, {Y, ∅}) fonksiyon tanım kümesi üzerindeki topolojiden bağımsız olarak her zaman süreklidir.
+                            <br><br>
+                            <strong>Çözüm:</strong> (Y, {Y, ∅}) uzayındaki açık kümeler ∅ ve Y kümeleridir. (X, τ) topolojik uzayı için ∅, X ∈ τ olduğundan f⁻¹(Y) = X ∈ τ ve f⁻¹(∅) = ∅ ∈ τ elde edilir. O halde f fonksiyonu süreklidir.
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <div class="warning-content">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Uyarı 3.2.11:</strong> Bir f fonksiyonunun sürekliliğini en zor olduğu durum tanım ve görüntü kümesi f : (X, {X, ∅}) → (Y, P(Y)) şeklindedir. X ve Y kümeleri birden fazla elemana sahipse tanım kümesinde kaba uzay ve görüntü kümesinde ayrık uzay tanımlı olduğunda sadece sabit fonksiyon sürekli olur.
+                        </div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Örnek 3.2.12:</strong> y₀ ∈ Y sabit bir nokta olmak üzere her x ∈ X noktası için, f(x) = y₀ şeklinde tanımlanan f : (X, τ) → (Y, σ) sabit fonksiyonu süreklidir.
+                            <br><br>
+                            <strong>Çözüm:</strong> Herhangi bir B ∈ σ kümesi verilsin. B kümesinin öngörüntüsü:
+                            <br><br>
+                            f⁻¹(B) = {∅, y₀ ∉ B; X, y₀ ∈ B}
+                            <br><br>
+                            ∅, X ∈ τ olduğundan f⁻¹(B) ∈ τ elde edilir. Sonuç olarak sabit fonksiyon sürekli olur.
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Sonuç 3.2.13:</strong> Sabit fonksiyon tanım ve görüntü kümesi üzerindeki topolojilerden bağımsız olarak her zaman süreklidir.
+                        </div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Örnek 3.2.14:</strong> f : (X, τ) → (X, τ) birim fonksiyonu süreklidir.
+                            <br><br>
+                            <strong>Çözüm:</strong> f : (X, τ) → (X, τ) birim fonksiyonu, her x ∈ X noktası için, f(x) = x şeklinde tanımlıdır. Her B ∈ τ açık kümesi için B ∈ τ ⟹ f⁻¹(B) = B (f birim fonksiyon) ⟹ f⁻¹(B) ∈ τ (B ∈ τ) ⟹ f, (c)
+                        </div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="example-box-content">
+                            <strong>Örnek 3.2.15:</strong> X kümesi birden fazla eleman içeren bir küme ve f : (X, τ₁) → (X, τ₂) birim fonksiyon olmak üzere eğer τ₁ topoloji τ₂ topolojisinden daha kaba ise birim fonksiyon sürekli değildir.
+                            <br><br>
+                            <strong>Çözüm:</strong> τ₁ ⊂ τ₂ olsun. Buradan ∃U ∈ τ₂ ϶ U ∉ τ₁ olur. U ∈ τ₂ için f⁻¹(U) = U ∉ τ₁ olduğundan f fonksiyonu sürekli değildir.
+                        </div>
+                    </div>
+                    
+                    <div class="theorem-box">
+                        <div class="theorem-box-content">
+                            <strong>Sonuç 3.2.16:</strong> Birim fonksiyon her zaman sürekli değildir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Console Easter Egg
+        console.log('%c∞ Topoloji Öğrenme Portalı', 'color: #8a2be2; font-size: 20px; font-weight: bold;');
+        console.log('%c> Grok Theme initialized', 'color: #8a2be2; font-family: monospace;');
+        console.log('%c> Topology modules loaded', 'color: #8a2be2; font-family: monospace;');
+        console.log('%c> Mathematical structures activated', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> τ = {∅, X, U₁, U₂, ...}', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(138, 43, 226, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Mathematical formula renderer (simple LaTeX-like syntax)
+        function renderMath() {
+            const mathElements = document.querySelectorAll('.math-inline');
+            mathElements.forEach(element => {
+                let text = element.textContent;
+                // Simple replacements for common mathematical symbols
+                text = text.replace(/\\tau/g, 'τ');
+                text = text.replace(/\\subset/g, '⊂');
+                text = text.replace(/\\cup/g, '∪');
+                text = text.replace(/\\cap/g, '∩');
+                text = text.replace(/\\emptyset/g, '∅');
+                text = text.replace(/\\infty/g, '∞');
+                text = text.replace(/\\in/g, '∈');
+                text = text.replace(/\\notin/g, '∉');
+                text = text.replace(/\\subseteq/g, '⊆');
+                text = text.replace(/\\supseteq/g, '⊇');
+                text = text.replace(/\\forall/g, '∀');
+                text = text.replace(/\\exists/g, '∃');
+                text = text.replace(/\\Rightarrow/g, '⟹');
+                text = text.replace(/\\Leftrightarrow/g, '⟺');
+                element.innerHTML = text;
+            });
+        }
+
+        // Initialize math rendering
+        document.addEventListener('DOMContentLoaded', renderMath);
+
+        // Add dynamic background particles
+        function createParticles() {
+            const particleContainer = document.createElement('div');
+            particleContainer.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: -2;
+            `;
+            document.body.appendChild(particleContainer);
+
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    background: rgba(138, 43, 226, 0.3);
+                    border-radius: 50%;
+                    animation: float 20s infinite linear;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation-delay: ${Math.random() * 20}s;
+                `;
+                particleContainer.appendChild(particle);
+            }
+        }
+
+        // Add particle animation CSS
+        const particleStyle = document.createElement('style');
+        particleStyle.textContent = `
+            @keyframes float {
+                0% {
+                    transform: translateY(100vh) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(particleStyle);
+
+        // Initialize particles
+        createParticles();
+
+        // Add topology-specific interactive elements
+        const mathBlocks = document.querySelectorAll('.math-block');
+        mathBlocks.forEach(block => {
+            block.addEventListener('click', () => {
+                block.style.background = block.style.background === 'rgba(138, 43, 226, 0.1)' 
+                    ? '#1a1a1a' 
+                    : 'rgba(138, 43, 226, 0.1)';
+            });
+        });
+
+        // Theorem highlighting
+        const theoremBoxes = document.querySelectorAll('.theorem-box');
+        theoremBoxes.forEach(box => {
+            box.addEventListener('mouseenter', () => {
+                box.style.boxShadow = '0 0 30px rgba(80, 250, 123, 0.3)';
+            });
+            
+            box.addEventListener('mouseleave', () => {
+                box.style.boxShadow = 'none';
+            });
+        });
+
+        // Definition highlighting
+        const definitionBoxes = document.querySelectorAll('.definition-box');
+        definitionBoxes.forEach(box => {
+            box.addEventListener('mouseenter', () => {
+                box.style.boxShadow = '0 0 30px rgba(138, 43, 226, 0.3)';
+            });
+            
+            box.addEventListener('mouseleave', () => {
+                box.style.boxShadow = 'none';
+            });
+        });
+
+        // Add mathematical symbol keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'i') {
+                e.preventDefault();
+                console.log('Mathematical symbols available:');
+                console.log('τ (tau), ∅ (empty set), ∪ (union), ∩ (intersection)');
+                console.log('⊂ (subset), ∈ (element of), ∞ (infinity)');
+                console.log('∀ (for all), ∃ (exists), ⟹ (implies), ⟺ (if and only if)');
+            }
+        });
+
+        // Loading animation for complex sections
+        const contentSections = document.querySelectorAll('.content-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        contentSections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

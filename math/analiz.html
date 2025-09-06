@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!--
+      Copyright © 2025 Burak Demiröz
+      All Rights Reserved. This page and its contents may not be copied,
+      distributed, or used without explicit written permission.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematik Analiz | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon/mathfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon/mathfavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+    
+    <style>
+        :root {
+            /* Mathematics Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(255, 165, 0, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #ff6b35;
+            --skin-color-hover: #e55a2b;
+            --neon-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+            --text-shadow: 0 0 10px rgba(255, 107, 53, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --formula-bg: rgba(255, 107, 53, 0.05);
+            --formula-border: rgba(255, 107, 53, 0.2);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 107, 53, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 53, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-square-root-variable {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 107, 53, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(255, 107, 53, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(255, 107, 53, 0.1);
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-square-root-variable {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-formula {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-formula::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Formula Blocks */
+        .formula-block {
+            background: var(--formula-bg);
+            border: 1px solid var(--formula-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .formula-block::before {
+            content: 'Formula';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .formula-block .formula {
+            font-size: 24px;
+            color: var(--skin-color);
+            font-family: 'JetBrains Mono', monospace;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* Example Blocks */
+        .example-block {
+            background: rgba(80, 250, 123, 0.05);
+            border-left: 3px solid var(--success-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        
+        .example-block::before {
+            content: '> Örnek:';
+            display: block;
+            font-size: 12px;
+            color: var(--success-color);
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Solution Blocks */
+        .solution-block {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid #00d4ff;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #00d4ff;
+        }
+        
+        .solution-block::before {
+            content: '> Çözüm:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+
+        /* Graph Container */
+        .graph-container {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .graph-placeholder {
+            width: 100%;
+            height: 300px;
+            background: rgba(255, 107, 53, 0.05);
+            border: 2px dashed rgba(255, 107, 53, 0.3);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--skin-color);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Step by Step */
+        .step-by-step {
+            counter-reset: step-counter;
+        }
+
+        .step {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 107, 53, 0.05);
+            border-left: 3px solid var(--skin-color);
+            position: relative;
+        }
+
+        .step::before {
+            content: "Adım " counter(step-counter);
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--bg-black900);
+            color: var(--skin-color);
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+
+            .formula-block .formula {
+                font-size: 18px;
+            }
+        }
+
+        /* MathJax styling */
+        .MathJax {
+            color: var(--skin-color) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-square-root-variable"></i>
+                <span>Matematik Analiz</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#analiz-nedir" class="active">Analiz Nedir?</a></li>
+            <li><a href="#limit">Limit Kavramı</a></li>
+            <li><a href="#sureklilik">Süreklilik</a></li>
+            <li><a href="#turev">Türev</a></li>
+            <li><a href="#turev-kurallar">Türev Kuralları</a></li>
+            <li><a href="#uygulamalar">Türev Uygulamaları</a></li>
+            <li><a href="#integral">İntegral</a></li>
+            <li><a href="#belirsiz-integral">Belirsiz İntegral</a></li>
+            <li><a href="#belirli-integral">Belirli İntegral</a></li>
+            <li><a href="#uygulama-alanlari">Uygulama Alanları</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-square-root-variable"></i>
+                    Matematik Analiz
+                </h1>
+                <p class="hero-subtitle">
+                    Lise düzeyi matematik analizi: Limit, süreklilik, türev ve integral konularını keşfedin
+                </p>
+                <div class="hero-formula">
+                    $$\lim_{x \to a} f(x) = L$$
+                </div>
+            </section>
+
+            <!-- Analiz Nedir Section -->
+            <section id="analiz-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-infinity"></i>
+                    Matematik Analiz Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Matematik Analiz</strong>, fonksiyonların davranışlarını inceleyen, limit, süreklilik, türev ve integral kavramlarını temel alan matematik dalıdır. Analiz, değişimin matematiksel bir dilde ifade edilmesini sağlar.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Analizin Temel Konuları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Limit:</strong> Fonksiyonun bir noktadaki davranışı</li>
+                                <li>• <strong>Süreklilik:</strong> Fonksiyonun kesintisiz olma durumu</li>
+                                <li>• <strong>Türev:</strong> Değişim hızının ölçülmesi</li>
+                                <li>• <strong>İntegral:</strong> Alan hesaplama ve ters türev</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">Tarihçe</span>
+                        </div>
+                        <div class="note-card-content">
+                            Analiz, 17. yüzyılda Newton ve Leibniz tarafından geliştirildi. Fizik problemlerini çözmek için yaratılan bu dal, bugün matematik, mühendislik ve fen bilimlerinin temelini oluşturur.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Çalışma İpucu:</strong> Analiz konularını öğrenirken her kavramı önceki kavramlarla ilişkilendirin. Limit → Süreklilik → Türev → İntegral sırası mantıklı bir öğrenme yoludur.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Limit Section -->
+            <section id="limit" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-arrow-right"></i>
+                    Limit Kavramı
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Limit</strong>, bir fonksiyonun belirli bir noktaya yaklaşırken aldığı değerdir. Limit kavramı, analizin temelini oluşturur ve türev ile integral tanımlarında kullanılır.
+                    </p>
+
+                    <div class="formula-block">
+                        <div class="formula">
+                            $$\lim_{x \to a} f(x) = L$$
+                        </div>
+                        <p style="margin-top: 15px; color: var(--text-black700); font-size: 14px;">
+                            "x, a'ya yaklaşırken f(x), L'ye yaklaşır"
+                        </p>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek 1:</strong> $\lim_{x \to 2} (3x + 1)$ limitini hesaplayalım.
+                    </div>
+
+                    <div class="step-by-step">
+                        <div class="step">
+                            <strong>Doğrudan Yerine Koyma:</strong> $f(x) = 3x + 1$ fonksiyonu $x = 2$ noktasında tanımlıdır.
+                        </div>
+                        <div class="step">
+                            <strong>Hesaplama:</strong> $f(2) = 3(2) + 1 = 7$
+                        </div>
+                        <div class="step">
+                            <strong>Sonuç:</strong> $\lim_{x \to 2} (3x + 1) = 7$
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Limit her zaman fonksiyonun o noktadaki değerine eşit değildir. Fonksiyon o noktada tanımsız olabilir ama limit var olabilir.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-calculator note-card-icon"></i>
+                            <span class="note-card-title">Limit Hesaplama Yöntemleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            • <strong>Doğrudan Yerine Koyma:</strong> $\lim_{x \to a} f(x) = f(a)$ (eğer sürekli ise)<br>
+                            • <strong>Çarpanlara Ayırma:</strong> $0/0$ belirsizliklerinde<br>
+                            • <strong>Rasyonelleştirme:</strong> Köklü ifadelerde<br>
+                            • <strong>L'Hospital Kuralı:</strong> $0/0$ veya $\infty/\infty$ durumlarında
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Süreklilik Section -->
+            <section id="sureklilik" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-link"></i>
+                    Süreklilik
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Bir fonksiyon, belirli bir noktada <strong>sürekli</strong>dir, eğer o noktada limit değeri ile fonksiyon değeri eşitse. Süreklilik, fonksiyonun grafiğinin o noktada kesintisiz olduğunu gösterir.
+                    </p>
+
+                    <div class="formula-block">
+                        <div class="formula">
+                            $f(x), \, x = a \text{ noktasında sürekli} \Leftrightarrow \lim_{x \to a} f(x) = f(a)$
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Süreklilik Koşulları (x = a noktasında):</strong>
+                            <ol style="margin-top: 10px; margin-left: 20px;">
+                                <li>1. $f(a)$ tanımlı olmalı</li>
+                                <li>2. $\lim_{x \to a} f(x)$ var olmalı</li>
+                                <li>3. $\lim_{x \to a} f(x) = f(a)$ olmalı</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek:</strong> $f(x) = \begin{cases} x^2 & \text{eğer } x \neq 2 \\ 5 & \text{eğer } x = 2 \end{cases}$ fonksiyonunun $x = 2de sürekliliğini inceleyelim.
+                    </div>
+
+                    <div class="solution-block">
+                        $\lim_{x \to 2} f(x) = \lim_{x \to 2} x^2 = 4$<br>
+                        $f(2) = 5$<br>
+                        $\lim_{x \to 2} f(x) \neq f(2)$ olduğundan fonksiyon $x = 2de sürekli değildir.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Türev Section -->
+            <section id="turev" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Türev Kavramı
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Türev</strong>, bir fonksiyonun belirli bir noktadaki değişim hızını ölçen kavramdır. Geometrik olarak, türev bir noktadaki teğet doğrusunun eğimini verir.
+                    </p>
+
+                    <div class="formula-block">
+                        <div class="formula">
+                            $f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$
+                        </div>
+                        <p style="margin-top: 15px; color: var(--text-black700); font-size: 14px;">
+                            Türev tanımı (limit tanımı)
+                        </p>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Türev Notasyonları:</strong><br>
+                            $f'(x)$, $\frac{df}{dx}$, $\frac{d}{dx}f(x)$, $D_x f(x)$ - hepsi aynı anlama gelir
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek:</strong> $f(x) = x^2$ fonksiyonunun türevini limit tanımından bulalım.
+                    </div>
+
+                    <div class="step-by-step">
+                        <div class="step">
+                            <strong>Tanımı uygula:</strong> $f'(x) = \lim_{h \to 0} \frac{(x+h)^2 - x^2}{h}$
+                        </div>
+                        <div class="step">
+                            <strong>Açılım:</strong> $= \lim_{h \to 0} \frac{x^2 + 2xh + h^2 - x^2}{h}$
+                        </div>
+                        <div class="step">
+                            <strong>Sadeleştir:</strong> $= \lim_{h \to 0} \frac{2xh + h^2}{h} = \lim_{h \to 0} (2x + h)$
+                        </div>
+                        <div class="step">
+                            <strong>Limit hesapla:</strong> $f'(x) = 2x$
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-eye note-card-icon"></i>
+                            <span class="note-card-title">Geometrik Yorum</span>
+                        </div>
+                        <div class="note-card-content">
+                            Türev, fonksiyonun grafiğindeki bir noktada çizilen teğet doğrusunun eğimidir. Pozitif türev artan, negatif türev azalan fonksiyonu gösterir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Türev Kuralları Section -->
+            <section id="turev-kurallar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-rules"></i>
+                    Türev Alma Kuralları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Türev almanı kolaylaştıran temel kurallar. Bu kuralları kullanarak limit tanımından türev almak zorunda kalmazsınız.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel Türev Kuralları:</strong>
+                            <div style="margin-top: 15px;">
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    <strong>Sabit Kural:</strong> $(c)' = 0$
+                                </div>
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    <strong>Kuvvet Kuralı:</strong> $(x^n)' = nx^{n-1}$
+                                </div>
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    <strong>Toplam Kuralı:</strong> $(f + g)' = f' + g'$
+                                </div>
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    <strong>Çarpım Kuralı:</strong> $(fg)' = f'g + fg'$
+                                </div>
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    <strong>Bölüm Kuralı:</strong> $\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek 1:</strong> $f(x) = 3x^4 - 2x^2 + 5x - 1$ fonksiyonunun türevini bulalım.
+                    </div>
+
+                    <div class="solution-block">
+                        $f'(x) = 3 \cdot 4x^3 - 2 \cdot 2x + 5 - 0 = 12x^3 - 4x + 5$
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek 2:</strong> $g(x) = (2x + 1)(x^2 - 3)$ fonksiyonunun türevini çarpım kuralı ile bulalım.
+                    </div>
+
+                    <div class="step-by-step">
+                        <div class="step">
+                            <strong>Fonksiyonları belirle:</strong> $f = 2x + 1$, $g = x^2 - 3$
+                        </div>
+                        <div class="step">
+                            <strong>Türevleri hesapla:</strong> $f' = 2$, $g' = 2x$
+                        </div>
+                        <div class="step">
+                            <strong>Çarpım kuralını uygula:</strong> $(fg)' = f'g + fg' = 2(x^2 - 3) + (2x + 1)(2x)$
+                        </div>
+                        <div class="step">
+                            <strong>Sadeleştir:</strong> $= 2x^2 - 6 + 4x^2 + 2x = 6x^2 + 2x - 6$
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Yaygın Hata:</strong> $(fg)' = f'g'$ DEĞİLDİR! Doğru formül: $(fg)' = f'g + fg'$
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Türev Uygulamaları Section -->
+            <section id="uygulamalar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cogs"></i>
+                    Türev Uygulamaları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Türev, matematikte ve günlük hayatta birçok alanda kullanılır. En önemli uygulamalar maksimum-minimum bulma ve hareket problemleridir.
+                    </p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-chart-area note-card-icon"></i>
+                            <span class="note-card-title">Fonksiyon Analizi</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>$f'(x) > 0$:</strong> Fonksiyon artan<br>
+                            <strong>$f'(x) < 0$:</strong> Fonksiyon azalan<br>
+                            <strong>$f'(x) = 0$:</strong> Kritik nokta (maksimum, minimum veya eğim değişimi)
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek - Maksimum Bulma:</strong> $f(x) = -x^2 + 4x + 5$ fonksiyonunun maksimum değerini bulalım.
+                    </div>
+
+                    <div class="step-by-step">
+                        <div class="step">
+                            <strong>Türevi hesapla:</strong> $f'(x) = -2x + 4$
+                        </div>
+                        <div class="step">
+                            <strong>Kritik noktayı bul:</strong> $f'(x) = 0 \Rightarrow -2x + 4 = 0 \Rightarrow x = 2$
+                        </div>
+                        <div class="step">
+                            <strong>İkinci türev testi:</strong> $f''(x) = -2 < 0$ (maksimum)
+                        </div>
+                        <div class="step">
+                            <strong>Maksimum değer:</strong> $f(2) = -4 + 8 + 5 = 9$
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 İkinci Türev Testi:</strong><br>
+                            $f''(x) > 0$: Minimum nokta<br>
+                            $f''(x) < 0$: Maksimum nokta<br>
+                            $f''(x) = 0$: Test sonuçsuz (daha fazla analiz gerekli)
+                        </div>
+                    </div>
+
+                    <div class="graph-container">
+                        <div class="graph-placeholder">
+                            <i class="fas fa-chart-line" style="font-size: 48px; margin-right: 20px;"></i>
+                            <div>
+                                <div>f(x) = -x² + 4x + 5</div>
+                                <div style="font-size: 14px; opacity: 0.7;">Maksimum noktası: (2, 9)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- İntegral Section -->
+            <section id="integral" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-integral"></i>
+                    İntegral Kavramı
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>İntegral</strong>, türevin ters işlemidir ve alan hesaplamada kullanılır. İki türü vardır: belirsiz integral (ters türev) ve belirli integral (alan hesabı).
+                    </p>
+
+                    <div class="formula-block">
+                        <div class="formula">
+                            $\int f(x) \, dx = F(x) + C$
+                        </div>
+                        <p style="margin-top: 15px; color: var(--text-black700); font-size: 14px;">
+                            Belirsiz integral (F'(x) = f(x) olacak şekilde)
+                        </p>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel İntegral Formülleri:</strong>
+                            <div style="margin-top: 15px;">
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    $\int k \, dx = kx + C$ (sabit)
+                                </div>
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    $\int x^n \, dx = \frac{x^{n+1}}{n+1} + C$ (n ≠ -1)
+                                </div>
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    $\int \frac{1}{x} \, dx = \ln|x| + C$
+                                </div>
+                                <div class="formula-block" style="margin: 10px 0; padding: 10px;">
+                                    $\int e^x \, dx = e^x + C$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-link note-card-icon"></i>
+                            <span class="note-card-title">Türev-İntegral İlişkisi</span>
+                        </div>
+                        <div class="note-card-content">
+                            İntegral ile türev birbirinin tersidir:<br>
+                            $\frac{d}{dx}\left[\int f(x) \, dx\right] = f(x)$<br>
+                            $\int F'(x) \, dx = F(x) + C$
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Belirsiz İntegral Section -->
+            <section id="belirsiz-integral" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-question"></i>
+                    Belirsiz İntegral
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Belirsiz integral</strong>, verilen bir fonksiyonun ters türevini bulma işlemidir. Sonuçta mutlaka bir sabit terimi (C) eklenir.
+                    </p>
+
+                    <div class="example-block">
+                        <strong>Örnek 1:</strong> $\int (3x^2 + 2x - 1) \, dx$ integralini hesaplayalım.
+                    </div>
+
+                    <div class="step-by-step">
+                        <div class="step">
+                            <strong>Terim terim integral al:</strong> $\int 3x^2 \, dx + \int 2x \, dx + \int (-1) \, dx$
+                        </div>
+                        <div class="step">
+                            <strong>Formülleri uygula:</strong> $3 \cdot \frac{x^3}{3} + 2 \cdot \frac{x^2}{2} - x + C$
+                        </div>
+                        <div class="step">
+                            <strong>Sadeleştir:</strong> $x^3 + x^2 - x + C$
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek 2:</strong> $\int \frac{2}{x} + e^x \, dx$ integralini hesaplayalım.
+                    </div>
+
+                    <div class="solution-block">
+                        $\int \frac{2}{x} \, dx + \int e^x \, dx = 2\ln|x| + e^x + C$
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Belirsiz integralde mutlaka +C sabit terimi eklenmelidir! Bu terim, türev alırken kaybolan sabiti temsil eder.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Belirli İntegral Section -->
+            <section id="belirli-integral" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-area-chart"></i>
+                    Belirli İntegral
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Belirli integral</strong>, bir fonksiyonun belirli bir aralıktaki altında kalan alanı hesaplar. Geometrik ve fiziksel problemlerde sıkça kullanılır.
+                    </p>
+
+                    <div class="formula-block">
+                        <div class="formula">
+                            $\int_a^b f(x) \, dx = F(b) - F(a)$
+                        </div>
+                        <p style="margin-top: 15px; color: var(--text-black700); font-size: 14px;">
+                            Calculus'un Temel Teoremi (F'(x) = f(x))
+                        </p>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek:</strong> $\int_1^3 (2x + 1) \, dx$ belirli integralini hesaplayalım.
+                    </div>
+
+                    <div class="step-by-step">
+                        <div class="step">
+                            <strong>Belirsiz integral bul:</strong> $\int (2x + 1) \, dx = x^2 + x + C$
+                        </div>
+                        <div class="step">
+                            <strong>Sınır değerleri uygula:</strong> $[x^2 + x]_1^3$
+                        </div>
+                        <div class="step">
+                            <strong>Üst sınır:</strong> $F(3) = 3^2 + 3 = 9 + 3 = 12$
+                        </div>
+                        <div class="step">
+                            <strong>Alt sınır:</strong> $F(1) = 1^2 + 1 = 1 + 1 = 2$
+                        </div>
+                        <div class="step">
+                            <strong>Sonuç:</strong> $12 - 2 = 10$
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-shapes note-card-icon"></i>
+                            <span class="note-card-title">Geometrik Yorum</span>
+                        </div>
+                        <div class="note-card-content">
+                            Belirli integral, f(x) fonksiyonunun x-ekseni ile a ve b noktaları arasında kalan alanını verir. Alan negatif ise fonksiyon x-ekseninin altındadır.
+                        </div>
+                    </div>
+
+                    <div class="graph-container">
+                        <div class="graph-placeholder">
+                            <i class="fas fa-chart-area" style="font-size: 48px; margin-right: 20px;"></i>
+                            <div>
+                                <div>∫₁³ (2x + 1) dx = 10</div>
+                                <div style="font-size: 14px; opacity: 0.7;">Alan hesabı</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Alan Hesaplama İpucu:</strong> Eğer fonksiyon negatif değerler alıyorsa, gerçek alanı bulmak için mutlak değer alın veya ayrı ayrı hesaplayın.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Uygulama Alanları Section -->
+            <section id="uygulama-alanlari" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-rocket"></i>
+                    Analiz'in Uygulama Alanları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Matematik analizi sadece teorik bir konu değil, günlük hayattan bilime kadar birçok alanda kullanılır.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Uygulama Alanları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Fizik:</strong> Hareket, hız, ivme hesaplamaları</li>
+                                <li><strong>Mühendislik:</strong> Optimizasyon problemleri</li>
+                                <li><strong>Ekonomi:</strong> Maliyet, kâr analizi</li>
+                                <li><strong>Biyoloji:</strong> Populasyon büyümesi</li>
+                                <li><strong>Mimarlık:</strong> Yapısal analiz</li>
+                                <li><strong>Bilgisayar:</strong> Algoritmalar, grafik</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Fizik Örneği:</strong> Bir cisim $s(t) = 16t^2$ denklemiyle hareket ediyor. 3. saniyedeki hızını bulalım.
+                    </div>
+
+                    <div class="solution-block">
+                        Hız = konum fonksiyonunun türevi<br>
+                        $v(t) = s'(t) = 32t$<br>
+                        $v(3) = 32 \cdot 3 = 96$ birim/saniye
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Günlük Hayattan Örnek</span>
+                        </div>
+                        <div class="note-card-content">
+                            Telefon pil şarjının değişim hızı, araba yakıt tüketimi, nüfus artış oranı - hepsi türev kavramıyla açıklanabilir.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Öğrenmeye Devam:</strong><br>
+                            • Günlük hayattan örnekler bulun<br>
+                            • Grafik çizme alışkanlığı edinin<br>
+                            • Fizik problemleri çözün<br>
+                            • Hesap makinesi kullanmayı öğrenin
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(255, 107, 53, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Matematiğe Devam Et!
+                </h2>
+                <div class="section-content">
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">Son Tavsiyeler</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Pratik yapın:</strong> Her gün türev ve integral soruları çözün<br>
+                            <strong>Görselleştirin:</strong> Grafik çizme alışkanlığı edinin<br>
+                            <strong>Bağlantı kurun:</strong> Konuları birbirleriyle ilişkilendirin<br>
+                            <strong>Sabırlı olun:</strong> Analiz zaman alan bir konudur
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-infinity"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            ∫ Başarılar dileriz! dx = ∞
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // MathJax Configuration
+        window.MathJax = {
+            tex: {
+                inlineMath: [[', '], ['\\(', '\\)']],
+                displayMath: [['$', '$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Formula Animation on Scroll
+        const formulaBlocks = document.querySelectorAll('.formula-block');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transform = 'scale(1.05)';
+                    entry.target.style.transition = 'transform 0.3s ease';
+                    setTimeout(() => {
+                        entry.target.style.transform = 'scale(1)';
+                    }, 300);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        formulaBlocks.forEach(block => {
+            observer.observe(block);
+        });
+
+        // Console Easter Egg
+        console.log('%c∫ Matematik Analiz Portalı', 'color: #ff6b35; font-size: 20px; font-weight: bold;');
+        console.log('%c> Mathematics Theme initialized', 'color: #ff6b35; font-family: monospace;');
+        console.log('%c> MathJax loaded successfully', 'color: #ff6b35; font-family: monospace;');
+        console.log('%c> Enhanced features activated', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> ∫ f(x) dx = F(x) + C', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(255, 107, 53, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Mathematical calculations demo
+        function demonstrateCalculations() {
+            // Limit calculation
+            const limitDemo = (x) => Math.pow(x, 2);
+            console.log('Limit Demo: f(x) = x², f(2) =', limitDemo(2));
+
+            // Derivative approximation
+            const derivative = (f, x, h = 0.0001) => (f(x + h) - f(x)) / h;
+            const f = x => Math.pow(x, 2);
+            console.log('Derivative Demo: f\'(2) ≈', derivative(f, 2));
+
+            // Simple integration (rectangle method)
+            const integrate = (f, a, b, n = 1000) => {
+                const h = (b - a) / n;
+                let sum = 0;
+                for (let i = 0; i < n; i++) {
+                    sum += f(a + i * h) * h;
+                }
+                return sum;
+            };
+            console.log('Integration Demo: ∫₀² x² dx ≈', integrate(f, 0, 2));
+        }
+
+        // Run math demo
+        setTimeout(demonstrateCalculations, 2000);
+
+        // Interactive formula hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const formulas = document.querySelectorAll('.formula');
+            formulas.forEach(formula => {
+                formula.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1)';
+                    this.style.textShadow = '0 0 15px rgba(255, 107, 53, 0.8)';
+                });
+                
+                formula.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.textShadow = '0 0 5px rgba(255, 107, 53, 0.3)';
+                });
+            });
+        });
+
+        // Example problem solver (for demonstration)
+        function solveQuadratic(a, b, c) {
+            const discriminant = b * b - 4 * a * c;
+            if (discriminant > 0) {
+                const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                return [x1, x2];
+            } else if (discriminant === 0) {
+                return [(-b) / (2 * a)];
+            } else {
+                return ['Kompleks kökler'];
+            }
+        }
+
+        // Educational tips system
+        const tips = [
+            "İpucu: Türev alırken kuvvet kuralını hatırlayın: (x^n)' = nx^(n-1)",
+            "İpucu: İntegral alırken +C sabitini unutmayın!",
+            "İpucu: Limit hesaplarken önce doğrudan yerine koyma deneyin",
+            "İpucu: Maksimum-minimum bulurken türevi sıfıra eşitleyin",
+            "İpucu: Süreklilik için üç koşul: tanımlı, limit var, eşit"
+        ];
+
+        function showRandomTip() {
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            console.log('%c' + randomTip, 'color: #50fa7b; font-style: italic;');
+        }
+
+        // Show a tip every 30 seconds
+        setInterval(showRandomTip, 30000);
+
+        // Mobile touch improvements
+        if ('ontouchstart' in window) {
+            document.body.style.cursor = 'pointer';
+            
+            // Add touch feedback for cards
+            noteCards.forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'translateY(-1px) scale(1.01)';
+                });
+                
+                card.addEventListener('touchend', function() {
+                    this.style.transform = 'translateY(-2px) scale(1.0)';
+                });
+            });
+        }
+
+        // Accessibility improvements
+        document.addEventListener('keydown', function(e) {
+            // Escape key closes sidebar
+            if (e.key === 'Escape' && document.getElementById('sidebar').classList.contains('active')) {
+                toggleSidebar();
+            }
+            
+            // Arrow keys for navigation
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                const activeLink = document.querySelector('.sidebar-menu a.active');
+                if (activeLink) {
+                    const allLinks = Array.from(document.querySelectorAll('.sidebar-menu a'));
+                    const currentIndex = allLinks.indexOf(activeLink);
+                    let nextIndex;
+                    
+                    if (e.key === 'ArrowDown') {
+                        nextIndex = (currentIndex + 1) % allLinks.length;
+                    } else {
+                        nextIndex = (currentIndex - 1 + allLinks.length) % allLinks.length;
+                    }
+                    
+                    allLinks[nextIndex].click();
+                }
+            }
+        });
+
+        // Print-friendly styles
+        window.addEventListener('beforeprint', function() {
+            document.body.style.background = 'white';
+            document.body.style.color = 'black';
+        });
+
+        window.addEventListener('afterprint', function() {
+            document.body.style.background = '';
+            document.body.style.color = '';
+        });
+    </script>
+</body>
+</html>
