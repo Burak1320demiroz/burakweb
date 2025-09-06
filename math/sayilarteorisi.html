@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!--
+      Copyright © 2025 Burak Demiröz
+      All Rights Reserved. This page and its contents may not be copied,
+      distributed, or used without explicit written permission.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayılar Teorisi | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon/mathfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon/mathfavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors - Math focused */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(255, 215, 0, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #ffd700;
+            --skin-color-hover: #ffb700;
+            --neon-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            --text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --theorem-color: #8a2be2;
+            --definition-color: #4169e1;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.6; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 215, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-infinity {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 215, 0, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(255, 215, 0, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(255, 215, 0, 0.1);
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-infinity {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-formula {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-formula::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Math Formula Blocks */
+        .formula-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'JetBrains Mono', monospace;
+            color: #ffd700;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .formula-block::before {
+            content: 'Formula';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        /* Theorem Blocks */
+        .theorem-block {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .theorem-block::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--theorem-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .theorem-block-content {
+            padding-left: 40px;
+            color: var(--theorem-color);
+        }
+
+        .theorem-title {
+            font-weight: 600;
+            color: var(--theorem-color);
+            margin-bottom: 10px;
+        }
+
+        /* Definition Blocks */
+        .definition-block {
+            background: rgba(65, 105, 225, 0.1);
+            border: 1px solid rgba(65, 105, 225, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .definition-block::before {
+            content: '\f02d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--definition-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(65, 105, 225, 0.5));
+        }
+        
+        .definition-block-content {
+            padding-left: 40px;
+            color: var(--definition-color);
+        }
+
+        .definition-title {
+            font-weight: 600;
+            color: var(--definition-color);
+            margin-bottom: 10px;
+        }
+
+        /* Example Blocks */
+        .example-block {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+        }
+        
+        .example-block::before {
+            content: '> Örnek:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Proof Blocks */
+        .proof-block {
+            background: rgba(128, 128, 128, 0.1);
+            border-left: 3px solid #808080;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        .proof-block::before {
+            content: 'İspat: ';
+            font-weight: bold;
+            color: #808080;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+        }
+
+        /* Historical Quote Box */
+        .historical-quote {
+            background: rgba(138, 43, 226, 0.1);
+            border-left: 4px solid var(--theorem-color);
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            position: relative;
+        }
+
+        .historical-quote::before {
+            content: '"';
+            font-size: 60px;
+            color: var(--theorem-color);
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            opacity: 0.5;
+        }
+
+        .quote-text {
+            padding-left: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            text-align: right;
+            margin-top: 10px;
+            font-weight: 600;
+            color: var(--theorem-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-infinity"></i>
+                <span>Sayılar Teorisi</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#giris" class="active">Giriş</a></li>
+            <li><a href="#bolunebilme">Bölünebilme</a></li>
+            <li><a href="#algoritma">Bölme Algoritması</a></li>
+            <li><a href="#ebob-ekok">EBOB ve EKOK</a></li>
+            <li><a href="#diophant">Diophant Denklemleri</a></li>
+            <li><a href="#euler-fonksiyonu">Euler Fonksiyonu</a></li>
+            <li><a href="#kongruanslar">Kongrüanslar</a></li>
+            <li><a href="#fermat-teoremi">Fermat'ın Küçük Teoremi</a></li>
+            <li><a href="#crt">Çinlilerin Kalan Teoremi</a></li>
+            <li><a href="#asal-sayilar">Asal Sayılar</a></li>
+            <li><a href="#mersenne">Mersenne Sayıları</a></li>
+            <li><a href="#fermat-sayilari">Fermat Sayıları</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-infinity"></i>
+                    Sayılar Teorisi
+                </h1>
+                <p class="hero-subtitle">
+                    "Matematik bilimlerin kraliçesi, sayılar teorisi ise matematiğin kraliçesidir."
+                </p>
+                <div class="hero-formula">
+                    ∀n ∈ ℤ⁺, ∃p ∈ ℙ : p | n
+                </div>
+            </section>
+
+            <div class="historical-quote">
+                <div class="quote-text">
+                    Matematik bilimlerin, aritmetik ise matematiğin kraliçesidir.
+                </div>
+                <div class="quote-author">— Carl Friedrich Gauss</div>
+            </div>
+
+            <!-- Giriş Section -->
+            <section id="giris" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-play-circle"></i>
+                    Sayılar Teorisine Giriş
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Sayılar teorisi</strong>, matematiğin en temel dallarından biri olarak, tamsayıların özelliklerini inceleyen fascinant bir alandır. Bu alan, Pisagor ve öğrencilerinden başlayarak günümüze kadar matematik dünyasında önemli bir yer tutmuştur.
+                    </p>
+                    
+                    <p>
+                        Sayılar teorisinin cazibesi, basit ifadelerle tanımlanabilen problemlerin bazen çok karmaşık çözümler gerektirmesinde yatar. Goldbach varsayımı gibi basitçe ifade edilebilen problemler, yüzyıllardır matematikçileri meşgul etmektedir.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Sayılar Teorisinin Temel Alanları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Bölünebilme kuramı ve asal sayılar</li>
+                                <li>• Kongrüanslar (modüler aritmetik)</li>
+                                <li>• Diophant denklemleri</li>
+                                <li>• Aritmetik fonksiyonlar</li>
+                                <li>• Kriptografi uygulamaları</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">Tarihçe</span>
+                        </div>
+                        <div class="note-card-content">
+                            Sayılar teorisi, Pisagorculların "her şey sayıdır" felsefesiyle başlar. Öklid'in "Elemanlar" eseri, asal sayıların sonsuzluğunu kanıtlayan ilk matematiksel çalışmadır.
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.8 Fermat Sayıları</h4>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            Pierre de Fermat (1601-1665) profesyonel işi avukatlık olmasına rağmen matematikle amatör olarak uğraşmış, zamanının ciddi bir bölümünü matematiğe adamış bir kişidir. Amatör matematikçilerin prensi olarak adlandırılır. En önemli katkıları sayılar teorisi alanındadır. Sonuçlarının çoğunu Diophantus'un eserlerinin kopyaları üzerine yazmıştır.
+                        </div>
+                        <div class="quote-author">— Fermat'ın Hayatı</div>
+                    </div>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Fermat Sayıları</div>
+                        <div class="definition-block-content">
+                            <strong>Fₙ = 2^(2ⁿ) + 1</strong> (n ≥ 0) formundaki sayılar Fermat tarafından çalışıldığı için "Fermat sayıları" olarak adlandırılır.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        İlk beş Fermat sayısı:
+                        <br>F₀ = 2¹ + 1 = 3
+                        <br>F₁ = 2² + 1 = 5  
+                        <br>F₂ = 2⁴ + 1 = 17
+                        <br>F₃ = 2⁸ + 1 = 257
+                        <br>F₄ = 2¹⁶ + 1 = 65537
+                    </div>
+
+                    <p>
+                        Fermat bu sayıların hepsinin asal olduğunu görmüş ve bu tipteki sayıların hepsinin asal olduğunu iddia etmiştir. Ancak 1732'de Euler 2²⁵ + 1'in 2³² + 1 = 641 × 6700417 olduğunu ispatlatarak ilk istisna örneğini bulmuştur.
+                    </p>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Fermat'ın Yanlış Tahmini:</strong> Sonrasında F₆, F₇, F₈, F₉, F₁₀, F₁₁'in de bileşik olduğu gösterildi. 2014 yılından günümüze 5 ≤ n ≤ 32 için Fermat sayılarının bileşik sayı olduğu bilinmektedir.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Açık Problemler:</strong>
+                            <br>1. ∀n > 4 için Fₙ'ler bileşik sayı mıdır?
+                            <br>2. Fermat asalları sonsuz çoklukta mıdır?
+                            <br>3. Bileşik Fermat sayıları sonsuz çoklukta mıdır?
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.1</div>
+                        <div class="theorem-block-content">
+                            2ᵐ + 1 asal ise m = 2ⁿ, n ≥ 0'dır.
+                        </div>
+                    </div>
+
+                    <h5 style="color: var(--skin-color); margin: 15px 0; font-size: 16px;">Fermat Sayılarının Özellikleri</h5>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.2</div>
+                        <div class="theorem-block-content">
+                            n ≥ 1 için <strong>Fₙ = (Fₙ₋₁ - 1)² + 1</strong>
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        (Fₙ₋₁ - 1)² + 1 = (2^(2^(n-1)) + 1 - 1)² + 1 = (2^(2^(n-1)))² + 1 = 2^(2^n) + 1 = Fₙ
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.3</div>
+                        <div class="theorem-block-content">
+                            n ≥ 1 için <strong>Fₙ = F₀ · F₁ · ... · Fₙ₋₁ + 2</strong>
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        Tümevarım ile: n = 1 iken F₀ + 2 = 3 + 2 = 5 = F₁ ✓
+                        <br>Fₙ = F₀ · ... · Fₙ₋₁ + 2 eşitliğini varsayalım:
+                        <br>F₀ · ... · Fₙ + 2 = (Fₙ - 2)Fₙ + 2 = Fₙ² - 2Fₙ + 2 = (2^(2^n) + 1)² - 2(2^(2^n) + 1) + 2
+                        <br>= 2^(2^(n+1)) + 1 = Fₙ₊₁
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 5.4.4</div>
+                        <div class="theorem-block-content">
+                            n ≥ 1 için <strong>Fₙ ≡ 2 (mod Fₖ)</strong> (k = 0, 1, ..., n-1)
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 5.4.5</div>
+                        <div class="theorem-block-content">
+                            n ≥ 2 için <strong>Fₙ'nin son basamağı 7'dir</strong>.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        Sonuç 5.4.4'ten Fₙ ≡ 2 (mod 5). Fermat sayıları tek olduğundan Fₙ ≡ 1 (mod 2).
+                        <br>Çinlilerin kalan teoremi ile: Fₙ ≡ 7 (mod 10)
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 5.4.6</div>
+                        <div class="theorem-block-content">
+                            Mükemmel kare olan Fermat sayısı yoktur.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        F₀ = 3, F₁ = 5 kare sayılar değildir. n ≥ 2 için Fₙ ≡ 7 (mod 10).
+                        <br>Ancak mükemmel kareler sadece 0, 1, 4, 5, 6, 9 (mod 10) olabilir. Çelişki!
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 5.4.7</div>
+                        <div class="theorem-block-content">
+                            n ≥ 1 için her Fermat sayısı <strong>6m - 1</strong> (m ∈ ℤ) formundadır.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        6 | Fₙ + 1 olduğunu gösterelim:
+                        <br>Fₙ + 1 = 3 · F₁ · ... · Fₙ₋₁ + 2 + 1 = 3 · (F₁ · ... · Fₙ₋₁ + 1)
+                        <br>F₁ · ... · Fₙ₋₁ + 1 çift sayı olduğundan 6 | Fₙ + 1
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.10 (Önemli Özellik)</div>
+                        <div class="theorem-block-content">
+                            <strong>Farklı Fermat sayıları aralarında asaldır.</strong>
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        (Fᵢ, Fⱼ) = d > 1 ve Fᵢ > Fⱼ olsun. d | Fᵢ ve d | Fⱼ olduğundan d | Fⱼ₋₁.
+                        <br>Teorem 5.4.3'ten Fⱼ - F₀ · ... · Fⱼ₋₁ = 2. Böylece d | 2.
+                        <br>Bu da Fᵢ ve Fⱼ'nin tek oluşuyla çelişir.
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.9 Düzgün Çokgenlerin Çizilebilirliği</h4>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.23 (Gauss'un Teoremi, 1796)</div>
+                        <div class="theorem-block-content">
+                            Bir düzgün n-genin cetvel ve pergel yardımıyla çizilebilmesi için gerekli ve yeterli şart:
+                            <br><br>
+                            <strong>n = 2ⁱ · p₁ · p₂ · ... · pⱼ</strong>
+                            <br><br>
+                            burada p₁, p₂, ..., pⱼ farklı Fermat asalları ve n ≥ 3, i ≥ 0, j ≥ 0'dır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-compass note-card-icon"></i>
+                            <span class="note-card-title">Çizilebilir Çokgenler</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bilinen Fermat asalları: 3, 5, 17, 257, 65537
+                            <br><br>
+                            Çizilebilir çokgenler: 3, 4, 5, 6, 8, 10, 12, 15, 17, 20, 24, 30, 32, 34, 40, 48, 51, 60, 64, 68, 80, 85, 96, 102, 120, 128, 136, 160, 170, 192, 204, 240, 255, 256, 257, 272, ...
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        Örnekler:
+                        <br>Düzgün 3-gen (üçgen): 3 = 3¹ ✓
+                        <br>Düzgün 4-gen (kare): 4 = 2² ✓
+                        <br>Düzgün 5-gen: 5 = 5¹ ✓
+                        <br>Düzgün 6-gen: 6 = 2¹ × 3¹ ✓
+                        <br>Düzgün 7-gen: 7 asal ama Fermat asalı değil ✗
+                        <br>Düzgün 17-gen: 17 = 17¹ (Fermat asalı) ✓
+                        <br>Düzgün 272-gen: 272 = 2⁴ × 17¹ ✓
+                    </div>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            1796'da 19 yaşındaki Gauss, düzgün 17-genin cetvel ve pergel ile çizilebileceğini keşfettiğinde o kadar mutlu olmuştu ki matematiğe adanmaya karar verdi. Bu keşif onu matematik tarihine geçirdi.
+                        </div>
+                        <div class="quote-author">— Gauss'un Gençlik Keşfi</div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Derin Bağlantı:</strong> Düzgün çokgenlerin çizilebilirliği, karmaşık sayılar teorisi ve Galois teorisi ile derin bağlantıları olan bir konudur. Bu, sayılar teorisinin diğer matematik dallarıyla ne kadar iç içe olduğunu gösterir.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Önemli Not:</strong> F₄ = 65537'den sonra bilinen Fermat asalı olmadığı için, pratikte çizilebilir çokgenlerin sayısı sınırlıdır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-question note-card-icon"></i>
+                            <span class="note-card-title">Açık Problem</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Ödev:</strong> p asal olmak üzere iki tane p'inci kuvvet farkı şeklinde ifade edilebilecek Fermat asalı olmadığını gösteriniz.
+                            <br><br>
+                            <strong>İpucu:</strong> Fₙ = aᵖ - bᵖ = (a-b)(aᵖ⁻¹ + aᵖ⁻²b + ... + bᵖ⁻¹) formunu kullanın.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Sonuç ve Değerlendirme:</strong>
+                            <br><br>
+                            5. Bölüm boyunca asal sayıların zengin yapısını gördük:
+                            <br>• Sonsuzluk ispatları (Öklid, Euler, modern yöntemler)
+                            <br>• Dağılım teorisi (Asal Sayı Teoremi)
+                            <br>• Özel asal türleri (İkiz, Sophie Germain, Mersenne, Fermat)
+                            <br>• Geometrik uygulamalar (çizilebilir çokgenler)
+                            <br>• Açık problemler (Goldbach, ikiz asal sanısı)
+                            <br><br>
+                            Bu zenginlik, sayılar teorisinin neden "matematiğin kraliçesi" olarak adlandırıldığını göstermektedir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bölünebilme Section -->
+            <section id="bolunebilme" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-divide"></i>
+                    Bölünebilme
+                </h2>
+                <div class="section-content">
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 1.1.1 (Bölünebilme)</div>
+                        <div class="definition-block-content">
+                            a, b ∈ ℤ (a ≠ 0) ve a·c = b olacak şekilde bir c ∈ ℤ varsa bu durumda "a, b'yi böler" denir ve "a | b" ile gösterilir.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 1.1.2 (Bölünebilmenin Temel Özellikleri)</div>
+                        <div class="theorem-block-content">
+                            a, b, c ∈ ℤ olsun:
+                            <br>1. a ≠ 0 ise a | a ve a | 0
+                            <br>2. ±1 | a, ±a | a
+                            <br>3. a | b ve a | c ise ∀x, y ∈ ℤ için a | (bx + cy)
+                            <br>4. a | b ve b | c ise a | c (Geçişme özelliği)
+                            <br>5. a > 0, b > 0, a | b ve b | a ise a = b
+                            <br>6. a > 0, b > 0 ve a | b ise a ≤ b
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        23 ≡ 3 (mod 5) çünkü 5 | (23 - 3) = 5 | 20
+                        <br>7 | 21 çünkü 21 = 7 × 3
+                        <br>Tümevarım ile: ∀n ∈ ℤ⁺ için 6 | (7ⁿ - 1)
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 İpucu:</strong> Bölünebilme kuralları günlük hayatta çok kullanışlıdır. Bir sayının 3 ile bölünüp bölünmediğini öğrenmek için rakamlarının toplamına bakmanız yeterlidir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bölme Algoritması Section -->
+            <section id="algoritma" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    Bölme Algoritması
+                </h2>
+                <div class="section-content">
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 1.1.7 (Bölme Algoritması)</div>
+                        <div class="theorem-block-content">
+                            a, b ∈ ℤ, b ≠ 0 iken bir tek q ve r tamsayı çifti vardır öyle ki:
+                        </div>
+                    </div>
+
+                    <div class="formula-block">
+                        a = bq + r, &nbsp;&nbsp; 0 ≤ r < |b|
+                    </div>
+
+                    <p>Burada q'ya <strong>bölüm</strong>, r'ye <strong>kalan</strong> denir.</p>
+
+                    <div class="example-block">
+                        207 ÷ 15 işlemi:
+                        <br>207 = 15 × 13 + 12
+                        <br>Bölüm: q = 13, Kalan: r = 12
+                        <br><br>
+                        -23 ÷ 5 işlemi:
+                        <br>-23 = 5 × (-5) + 2
+                        <br>Bölüm: q = -5, Kalan: r = 2
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Kalan her zaman negatif olmayan bir sayı olmalıdır: 0 ≤ r < |b|
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EBOB ve EKOK Section -->
+            <section id="ebob-ekok" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-link"></i>
+                    En Büyük Ortak Bölen (EBOB) ve En Küçük Ortak Kat (EKOK)
+                </h2>
+                <div class="section-content">
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 1.1.9 (EBOB)</div>
+                        <div class="definition-block-content">
+                            a, b ∈ ℤ iken, d'nin a ve b'nin en büyük ortak böleni olması için gerekli ve yeterli şartlar:
+                            <br>1. d > 0
+                            <br>2. d | a ve d | b  
+                            <br>3. Eğer c | a ve c | b ise c ≤ d
+                            <br>Bu d sayısı (a,b) ile gösterilir.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 1.1.12 (Bézout'un Özdeşliği)</div>
+                        <div class="theorem-block-content">
+                            a ve b tamsayılarının EBOB'u bu iki sayının bir lineer birleşimidir:
+                            <br>d = (a,b) ise d = αa + βb şeklinde α, β ∈ ℤ vardır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-cogs note-card-icon"></i>
+                            <span class="note-card-title">Öklid Algoritması</span>
+                        </div>
+                        <div class="note-card-content">
+                            EBOB hesaplamak için en etkili yöntem Öklid Algoritması'dır. Bölme algoritmasının ardışık uygulanmasına dayanır.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        (4076, 1024) hesabı:
+                        <br>4076 = 3 × 1024 + 1004
+                        <br>1024 = 1 × 1004 + 20  
+                        <br>1004 = 50 × 20 + 4
+                        <br>20 = 5 × 4 + 0
+                        <br>∴ (4076, 1024) = 4
+                    </div>
+
+                    <div class="formula-block">
+                        |a × b| = [a,b] × (a,b)
+                    </div>
+
+                    <p>Bu formül EBOB ve EKOK arasındaki temel ilişkiyi gösterir.</p>
+                </div>
+            </section>
+
+            <!-- Diophant Denklemleri Section -->
+            <section id="diophant" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-equals"></i>
+                    2. Bölüm: Diophant Denklemleri
+                </h2>
+                <div class="section-content">
+                    <h3 style="color: var(--skin-color); margin: 20px 0; font-size: 22px;">2.1 Giriş</h3>
+                    
+                    <p>
+                        Tamsayı katsayılı ve çözümleri tamsayı olan denklemler <strong>"Diophant denklemleri"</strong> olarak adlandırılır. Bu denklemler adını İskenderiye'de yaşayan Yunan matematikçi Diophantus'tan alır (MS 250 civarı). Cebirin babası olarak tanınır.
+                    </p>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            Diophantus hayatının 1/6'sında ergenliğe erişmiştir. Hayatının 1/12'sini tamamladığında sakal bırakmaya başlamıştır. Hayatının 1/7'sini tamamladığında evlenmiştir. 5 yıl sonra bir oğlu olmuştur. Oğlu Diophantus'un hayatının yarısı kadar yaşamıştır. Oğlunun ölümünden 4 yıl sonra da Diophantus ölmüştür.
+                        </div>
+                        <div class="quote-author">— Yunan Antolojisi'nden Diophantus Bilmecesi</div>
+                    </div>
+
+                    <div class="example-block">
+                        Diophantus'un yaşını x ile gösterirsek:
+                        <br>x = (1/6 + 1/7 + 1/12)x + 5 + x/2 + 4
+                        <br>Buradan x = 84 bulunur. Yani 84 yaşında ölmüştür.
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0; font-size: 22px;">2.2 Bazı Temel Tanım ve Teoremler</h3>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 2.2.1 (Lineer Diophant Denklemi)</div>
+                        <div class="definition-block-content">
+                            a, b, c ∈ ℤ, a, b ≠ 0 olmak üzere (x, y) çözümleri tamsayı olan
+                            <br><strong>ax + by = c</strong>
+                            <br>şeklindeki denklemlere <strong>lineer Diophant denklemleri</strong> denir.
+                        </div>
+                    </div>
+
+                    <p>
+                        Geometrik olarak böyle denklemelerin çözümleri bir doğru üzerindeki noktalardır. Örneğin 2x + 3y = 4 lineer Diophant denklemi (-1, 2) çözümüne sahiptir. Bu denklem sonsuz çoklukta çözüme sahiptir.
+                    </p>
+
+                    <div class="example-block">
+                        Mahavira'nın Bilmecesi (MS 850):
+                        <br>23 yorgun gezgin yeşil bir ormanın eteklerine girer. 
+                        <br>Eşit miktarda 63 muz yığını ve 7 tek meyve bulurlar ve eşit olarak paylaşırlar.
+                        <br>Her bir yığındaki meyve sayısını bulunuz.
+                        <br><br>
+                        Çözüm: 63x + 7 = 23y (x, y > 0)
+                        <br>y = (63x + 7)/23
+                        <br>x = 5, y = 14; x = 28, y = 77 ...
+                    </div>
+
+                    <p><strong>Bir LDD ile ilgili şu iki soruyu sormalıyız:</strong></p>
+                    <p>1) Her LDD bir çözüme sahip midir?</p>
+                    <p>2) Bir LDD çözüme sahip olması için gerek ve yeter koşullar nedir?</p>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 2.2.3 (Bachet'nin Teoremi)</div>
+                        <div class="theorem-block-content">
+                            d = (a,b) olsun. ax + by = c lineer Diophant denkleminin çözülebilir olması için gerekli ve yeterli şart <strong>d | c</strong> olmasıdır. 
+                            <br><br>
+                            Eğer (x₀, y₀) bu denklemin bir özel çözümü ise tüm çözümler:
+                            <br><strong>x = x₀ + (b/d)t</strong>
+                            <br><strong>y = y₀ - (a/d)t</strong>, t ∈ ℤ
+                            <br>bağıntıları ile verilir.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        <strong>İspat (4 adımda):</strong>
+                        <br><br>
+                        <strong>I)</strong> LDD çözülebilir olsun. x = α, y = β bir özel çözüm olsun:
+                        <br>aα + bβ = c
+                        <br>d = (a,b) olduğundan d | a, d | b ve böylece d | (aα + bβ) ⟹ d | c.
+                        <br><br>
+                        <strong>II)</strong> d | c olsun. c = d·e şeklinde e ∈ ℤ vardır. d = (a,b) ⟹ ra + sb = d şeklinde r, s ∈ ℤ vardır. Her iki tarafı e ile çarparsak: a(re) + b(se) = c. Yani x = re, y = se LDD'nin bir çözümüdür.
+                        <br><br>
+                        <strong>III)</strong> x = x₀ + (b/d)t, y = y₀ - (a/d)t'nin çözüm olduğunu gösterelim:
+                        <br>ax + by = a(x₀ + (b/d)t) + b(y₀ - (a/d)t) = ax₀ + by₀ = c
+                        <br><br>
+                        <strong>IV)</strong> Tüm çözümlerin bu formda olduğunu gösterelim... (Detaylı ispat PDF'te)
+                    </div>
+
+                    <div class="example-block">
+                        Örnekler:
+                        <br>(1) 12x + 18y = 30 → (12,18) = 6 | 30 ✓ Çözülebilir
+                        <br>(2) 2x + 3y = 4 → (2,3) = 1 | 4 ✓ Çözülebilir  
+                        <br>(3) 6x + 8y = 25 → (6,8) = 2 ∤ 25 ✗ Çözülemez
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Çözüm Yöntemi</span>
+                        </div>
+                        <div class="note-card-content">
+                            1. d = (a,b) hesapla
+                            <br>2. d | c kontrolü yap
+                            <br>3. Öklid algoritması ile özel çözüm bul
+                            <br>4. Genel çözümü yaz: x = x₀ + (b/d)t, y = y₀ - (a/d)t
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        12x + 18y = 30 denklemini çözelim:
+                        <br>(12,18) = 6 | 30 ✓
+                        <br>Öklid algoritması: 18 = 1×12 + 6, 12 = 2×6 + 0
+                        <br>6 = 18 - 1×12, yani 6 = 1×18 + (-1)×12
+                        <br>30 = 5×6 = 5×(1×18 + (-1)×12) = 5×18 + (-5)×12
+                        <br>Özel çözüm: x₀ = -5, y₀ = 5
+                        <br>Genel çözüm: x = -5 + 3t, y = 5 - 2t (t ∈ ℤ)
+                    </div>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            Bu yöntem Hint matematikçi Aryabhata'nın (MS 476-550) yönteminin bir varyasyonudur.
+                        </div>
+                        <div class="quote-author">— Tarihsel Not</div>
+                    </div>
+
+                    <div class="example-block">
+                        Meyve Sepeti Problemi:
+                        <br>Bir sepette elma ve portakal var. Her elma 63 kr, portakal 45 kr değerinde.
+                        <br>Sepetteki meyvelerin tutarı 810 kr ise kaç elma ve portakal olabilir?
+                        <br><br>
+                        63x + 45y = 810
+                        <br>(63,45) = 9 | 810 ✓
+                        <br>7x + 5y = 90 (9'a böldük)
+                        <br>Özel çözüm: x₀ = 5, y₀ = 11
+                        <br>Genel çözüm: x = 5 + 5t, y = 11 - 7t
+                        <br>Pozitif çözümler için: t = 0: (5,11), t = -1: (0,18)
+                    </div>
+
+                    <div class="example-block">
+                        Bachet'nin Problemi (1581-1638):
+                        <br>Erkek, kadın ve çocuktan oluşan 41 kişilik grup restoranda yemek yiyor.
+                        <br>Her erkek 4 frank, her kadın 3 frank, her üç çocuk 1 frank ödüyor.
+                        <br>Toplam 40 frank hesap var. Erkek, kadın ve çocuk sayıları?
+                        <br><br>
+                        x + y + z = 41
+                        <br>4x + 3y + z/3 = 40 → 12x + 9y + z = 120
+                        <br>İlk denklemden z = 41 - x - y
+                        <br>12x + 9y + (41 - x - y) = 120
+                        <br>11x + 8y = 79
+                    </div>
+
+                    <div class="example-block">
+                        Euler'in Problemi (1770):
+                        <br>1170$ parası olan kişi bu parayı at ve sığır almak için harcıyor.
+                        <br>Bir at 31$, bir inek 21$ ise herbirinden kaçar tane alabilir?
+                        <br><br>
+                        31x + 21y = 1170
+                        <br>(31,21) = 1 | 1170 ✓
+                        <br>Öklid algoritması ile özel çözüm bulunur...
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Pratik İpucu:</strong> Lineer Diophant denklemleri çözümlerinin bulunması, kongrüanslar konusuyla da yakından ilişkilidir. ax ≡ c (mod b) kongrüansı ax + by = c LDD'sine karşılık gelir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Euler Fonksiyonu Section -->
+            <section id="euler-fonksiyonu" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-function"></i>
+                    3. Bölüm: Euler φ Fonksiyonu
+                </h2>
+                <div class="section-content">
+                    <h3 style="color: var(--skin-color); margin: 20px 0; font-size: 22px;">3.1 Giriş</h3>
+                    
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            Leonhard Euler (1707–1783) İsviçre'nin Basel kentinde doğdu. Matematikçi ve Kalvinist bir papaz olan babası onun da papaz olmasını istiyordu. Euler'in farklı fikirleri olmasına rağmen babasının isteğini yerine getirdi ve Basel Üniversitesi'nde İbranice ve teoloji okudu. Üniversitedeki sıkı çalışması ve dikkate değer yeteneği, onu ünlü matematikçi Johann Bernoulli'nin (1667-1748) dikkatini çekti.
+                        </div>
+                        <div class="quote-author">— Euler'in Hayatından</div>
+                    </div>
+
+                    <p>
+                        Genç Euler'in yeteneklerini fark eden Bernoulli, babasının fikrini değiştirmeye ikna etti ve Euler matematik alanındaki çalışmalarına devam etti. Euler 19 yaşındayken ilk makalesini çıkardı. Makalesi 1727'de Paris Akademi Ödülü'nü kazanamadı; ancak daha sonraki yıllarda bu ödülü 72 kez kazandı.
+                    </p>
+
+                    <p>
+                        Euler, matematiğin her dalına önemli katkılarda bulunan en üretken matematikçiydi. Olağanüstü hafızası sayesinde her formül parmaklarının ucundaydı.
+                    </p>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 3.1.1 (Euler φ Fonksiyonu)</div>
+                        <div class="definition-block-content">
+                            m ∈ ℤ⁺ olsun. m ile aralarında asal ve m'den küçük olan pozitif tamsayıların sayısı φ(m) ile gösterilir:
+                            <br><br>
+                            <strong>φ(m) = |{k ∈ ℕ⁺ : (k,m) = 1 ve 1 ≤ k < m}|</strong>
+                            <br><br>
+                            ve φ(1) = 1 ile verilir.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        İlk birkaç değer:
+                        <br>φ(2) = 1 → {1}
+                        <br>φ(3) = 2 → {1, 2}
+                        <br>φ(4) = 2 → {1, 3}
+                        <br>φ(5) = 4 → {1, 2, 3, 4}
+                        <br>φ(6) = 2 → {1, 5}
+                        <br>φ(7) = 6 → {1, 2, 3, 4, 5, 6}
+                        <br>φ(8) = 4 → {1, 3, 5, 7}
+                        <br>φ(9) = 6 → {1, 2, 4, 5, 7, 8}
+                        <br>φ(10) = 4 → {1, 3, 7, 9}
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 3.1.2 (Asal Kuvvetler için φ)</div>
+                        <div class="theorem-block-content">
+                            p asal ve α ∈ ℤ⁺ ise:
+                            <br><strong>φ(pᵅ) = pᵅ - pᵅ⁻¹ = pᵅ⁻¹(p - 1)</strong>
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        pᵅ'dan küçük ya da eşit ve pᵅ ile aralarında asal olmayan sayılar:
+                        p, 2p, 3p, ..., (pᵅ⁻¹ - 1)·p, pᵅ⁻¹·p
+                        dir. Yani bu sayılar pᵅ⁻¹ tanedir. O halde pᵅ ile aralarında asal ve pᵅ'dan küçük olan pozitif tamsayıların sayısı:
+                        pᵅ - pᵅ⁻¹ = pᵅ⁻¹(p - 1) tanedir.
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 3.1.3</div>
+                        <div class="theorem-block-content">
+                            p asal ise φ(p) = p - 1'dir.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 3.1.4</div>
+                        <div class="theorem-block-content">
+                            n = 2ᵏ, k > 0 için φ(n) = n/2'dir.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        φ(128) = φ(2⁷) = 2⁷/2 = 2⁶ = 64
+                        <br>φ(27) = φ(3³) = 3³ - 3² = 27 - 9 = 18
+                        <br>φ(25) = φ(5²) = 5² - 5¹ = 25 - 5 = 20
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 3.1.6 (Euler φ Fonksiyonunun Çarpımsallığı)</div>
+                        <div class="theorem-block-content">
+                            Euler φ fonksiyonu çarpımsaldır, yani (m,n) = 1 ise:
+                            <br><strong>φ(mn) = φ(m)φ(n)</strong>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-info note-card-icon"></i>
+                            <span class="note-card-title">Çarpımsallık</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bu özellik sayesinde φ fonksiyonunu herhangi bir sayı için asal çarpanlarına ayırarak hesaplayabiliriz.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        φ(72) hesabı:
+                        <br>72 = 8 × 9 = 2³ × 3²
+                        <br>(8,9) = 1 olduğundan:
+                        <br>φ(72) = φ(8) × φ(9) = (2³ - 2²) × (3² - 3¹) = 4 × 6 = 24
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 3.1.8 (Genel Formül)</div>
+                        <div class="theorem-block-content">
+                            n = ∏ᵢ₌₁ʳ pᵢᵅⁱ ise:
+                            <br><br>
+                            φ(n) = ∏ᵢ₌₁ʳ (pᵢᵅⁱ - pᵢᵅⁱ⁻¹) = ∏ᵢ₌₁ʳ pᵢᵅⁱ(1 - 1/pᵢ) = n · ∏ᵢ₌₁ʳ (1 - 1/pᵢ)
+                        </div>
+                    </div>
+
+                    <div class="formula-block">
+                        φ(n) = n · ∏(1 - 1/pᵢ)
+                        <br><br>
+                        Burada çarpım n'nin tüm farklı asal bölenlerinin üzerinden alınır
+                    </div>
+
+                    <div class="example-block">
+                        φ(666) hesabı:
+                        <br>666 = 2 × 3 × 111 = 2 × 3 × 3 × 37 = 2 × 3² × 37
+                        <br>φ(666) = 666 × (1-1/2) × (1-1/3) × (1-1/37)
+                        <br>= 666 × 1/2 × 2/3 × 36/37
+                        <br>= 666 × 36/(2×3×37) = 666 × 36/222 = 108
+                        <br><br>
+                        φ(1976) hesabı:
+                        <br>1976 = 8 × 247 = 8 × 13 × 19 = 2³ × 13 × 19
+                        <br>φ(1976) = 1976 × (1-1/2) × (1-1/13) × (1-1/19)
+                        <br>= 1976 × 1/2 × 12/13 × 18/19 = 864
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 3.1.10 (Gauss'un Teoremi)</div>
+                        <div class="theorem-block-content">
+                            n ∈ ℤ⁺ olsun. O zaman:
+                            <br><strong>∑ φ(d) = n</strong>
+                            <br>d|n, d≥1
+                            <br><br>
+                            Yani n'nin tüm pozitif bölenlerinin φ değerlerinin toplamı n'ye eşittir.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        n = 1 için: ∑φ(d) = φ(1) = 1 ✓
+                        <br><br>
+                        n > 1 için tümevarım kullanılır. n = p₁^e₁ × p₂^e₂ × ... × pₜ^eₜ (kanonik biçim) olsun.
+                        <br><br>
+                        t üzerine tümevarım: t = 1 için n = pᵉ, bölenleri 1, p, p², ..., pᵉ
+                        <br>∑φ(d) = φ(1) + φ(p) + φ(p²) + ... + φ(pᵉ)
+                        <br>= 1 + (p-1) + p(p-1) + ... + pᵉ⁻¹(p-1)
+                        <br>= 1 + (p-1)(1 + p + ... + pᵉ⁻¹) = 1 + (p-1) × (pᵉ-1)/(p-1) = pᵉ = n ✓
+                    </div>
+
+                    <div class="example-block">
+                        n = 81 = 3⁴ için doğrulama:
+                        <br>81'in bölenleri: 1, 3, 9, 27, 81
+                        <br>φ(1) + φ(3) + φ(9) + φ(27) + φ(81)
+                        <br>= 1 + 2 + 6 + 18 + 54 = 81 ✓
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 3.1.11</div>
+                        <div class="theorem-block-content">
+                            p asal ise:
+                            <br><strong>∑ᵢ₌₀ᵏ φ(pⁱ) = pᵏ</strong>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Kriptografi Uygulaması:</strong> Euler φ fonksiyonu RSA şifreleme algoritmasının temelini oluşturur. φ(n) değeri özel anahtar hesaplamasında kritik rol oynar.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-calculator note-card-icon"></i>
+                            <span class="note-card-title">Hesaplama İpuçları</span>
+                        </div>
+                        <div class="note-card-content">
+                            1. Sayıyı asal çarpanlarına ayır
+                            <br>2. φ(pᵅ) = pᵅ⁻¹(p-1) formülünü kullan
+                            <br>3. Çarpımsallık özelliğinden faydalanarak sonucu bul
+                            <br>4. Alternatif olarak genel formülü kullan: φ(n) = n∏(1-1/p)
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> φ fonksiyonu sadece aralarında asal sayılar için çarpımsaldır. Genel durumda φ(mn) = φ(m)φ(n) × (m,n)/φ((m,n)) formülü geçerlidir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kongrüanslar Section -->
+            <section id="kongruanslar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-balance-scale"></i>
+                    4. Bölüm: Kongrüanslar
+                </h2>
+                <div class="section-content">
+                    <h3 style="color: var(--skin-color); margin: 20px 0; font-size: 22px;">4.1 Kongrüanslar</h3>
+                    
+                    <p>
+                        Sayılar teorisindeki en önemli bağıntılardan biri <strong>"kongrüans"</strong> bağıntısıdır. Bu bağıntı K. Friedrich Gauss (1777-1855) tarafından tanımlanmış ve geliştirilmiştir. 1801'de henüz 24 yaşında iken matematiğin prensi olan Gauss "Disquisitiones Arithmeticae" adlı olağanüstü çalışmasında bölünebilme teorisinin güzel bir dalı olan kongrüans teorisini tanıtmıştır.
+                    </p>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            "≡" (kongrüans) sembolü ilk Gauss tarafından tanımlanmıştır ve günümüzde modüler aritmetiğin temelini oluşturur.
+                        </div>
+                        <div class="quote-author">— Tarihsel Not</div>
+                    </div>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 4.1.1 (Kongrüans)</div>
+                        <div class="definition-block-content">
+                            m ∈ ℤ⁺, a, b ∈ ℤ olsun. m | (a - b) ise "a, m modülünde b'ye kongruent'tir" denir ve
+                            <br><br>
+                            <strong>a ≡ b (mod m)</strong>
+                            <br><br>
+                            ile gösterilir. a, m modülünde b'ye kongruent değilse a ≢ b (mod m) ile gösterilir.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        23 ≡ 3 (mod 5) çünkü 5 | (23 - 3) = 5 | 20 ✓
+                        <br>20 ≢ 3 (mod 4) çünkü 4 ∤ (20 - 3) = 4 ∤ 17 ✗
+                        <br>-7 ≡ 8 (mod 5) çünkü 5 | (-7 - 8) = 5 | (-15) ✓
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.3 (Eşdeğer Tanım)</div>
+                        <div class="theorem-block-content">
+                            <strong>a ≡ b (mod m) ⟺ a = b + km</strong> şeklinde k ∈ ℤ vardır.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        (⟹) a ≡ b (mod m) ⟹ m | (a - b) ⟹ a - b = k·m ⟹ a = b + km
+                        <br>(⟸) a = b + km ⟹ a - b = km ⟹ m | (a - b) ⟹ a ≡ b (mod m)
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.4 (Kongrüansın Özellikleri)</div>
+                        <div class="theorem-block-content">
+                            1. <strong>a ≡ a (mod m)</strong> (Yansıma özelliği)
+                            <br>2. <strong>a ≡ b (mod m) ⟹ b ≡ a (mod m)</strong> (Simetri özelliği)
+                            <br>3. <strong>a ≡ b (mod m) ∧ b ≡ c (mod m) ⟹ a ≡ c (mod m)</strong> (Geçişme özelliği)
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.5 (Kalan ile İlişki)</div>
+                        <div class="theorem-block-content">
+                            <strong>a ≡ b (mod m) ⟺ a ve b, m ile bölündüğünde aynı kalanı verir.</strong>
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        (⟹) a ≡ b (mod m) ⟹ a = b + km. Bölme algoritmasından b = mq + r ⟹ a = (mq + r) + km = m(q + k) + r
+                        <br>(⟸) a = mq + r, b = mq' + r ⟹ a - b = m(q - q') ⟹ a ≡ b (mod m)
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-info note-card-icon"></i>
+                            <span class="note-card-title">En Küçük Kalan</span>
+                        </div>
+                        <div class="note-card-content">
+                            Her tamsayı m modülündeki 0, 1, 2, ..., m-1 en küçük kalanlarından birine kongruent'tir.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.8 (Denklik Bağıntısı)</div>
+                        <div class="theorem-block-content">
+                            Kongruent olma "≡" bağıntısı tamsayılar üzerinde bir denklik bağıntısıdır.
+                        </div>
+                    </div>
+
+                    <p>
+                        Bu denklik bağıntısı yardımıyla ℤ kümesi iki'şer iki'şer ayrık kümelere parçalanır. Bu kümelere <strong>m modülüne göre denklik sınıfları</strong>, denklik sınıflarının kümesine de <strong>kalan sınıfları</strong> denir.
+                    </p>
+
+                    <div class="example-block">
+                        5 modülündeki denklik sınıfları:
+                        <br>0̄ = {... -10, -5, 0, 5, 10, ...}
+                        <br>1̄ = {... -9, -4, 1, 6, 11, ...}
+                        <br>2̄ = {... -8, -3, 2, 7, 12, ...}
+                        <br>3̄ = {... -7, -2, 3, 8, 13, ...}
+                        <br>4̄ = {... -6, -1, 4, 9, 14, ...}
+                        <br><br>
+                        Böylece ℤ₅ = {0̄, 1̄, 2̄, 3̄, 4̄}
+                    </div>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 4.1.10 (Tam Kalanlar Sistemi)</div>
+                        <div class="definition-block-content">
+                            m modülünün kalan sınıflarının her birinden bir eleman alınmasıyla elde edilen bir kümeye <strong>m modülünün bir tam kalanlar sistemi</strong> denir.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        4 modülü için tam kalanlar sistemleri:
+                        <br>{0, 1, 2, 3} (standart)
+                        <br>{1, 2, 3, 4}
+                        <br>{-12, 9, 6, 23} (-12≡0, 9≡1, 6≡2, 23≡3 (mod 4))
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.14 (Kongrüans Aritmetiği)</div>
+                        <div class="theorem-block-content">
+                            a ≡ b (mod m) ve c ≡ d (mod m) olsun:
+                            <br>1. <strong>a ± c ≡ b ± d (mod m)</strong>
+                            <br>2. <strong>ac ≡ bd (mod m)</strong>
+                            <br>3. <strong>ac ≡ bc (mod m) ∧ (c,m) = n ⟹ a ≡ b (mod m/n)</strong>
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        (1) a = b + lm, c = d + km ⟹ a + c = (b + d) + (l + k)m ⟹ a + c ≡ b + d (mod m)
+                        <br>(2) ac - bd = c(a - b) + b(c - d) = clm + bkm = (cl + bk)m ⟹ ac ≡ bd (mod m)
+                        <br>(3) Detayları PDF'te...
+                    </div>
+
+                    <div class="example-block">
+                        1! + 2! + ... + 100! toplamının 15 ile bölümünden kalanı:
+                        <br>k ≥ 5 iken k! ≡ 0 (mod 15) (çünkü k! = k×(k-1)×...×5×...×3 ve 15 = 3×5)
+                        <br>∴ 1! + 2! + ... + 100! ≡ 1! + 2! + 3! + 4! (mod 15)
+                        <br>≡ 1 + 2 + 6 + 24 ≡ 33 ≡ 3 (mod 15)
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Sonuç 4.1.17</div>
+                        <div class="theorem-block-content">
+                            a ≡ b (mod m) ve n ∈ ℕ⁺, c ∈ ℤ olmak üzere:
+                            <br>1. <strong>a ± c ≡ b ± c (mod m)</strong>
+                            <br>2. <strong>aⁿ ≡ bⁿ (mod m)</strong>
+                            <br>3. <strong>ac ≡ bc (mod m)</strong>
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.18 (Üslü Alma)</div>
+                        <div class="theorem-block-content">
+                            a ≡ b (mod m) ise n ∈ ℤ⁺ için <strong>aⁿ ≡ bⁿ (mod m)</strong> elde edilir.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        16⁵³'ün 7 ile bölümünden kalanı:
+                        <br>16 ≡ 2 (mod 7)
+                        <br>2² ≡ 4 (mod 7), 2³ ≡ 1 (mod 7)
+                        <br>53 = 3×17 + 2
+                        <br>2⁵³ = 2³ˣ¹⁷⁺² ≡ (2³)¹⁷ × 2² ≡ 1¹⁷ × 4 ≡ 4 (mod 7)
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.22 (Polinom Kongrüansları)</div>
+                        <div class="theorem-block-content">
+                            a ≡ b (mod m) ve p(x) tam sayı katsayılı bir polinom olsun. Bu durumda:
+                            <br><strong>p(a) ≡ p(b) (mod m)</strong>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        p(x) = 4x² - 2x + 1, 3 ≡ 8 (mod 5) ⟹ p(3) ≡ p(8) (mod 5)
+                        <br>p(3) = 4(9) - 2(3) + 1 = 31 ≡ 1 (mod 5)
+                        <br>p(8) = 4(64) - 2(8) + 1 = 241 ≡ 1 (mod 5) ✓
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.24</div>
+                        <div class="theorem-block-content">
+                            a ≡ b (mod m) ise <strong>(a,m) = (b,m)</strong>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 30px 0 20px 0; font-size: 22px;">Kalan Sınıfları Aritmetiği</h3>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 4.1.25 (İşlemler)</div>
+                        <div class="definition-block-content">
+                            ℤₘ'deki "+" ve "·" işlemleri sırasıyla:
+                            <br><strong>ā + b̄ = a + b</strong>
+                            <br><strong>ā · b̄ = ab</strong>
+                            <br>şeklinde tanımlanır.
+                        </div>
+                    </div>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 4.1.27 (Asal Kalan Sınıfı)</div>
+                        <div class="definition-block-content">
+                            ā ∈ ℤₘ ve (a,m) = 1 ise ā elemanına bir <strong>asal kalan sınıf</strong> denir.
+                            <br>Asal kalan sınıfların kümesine <strong>m-modülünde bir indirgenmiş sistem</strong> denir.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        ℤ₆'daki asal kalan sınıfları: {1̄, 5̄}
+                        <br>ℤ₇'deki asal kalan sınıfları: {1̄, 2̄, 3̄, 4̄, 5̄, 6̄}
+                        <br>ℤ₉'da indirgenmiş sistem: I = {1, 2, 4, 5, 7, 8}
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.29</div>
+                        <div class="theorem-block-content">
+                            İki asal kalan sınıfının çarpımı yine bir asal kalan sınıftır.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.30</div>
+                        <div class="theorem-block-content">
+                            I, m modülünün bir indirgenmiş sistemi ve (a,m) = 1 ise:
+                            <br><strong>I' = {ax | x ∈ I}</strong>
+                            <br>kümesi de m modülüne göre bir indirgenmiş kalanlar sistemidir.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        9 modunda indirgenmiş sistem: I = {1, 2, 4, 5, 7, 8}
+                        <br>a = 2 için (2,9) = 1 ⟹ I' = {2, 4, 8, 1, 5, 7} (9 modunda)
+                        <br>Bu da indirgenmiş sistem.
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Pratik İpucu:</strong> Kongrüanslar günlük hesaplamalarda çok kullanışlıdır. Büyük sayıların kalanlarını hesaplarken modüler aritmetik büyük kolaylık sağlar.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fermat'ın Küçük Teoremi Section -->
+            <section id="fermat-teoremi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-crown"></i>
+                    Fermat'ın Küçük Teoremi ve Euler Teoremi
+                </h2>
+                <div class="section-content">
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.32 (Fermat'ın Küçük Teoremi)</div>
+                        <div class="theorem-block-content">
+                            p asal ve (a,p) = 1 olsun. O halde:
+                            <br><strong>aᵖ⁻¹ ≡ 1 (mod p)</strong>
+                            <br>veya denk olarak aᵖ ≡ a (mod p)
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.1.34 (Euler Teoremi)</div>
+                        <div class="theorem-block-content">
+                            (a,m) = 1 ise:
+                            <br><strong>aᶠ⁽ᵐ⁾ ≡ 1 (mod m)</strong>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        6¹⁴ ≡ ? (mod 13)
+                        <br>φ(13) = 12, 6¹² ≡ 1 (mod 13)
+                        <br>6¹⁴ = 6¹² × 6² ≡ 1 × 36 ≡ 10 (mod 13)
+                    </div>
+
+                    <div class="proof-block">
+                        Euler teoreminin ispatı indirgenmiş kalan sistemi kavramına dayanır. I = {x₁, x₂, ..., xᶠ⁽ᵐ⁾} mod m'de indirgenmiş bir sistem olsun. (a,m) = 1 için aI = {ax₁, ax₂, ..., axᶠ⁽ᵐ⁾} de indirgenmiş sistemdir...
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Kriptografi Uygulaması:</strong> RSA şifreleme algoritması Euler teoreminin doğrudan bir uygulamasıdır!
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Çinlilerin Kalan Teoremi Section -->
+            <section id="crt" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-puzzle-piece"></i>
+                    Çinlilerin Kalan Teoremi
+                </h2>
+                <div class="section-content">
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 4.5.14 (Çinlilerin Kalan Teoremi)</div>
+                        <div class="theorem-block-content">
+                            m₁, m₂, ..., mₖ sayıları i ≠ j iken (mᵢ,mⱼ) = 1 şartıyla pozitif tam sayılar olsun. Bu durumda kongrüans sistemi:
+                            <br>x ≡ a₁ (mod m₁)
+                            <br>x ≡ a₂ (mod m₂)
+                            <br>⋮
+                            <br>x ≡ aₖ (mod mₖ)
+                            <br>m₁×m₂×...×mₖ modülünde bir tek çözümü vardır.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        Sun Tzu'nun Problemi (MS 287-473):
+                        <br>3, 5 ve 7 ile bölündüğünde 1, 2 ve 3 kalanlarını veren sayıyı bulun.
+                        <br>
+                        <br>x ≡ 1 (mod 3)
+                        <br>x ≡ 2 (mod 5) 
+                        <br>x ≡ 3 (mod 7)
+                        <br>
+                        <br>Çözüm: x ≡ 52 (mod 105)
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-ancient note-card-icon"></i>
+                            <span class="note-card-title">Tarihsel Not</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bu teorem MS 287-473 yılları arasında yaşayan Çinli matematikçi Sun Tzu tarafından keşfedilmiştir. Genel çözüm yöntemi ise 1247'de Ch'in Chiu Shao tarafından verilmiştir.
+                        </div>
+                    </div>
+
+                    <div class="formula-block">
+                        x = a₁M₁y₁ + a₂M₂y₂ + ... + aₖMₖyₖ
+                        <br><br>
+                        M = m₁m₂...mₖ, Mᵢ = M/mᵢ, Mᵢyᵢ ≡ 1 (mod mᵢ)
+                    </div>
+                </div>
+            </section>
+
+            <!-- Asal Sayılar Section -->
+            <section id="asal-sayilar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-gem"></i>
+                    5. Bölüm: Asal Sayılar ve Bazı Özellikleri
+                </h2>
+                <div class="section-content">
+                    <h3 style="color: var(--skin-color); margin: 20px 0; font-size: 22px;">5.1 Giriş</h3>
+                    
+                    <p>
+                        1734'te L. Euler ∑ 1/p toplamının ıraksak olduğunu gösterdi. Asalların sonsuzluğu da buradan çıkar. Ancak ∏(1 - 1/p²) sonsuz çarpımı yakınsaktır. Aslında ∑∞ 1/n² = π²/6 olduğundan Euler şunu gösterdi:
+                    </p>
+
+                    <div class="formula-block">
+                        ∏(1 - 1/p²) = 6/π² ≈ 0.6079271018
+                    </div>
+
+                    <p>
+                        Sonsuz sayıda asal olduğunu bildiğimize göre acaba tamsayıların asallığını belirleyebilecek bir algoritma bulabilir miyiz? Alman matematikçi Karl Friedrich Gauss 1801'de Disquisitiones Arithmeticae isimli eserinde "Asalları bileşik sayılardan ayırt etmek aritmetikte en önemli problemlerden biridir" dedi.
+                    </p>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.1.1 (Asallık Testi)</div>
+                        <div class="theorem-block-content">
+                            Her n bileşik sayısının ⌊√n⌋'ten küçük bir asal çarpanı vardır.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        n bileşik olduğunda n = ab, 1 < a < n ve 1 < b < n şeklinde a ve b vardır. 
+                        Varsayalım ki a > √n ve b > √n olsun. n = ab > √n × √n = n olur ki imkansızdır. 
+                        O halde ya a ≤ √n veya b ≤ √n'dir. Herhangi tam sayı ≥ 2 bir asal çarpana sahiptir. 
+                        Böylece n'nin ≤ ⌊√n⌋ olmak şartıyla bir asal çarpanı olmak zorundadır.
+                    </div>
+
+                    <div class="example-block">
+                        1601'in asal olup olmadığını belirleyelim:
+                        <br>⌊√1601⌋ ≈ 40
+                        <br>40'tan küçük asallar: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37
+                        <br>Bunların hiçbiri 1601'i bölmez → 1601 asaldır.
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 30px 0 20px 0; font-size: 22px;">5.2 Eratosthenes (Eratosten) Kalburu</h3>
+
+                    <p>
+                        Teorem 5.1.1'den esinlenen bu eski algoritma bir n ∈ ℤ'den küçük olan tüm asalları bulmak için kullanılır. Eratosten (MÖ 276-194) Yunan matematikçidir.
+                    </p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-table note-card-icon"></i>
+                            <span class="note-card-title">Eratosthenes Kalburu Algoritması</span>
+                        </div>
+                        <div class="note-card-content">
+                            1. 2'den n'ye kadar sayıları listele
+                            <br>2. 2'nin katlarını (2 hariç) elendir
+                            <br>3. Bir sonraki elenmemiş sayıyı al ve katlarını elendir
+                            <br>4. √n'ye kadar tekrarla
+                            <br>5. Kalan sayılar asaldır
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        n = 50 için Eratosthenes Kalburu:
+                        <br>1  2  3  4  5  6  7  8  9  10
+                        <br>11 12 13 14 15 16 17 18 19 20
+                        <br>21 22 23 24 25 26 27 28 29 30
+                        <br>31 32 33 34 35 36 37 38 39 40
+                        <br>41 42 43 44 45 46 47 48 49 50
+                        <br><br>
+                        Sonuç: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            Kalbur hoş gözükmesine rağmen n büyüdükçe pratik olmaktan çıkar.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Örnek 5.2.1 (Asal Üreten Polinom Yokluğu)</div>
+                        <div class="theorem-block-content">
+                            ∀n ∈ ℤ için asalları üretecek tamsayı katsayılı bir f(n) polinomu yoktur.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        Varsayalım ki f(n) = aₖnᵏ + aₖ₋₁nᵏ⁻¹ + ... + a₁n + a₀ asalları üretsin.
+                        b ∈ ℤ için f(b) = p asal olsun. t keyfi tamsayı olmak üzere:
+                        f(b + tp) = p + p·g(t) = p(1 + g(t))
+                        Bu durumda p | f(b + tp) olur. f'in her değeri asal olduğundan f(b + tp) = p olmalı.
+                        Böylece f sonsuz kere aynı değeri alır. Ancak k. dereceden polinom k defadan fazla aynı değeri alamaz. Çelişki!
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 30px 0 20px 0; font-size: 22px;">5.3 Sayı Teorik Bir Fonksiyon</h3>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım (π(x) Fonksiyonu)</div>
+                        <div class="definition-block-content">
+                            x ∈ ℝ⁺ olsun. π(x) = x'den küçük eşit olan asalların sayısını gösterir:
+                            <br><br>
+                            <strong>π(x) = ∑ 1</strong>
+                            <br>p≤x
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        π(10) = 4 (asallar: 2, 3, 5, 7)
+                        <br>π(28.75) = 9
+                        <br>π(100) = 25
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.3.1 (İçleme-Dışlama Prensibi)</div>
+                        <div class="theorem-block-content">
+                            p₁, p₂, ..., pₜ ≤ √n asallar alalım. Bu durumda:
+                            <br><br>
+                            π(n) = n - 1 + π(√n) - ∑ᵢ ⌊n/pᵢ⌋ + ∑ᵢ<ⱼ ⌊n/(pᵢpⱼ)⌋ - ∑ᵢ<ⱼ<ₖ ⌊n/(pᵢpⱼpₖ)⌋ + ... + (-1)ᵗ⌊n/(p₁p₂...pₜ)⌋
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        π(100) hesabı:
+                        <br>π(√100) = π(10) = 4, asallar: 2, 3, 5, 7
+                        <br><br>
+                        π(100) = 100 - 1 + 4 - (⌊100/2⌋ + ⌊100/3⌋ + ⌊100/5⌋ + ⌊100/7⌋)
+                        <br>+ (⌊100/6⌋ + ⌊100/10⌋ + ⌊100/14⌋ + ⌊100/15⌋ + ⌊100/21⌋ + ⌊100/35⌋)
+                        <br>- (⌊100/30⌋ + ⌊100/42⌋ + ⌊100/70⌋ + ⌊100/105⌋) + ⌊100/210⌋
+                        <br><br>
+                        = 103 - (50 + 33 + 20 + 14) + (16 + 10 + 7 + 6 + 4 + 2) - (3 + 2 + 1 + 0) + 0
+                        <br>= 103 - 117 + 45 - 6 + 0 = 25
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.3.3 (Asal Sayı Teoremi)</div>
+                        <div class="theorem-block-content">
+                            <strong>lim[x→∞] π(x)/(x/ln x) = 1</strong>
+                            <br><br>
+                            Yani x yeterince büyüdüğünde π(x), x/ln x'e yaklaşır.
+                        </div>
+                    </div>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            Bu teorem 1793'te Gauss tarafından sanı olarak verildi. 1896'da Hadamard ve Poussin tarafından birbirlerinden bağımsız olarak ispatlandı. 1950'de Erdős ve Selberg bu teoremin elemanter bir ispatını verdiler.
+                        </div>
+                        <div class="quote-author">— Tarihsel Gelişim</div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.3.4 (Öklid, Elemanlar IX)</div>
+                        <div class="theorem-block-content">
+                            <strong>lim[x→∞] π(x) = ∞</strong>
+                            <br>Yani sonsuz çoklukta asal vardır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-magic note-card-icon"></i>
+                            <span class="note-card-title">Yeni İspat (Mayıs 2015) - Proof without Words</span>
+                        </div>
+                        <div class="note-card-content">
+                            Varsayalım sonlu çoklukta asal ve bunların çarpımı P olsun:
+                            <br>0 < ∏ₚ sin(π/p) = ∏ₚ sin(π(2P+1)/p) = 0
+                            <br>Çelişki! (Sol taraf pozitif, sağ taraf sıfır)
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Yardımcı Teorem 5.3.5</div>
+                        <div class="theorem-block-content">
+                            4n + 1 (n ∈ ℤ) formundaki iki tam sayının çarpımı yine aynı formdadır.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        a = 4l + 1, b = 4m + 1 olsun:
+                        a·b = (4l + 1)(4m + 1) = 16lm + 4l + 4m + 1 = 4(4lm + l + m) + 1
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-calculator note-card-icon"></i>
+                            <span class="note-card-title">4n + 3 Formundaki Çarpımlar</span>
+                        </div>
+                        <div class="note-card-content">
+                            I) (4n₁ + 3)(4n₂ + 3)...(4nₖ + 3) [k tek] = 4m + 3
+                            <br>II) (4n₁ + 3)(4n₂ + 3)...(4nₖ + 3) [k çift] = 4m + 1  
+                            <br>III) (4n + 1)(4n + 3) = 4m + 3
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.3.6 (Özel Formda Asalların Sonsuzluğu)</div>
+                        <div class="theorem-block-content">
+                            (i) 4n + 1 formunda sonsuz çoklukta asal vardır.
+                            <br>(ii) 4n + 3 formunda sonsuz çoklukta asal vardır.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        (ii) için: Varsayalım ki 4n + 3 formunda sonlu tane asal olsun: p₁, p₂, ..., pₖ.
+                        m = 4p₁p₂...pₖ - 1 sayısını tanımlayalım.
+                        m'nin tüm çarpanları 4 modunda 1'e kongruent asallar ise m ≡ 1 (mod 4) olur.
+                        Ancak m ≡ 3 (mod 4) olduğundan m'nin en az bir çarpanı 4 modunda 3'e kongruenttir.
+                        Varlığını kabul ettiğimiz asalların hiçbiri m'yi bölmeyeceğinden bu çarpan yeni bir asal olacaktır. Çelişki!
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.3.7 (Dirichlet'in Teoremi, 1837)</div>
+                        <div class="theorem-block-content">
+                            a ve b aralarında asal iki pozitif tamsayı ise (a + bn) sayı dizisi sonsuz çoklukta asal bulundurur.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-info note-card-icon"></i>
+                            <span class="note-card-title">Dirichlet Teoremi Örneği</span>
+                        </div>
+                        <div class="note-card-content">
+                            6 modunda sınıflandırma: (6,a) = 1 için a = 1 veya a = 5
+                            <br>Tek asallar 6 modunda 1 veya 5'e kongruent olmak üzere iki sınıfa ayrılır.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.3.8 (Ardışık Bileşik Sayılar)</div>
+                        <div class="theorem-block-content">
+                            Her n ∈ ℤ için n tane ardışık bileşik tam sayı bulunabilir.
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        (n+1)! + 2, (n+1)! + 3, ..., (n+1)! + n + 1 (n ≥ 1) ardışık tam sayılarını ele alalım.
+                        2 ≤ k ≤ n + 1 için k | (n+1)! ⟹ k | [(n+1)! + k].
+                        Yani yukarıdaki sayıların her biri bileşik sayıdır.
+                    </div>
+
+                    <div class="example-block">
+                        6 ardışık bileşik tam sayı:
+                        <br>(6+1)! + 2 = 5042
+                        <br>5042, 5043, 5044, 5045, 5046, 5047 (hepsi bileşik)
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 30px 0 20px 0; font-size: 22px;">5.4 Asalların Bazı İlginç Sınıfları</h3>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.1 Cunningham Asal Sayı Zincirleri</h4>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Cunningham Zincirleri</div>
+                        <div class="definition-block-content">
+                            İngiliz subay J.C. Cunningham (1842-1928) tarafından tanımlandı.
+                            <br>(p₁, p₂, ..., pₙ) bir zincir olmak üzere her i için:
+                            <br><strong>pᵢ₊₁ = 2pᵢ + 1</strong> şeklindeki asallardan oluşur.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        En küçük 5 elemanlı zincir: 2-5-11-23-47
+                        <br>5 = 2×2 + 1, 11 = 2×5 + 1, 23 = 2×11 + 1, 47 = 2×23 + 1
+                        <br><br>
+                        6 elemanlı en küçük zincir: 89-179-359-719-1439-2879
+                        <br><br>
+                        Bilinen en uzun zincir: 17 uzunlukta (J. Wroblewski, Mayıs 2008)
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.2 Palindromik Asallar</h4>
+
+                    <div class="example-block">
+                        1000'den küçük palindromik asallar (19 tane):
+                        <br>2, 3, 5, 7, 11, 101, 131, 151, 181, 313, 353, 373, 383, 727, 757, 787, 797, 919, 929
+                        <br><br>
+                        1950'de L. Moser 100.000'den küçük 107 tane palindromik asal olduğunu keşfetti.
+                        <br><br>
+                        Bilinen en büyük palindromik asal (Kasım 2014):
+                        <br>p = 10⁴⁷⁴⁵⁰⁰ + 999 × 10²³⁷²⁴⁹ + 1
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.3 İkiz Asallar</h4>
+
+                    <div class="definition-block">
+                        <div class="definition-title">İkiz Asallar</div>
+                        <div class="definition-block-content">
+                            Farkı 2 olan asallar ikiz asallar olarak adlandırılır.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        İkiz asal örnekleri:
+                        <br>(3,5), (5,7), (11,13), (17,19), (29,31), (41,43), (59,61), (71,73)...
+                        <br><br>
+                        Bilinen en büyük ikiz asallar (Eylül 2016):
+                        <br>2.996.863.034.895 × 2¹'²⁹⁰'⁰⁰⁰ ± 1
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-microchip note-card-icon"></i>
+                            <span class="note-card-title">İkiz Asallar ve Pentium Çip</span>
+                        </div>
+                        <div class="note-card-content">
+                            1994'te Thomas Nicely ikiz asallar sanısı üzerinde çalışırken Pentium çipindeki hatayı keşfetti:
+                            <br>1/824.633.702.441 + 1/824.663.702.443
+                            <br>Bu hata Intel'e 500.000$ mal oldu!
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Açık Problem:</strong> İkiz asalların sonsuz çoklukta olup olmadığı halen bilinmiyor (Twin Prime Conjecture).
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.4 Sophie Germain Asalları</h4>
+
+                    <div class="definition-block">
+                        <div class="definition-title">Sophie Germain Asalları</div>
+                        <div class="definition-block-content">
+                            1825'te Fransız matematikçi Sophie Germain tarafından tanıtıldı.
+                            <br>p asal olmak üzere <strong>2p + 1</strong> formundaki asallar.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        İlk üç Sophie Germain asalı: 2, 3, 5, 11, 23, 29, 41, 53...
+                        <br>2×2 + 1 = 5 ✓
+                        <br>2×3 + 1 = 7 ✓  
+                        <br>2×5 + 1 = 11 ✓
+                        <br>2×11 + 1 = 23 ✓
+                        <br><br>
+                        Bilinen en büyük Sophie Germain asalı (Şubat 2016):
+                        <br>p = 2618163402417 × 2¹'²⁹⁰'⁰⁰⁰ - 1 (3.888.342 basamaklı)
+                    </div>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            1825'te Sophie Germain, Fermat'ın son teoremini xᵖ + yᵖ = zᵖ (p Sophie Germain asalı) için ispatlamıştır.
+                        </div>
+                        <div class="quote-author">— Sophie Germain'in Katkısı</div>
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.5 Goldbach'ın Sanısı</h4>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Goldbach Sanısı (1742):</strong>
+                            <br><br>
+                            <strong>Sanı 1 (Güçlü Sanı):</strong> 2'den büyük her çift sayı iki asalın toplamı şeklinde yazılabilir.
+                            <br>4 = 2 + 2, 6 = 3 + 3, 8 = 3 + 5, 10 = 3 + 7, 12 = 5 + 7...
+                            <br><br>
+                            <strong>Sanı 2 (Zayıf Sanı):</strong> 9'dan büyük ya da eşit tek tam sayılar 3 tek asalın toplamı şeklinde yazılabilir.
+                            <br>9 = 3 + 3 + 3, 15 = 3 + 5 + 7...
+                            <br><br>
+                            <strong>Durum:</strong> Sanı 2, 2013-2014'te Helfgott tarafından ispatlandı.
+                            <br>Sanı 1, Nisan 2012'de 4×10¹⁸'e kadar doğrulandı, ancak henüz ispatlanmadı.
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.6 Bertrand'ın Sanısı</h4>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Bertrand Sanısı (1845) - Chebyshev Teoremi (1850)</div>
+                        <div class="theorem-block-content">
+                            ∀n ≥ 2 tamsayısı için n ile 2n arasında bir asal vardır.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        2 ile 4 arasında: 3
+                        <br>3 ile 6 arasında: 5
+                        <br>4 ile 8 arasında: 5, 7
+                        <br>5 ile 10 arasında: 7
+                        <br>10 ile 20 arasında: 11, 13, 17, 19
+                    </div>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            1845'te Joseph Bertrand tarafından sanı olarak ortaya atıldı. 5 yıl sonra Chebyshev tarafından ispatlandı. Sonrasında Ramanujan ve Erdős tarafından elemanter ispatlar verildi.
+                        </div>
+                        <div class="quote-author">— Tarihsel Gelişim</div>
+                    </div>
+
+                    <h4 style="color: var(--skin-color); margin: 20px 0; font-size: 18px;">5.4.7 Legendre'nin Sanısı</h4>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Legendre Sanısı (1912):</strong>
+                            <br>"n ∈ ℕ⁺ olmak üzere n² ile (n+1)² arasında daima bir asal vardır"
+                            <br><br>
+                            Örnekler:
+                            <br>1 ile 4 arasında: 3
+                            <br>4 ile 9 arasında: 5, 7
+                            <br>9 ile 16 arasında: 11, 13
+                            <br>16 ile 25 arasında: 17, 19, 23
+                            <br><br>
+                            <strong>Durum:</strong> Kısmi sonuçlar var, ancak halen tamamen ispatlanmadı.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Araştırma Fırsatı:</strong> Bu açık problemlerin herhangi birini çözmek matematikte büyük bir başarı olacaktır. Özellikle Goldbach ve ikiz asal sanıları aktif araştırma alanlarıdır.
+                        </div>
+                    </div>
+                </div>
+            </section>content">
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 1.1.4 (Asal ve Bileşik Sayılar)</div>
+                        <div class="definition-block-content">
+                            1'den büyük pozitif bir tamsayı 1 ve kendisinden başka sayıya bölünmüyorsa <strong>asal sayı</strong> olarak adlandırılır. Asal olmayan sayıya <strong>bileşik sayı</strong> denir.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 1.1.6 (Öklid - MÖ 300)</div>
+                        <div class="theorem-block-content">
+                            <strong>Asal sayıların sayısı sonsuzdur.</strong>
+                        </div>
+                    </div>
+
+                    <div class="proof-block">
+                        Varsayalım ki asal sayılar sonlu çoklukta olsun: 2, 3, 5, ..., p. 
+                        N = 2×3×5×...×p + 1 sayısını düşünelim. N > p olduğundan bileşik olmalı. 
+                        Ancak hiçbir asal N'yi bölmez, çelişki!
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.3.3 (Asal Sayı Teoremi)</div>
+                        <div class="theorem-block-content">
+                            π(x) = x'den küçük eşit asal sayıların sayısı olmak üzere:
+                            <br><strong>lim(x→∞) π(x)/(x/ln x) = 1</strong>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-search note-card-icon"></i>
+                            <span class="note-card-title">Eratosthenes Kalburu</span>
+                        </div>
+                        <div class="note-card-content">
+                            n'ye kadar olan tüm asalları bulmak için kullanılan eski ve etkili algoritma. √n'ye kadar olan asalların katlarını eleme işlemi.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Özel Asal Türleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>İkiz Asallar:</strong> (3,5), (5,7), (11,13), (17,19)...</li>
+                                <li>• <strong>Sophie Germain Asalları:</strong> p asal ve 2p+1 de asal</li>
+                                <li>• <strong>Palindromik Asallar:</strong> 11, 101, 131, 151...</li>
+                                <li>• <strong>Mersenne Asalları:</strong> 2ᵖ - 1 formunda asallar</li>
+                                <li>• <strong>Fermat Asalları:</strong> 2^(2ⁿ) + 1 formunda asallar</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            Asalları bileşik sayılardan ayırt etmek aritmetikte en önemli problemlerden biridir.
+                        </div>
+                        <div class="quote-author">— Carl Friedrich Gauss, 1801</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mersenne Sayıları Section -->
+            <section id="mersenne" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    Mersenne Sayıları
+                </h2>
+                <div class="section-content">
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım 5.4.14 (Mersenne Sayıları)</div>
+                        <div class="definition-block-content">
+                            p asal olmak üzere <strong>Mₚ = 2ᵖ - 1</strong> şeklindeki sayılara Mersenne sayısı, bunlardan asal olanlara <strong>Mersenne asalı</strong> denir.
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.13 (Mersenne için Gerekli Koşul)</div>
+                        <div class="theorem-block-content">
+                            m > 1 ve a ≥ 2 olsun. aᵐ - 1 asal ise a = 2 ve m asal olmalıdır.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        Bilinen ilk Mersenne asalları:
+                        <br>M₂ = 2² - 1 = 3
+                        <br>M₃ = 2³ - 1 = 7  
+                        <br>M₅ = 2⁵ - 1 = 31
+                        <br>M₇ = 2⁷ - 1 = 127
+                        <br>M₁₃ = 2¹³ - 1 = 8191
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> p asal olsa bile Mₚ her zaman asal değildir! Örneğin M₁₁ = 2047 = 23 × 89 bileşiktir.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 GIMPS Projesi:</strong> Great Internet Mersenne Prime Search (www.mersenne.org) kişisel bilgisayarlarla en büyük asal sayıları arıyor. Sen de katılabilirsin!
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-record-vinyl note-card-icon"></i>
+                            <span class="note-card-title">Güncel Rekor (2018)</span>
+                        </div>
+                        <div class="note-card-content">
+                            En büyük bilinen asal sayı: M₈₂,₅₈₉,₉₃₃ = 2⁸²'⁵⁸⁹'⁹³³ - 1 (24,862,048 basamaklı!)
+                        </div>
+                    </div>
+
+                    <div class="formula-block">
+                        Mₚ'nin basamak sayısı ≈ p × log₁₀(2) ≈ 0.301 × p
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fermat Sayıları Section -->
+            <section id="fermat-sayilari" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-shapes"></i>
+                    Fermat Sayıları
+                </h2>
+                <div class="section-content">
+                    <div class="definition-block">
+                        <div class="definition-title">Tanım (Fermat Sayıları)</div>
+                        <div class="definition-block-content">
+                            <strong>Fₙ = 2^(2ⁿ) + 1</strong> (n ≥ 0) formundaki sayılar Fermat sayıları olarak adlandırılır.
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        İlk beş Fermat sayısı:
+                        <br>F₀ = 2¹ + 1 = 3
+                        <br>F₁ = 2² + 1 = 5
+                        <br>F₂ = 2⁴ + 1 = 17
+                        <br>F₃ = 2⁸ + 1 = 257
+                        <br>F₄ = 2¹⁶ + 1 = 65537
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.10 (Fermat Sayılarının Aralarında Asallığı)</div>
+                        <div class="theorem-block-content">
+                            Farklı Fermat sayıları aralarında asaldır: (Fₘ, Fₙ) = 1 (m ≠ n)
+                        </div>
+                    </div>
+
+                    <div class="historical-quote">
+                        <div class="quote-text">
+                            Fermat, ilk beş Fermat sayısının asal olduğunu görünce tüm Fermat sayılarının asal olduğunu varsaydı. 1732'de Euler bu varsayımı F₅ = 2³² + 1 = 641 × 6700417 olduğunu göstererek çürüttü.
+                        </div>
+                        <div class="quote-author">— Tarihsel Not</div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.23 (Gauss - Düzgün Çokgenler)</div>
+                        <div class="theorem-block-content">
+                            Bir düzgün n-genin cetvel ve pergel yardımıyla çizilebilmesi için gerekli ve yeterli şart:
+                            <br><strong>n = 2ⁱ × p₁ × p₂ × ... × pⱼ</strong>
+                            <br>burada p₁, p₂, ..., pⱼ farklı Fermat asallarıdır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-compass note-card-icon"></i>
+                            <span class="note-card-title">Çizilebilir Çokgenler</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bilinen Fermat asalları: 3, 5, 17, 257, 65537. Bu nedenle düzgün 3, 4, 5, 6, 8, 10, 12, 15, 17, 20, 24, 30, 34, 40, 48, 51, 60, 68, 80, 85, 96, 102, 120, 136, 160, 170, 192, 204, 240, 255, 256, 257, 272... genler çizilebilir.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Açık Problem:</strong> F₄'ten sonra hiçbir Fermat asalının bilinmemesi, sonsuz sayıda Fermat asalının olup olmadığını merak konusu yapmaktadır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wilson Teoremi Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-exclamation"></i>
+                    Wilson Teoremi
+                </h2>
+                <div class="section-content">
+                    <div class="theorem-block">
+                        <div class="theorem-title">Teorem 5.4.19 (Wilson Teoremi)</div>
+                        <div class="theorem-block-content">
+                            n ∈ ℕ asal olması için gerekli ve yeterli şart:
+                            <br><strong>(n-1)! ≡ -1 (mod n)</strong>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        p = 7 için Wilson teoremi kontrolü:
+                        <br>6! = 720 ≡ -1 ≡ 6 (mod 7)
+                        <br>720 = 7 × 102 + 6 ✓
+                        <br><br>
+                        n = 6 (bileşik) için:
+                        <br>5! = 120 ≡ 0 (mod 6) ≢ -1 (mod 6)
+                    </div>
+
+                    <div class="proof-block">
+                        Wilson teoreminin ispatı Lagrange'ın polinom kongrüanslar teorisine dayanır. p asal iken x^(p-1) - 1 ≡ 0 (mod p) kongrüansının çözümleri 1, 2, ..., p-1'dir...
+                    </div>
+                </div>
+            </section>
+
+            <!-- Goldbach Varsayımı Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    Ünlü Açık Problemler
+                </h2>
+                <div class="section-content">
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Goldbach Varsayımı (1742):</strong>
+                            <br>2'den büyük her çift sayı iki asalın toplamı olarak yazılabilir.
+                            <br>4 = 2 + 2, 6 = 3 + 3, 8 = 3 + 5, 10 = 3 + 7, 12 = 5 + 7...
+                            <br><br>
+                            <strong>Durum:</strong> 4 × 10¹⁸'e kadar doğrulanmış, ancak henüz ispatlanmamış.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>İkiz Asal Varsayımı:</strong>
+                            <br>Sonsuz sayıda ikiz asal çifti vardır.
+                            <br>(3,5), (5,7), (11,13), (17,19), (29,31), (41,43)...
+                            <br><br>
+                            <strong>Durum:</strong> Açık problem.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Riemann Hipotezi:</strong>
+                            <br>ζ(s) = Σ(1/n^s) Riemann zeta fonksiyonunun tüm kritik sıfırları Re(s) = 1/2 doğrusu üzerindedir.
+                            <br><br>
+                            <strong>Durum:</strong> Millennium Prize Problem (1 milyon dolar ödül).
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Fermat'ın Son Teoremi:</strong> xⁿ + yⁿ = zⁿ denkleminin n > 2 için pozitif tam sayı çözümü yoktur. Andrew Wiles tarafından 1995'te ispatlandı (358 yıl sürdü!).
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bölünebilme Kuralları Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-ruler"></i>
+                    Bölünebilme Kuralları
+                </h2>
+                <div class="section-content">
+                    <p>Kongrüansların pratik uygulamalarından biri bölünebilme kurallarının türetilmesidir.</p>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">2ⁱ ile Bölünebilme</div>
+                        <div class="theorem-block-content">
+                            Bir sayının 2ⁱ ile bölünebilmesi için son i basamağının 2ⁱ ile bölünebilmesi gerekir ve yeterlidir.
+                            <br>• 2 ile: Son basamak çift
+                            <br>• 4 ile: Son iki basamak 4'ün katı  
+                            <br>• 8 ile: Son üç basamak 8'in katı
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">3 ve 9 ile Bölünebilme</div>
+                        <div class="theorem-block-content">
+                            10 ≡ 1 (mod 3) ve 10 ≡ 1 (mod 9) olduğundan:
+                            <br>• 3 ile bölünebilme: Rakamlar toplamı 3'ün katı
+                            <br>• 9 ile bölünebilme: Rakamlar toplamı 9'un katı
+                        </div>
+                    </div>
+
+                    <div class="theorem-block">
+                        <div class="theorem-title">11 ile Bölünebilme</div>
+                        <div class="theorem-block-content">
+                            10 ≡ -1 (mod 11) olduğundan:
+                            <br>Alternatif basamak toplamlarının farkı 11'in katı olmalı.
+                            <br>Örnek: 243506076 → (6+0+0+3+2) - (7+6+5+4) = 11-22 = -11 ≡ 0 (mod 11)
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        n = 2435060764 sayısını kontrol edelim:
+                        <br>• 2 ile: Son basamak 4 (çift) ✓
+                        <br>• 4 ile: Son iki basamak 64, 64÷4=16 ✓
+                        <br>• 3 ile: 2+4+3+5+0+6+0+7+6+4=37, 37÷3≠0 ✗
+                        <br>• 11 ile: (4+6+0+5+4) - (6+7+0+3+2) = 19-18 = 1 ≢ 0 (mod 11) ✗
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kriptografi Uygulamaları Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lock"></i>
+                    Modern Kriptografi Uygulamaları
+                </h2>
+                <div class="section-content">
+                    <p>Sayılar teorisi modern bilgi güvenliğinin temelini oluşturur.</p>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-key note-card-icon"></i>
+                            <span class="note-card-title">RSA Şifreleme</span>
+                        </div>
+                        <div class="note-card-content">
+                            RSA algoritması büyük asal sayıların çarpımını faktörize etmenin zorluğuna dayanır. Euler teoremi ve Çinlilerin Kalan Teoremi'nin doğrudan uygulamasıdır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-exchange-alt note-card-icon"></i>
+                            <span class="note-card-title">Diffie-Hellman Anahtar Değişimi</span>
+                        </div>
+                        <div class="note-card-content">
+                            Modüler üslü alma işleminin tek yönlü fonksiyon özelliğini kullanır. Diskret logaritma probleminin zorluğuna dayanır.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-coins note-card-icon"></i>
+                            <span class="note-card-title">Blockchain ve Kriptovalutalar</span>
+                        </div>
+                        <div class="note-card-content">
+                            Bitcoin'in SHA-256 hash fonksiyonu ve dijital imza algoritmaları sayılar teorisinin modern uygulamalarıdır.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Kuantum Bilgisayarlar ve Gelecek:</strong> Shor algoritması RSA'nın güvenliğini tehdit ederken, post-kuantum kriptografi için yeni sayı teorik yapılar araştırılmaktadır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(255, 215, 0, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Sayılar Teorisinin Gücü
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Sayılar teorisi, en soyut matematiksel kavramlardan en pratik uygulamalara uzanan geniş bir yelpazede karşımıza çıkar. Antik Yunan'dan günümüz dijital çağına kadar, sayıların gizli düzenini keşfetme serüveni devam ediyor.
+                    </p>
+
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-infinity note-card-icon"></i>
+                            <span class="note-card-title">Sonsuzluk ve Güzellik</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Keşfetmeye devam edin:</strong> Her asal sayı, her kongrüans, her teorem matematiğin büyülü dünyasında yeni kapılar açar. Sayılar evrensel bir dil konuşur ve bu dili öğrenmek insanlığın en büyük entelektüel maceralarından biridir.
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-infinity"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            ∀n ∈ ℕ : matematik(n) = güzel ∧ sonsuz
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (current && item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Mathematical Easter Eggs
+        console.log('%c∞ Sayılar Teorisi Portalı', 'color: #ffd700; font-size: 20px; font-weight: bold;');
+        console.log('%c> Grok Theme initialized', 'color: #ffd700; font-family: monospace;');
+        console.log('%c> Mathematical modules loaded', 'color: #ffd700; font-family: monospace;');
+        console.log('%c> Enhanced features activated', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> ∀n ∈ ℕ : beautiful(n) = true', 'color: #8a2be2; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(255, 215, 0, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Mathematical Formula Renderer (Simple)
+        document.addEventListener('DOMContentLoaded', () => {
+            const formulaBlocks = document.querySelectorAll('.formula-block');
+            formulaBlocks.forEach(block => {
+                // Add subtle animation to formulas
+                block.addEventListener('mouseenter', () => {
+                    block.style.transform = 'scale(1.02)';
+                    block.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.3)';
+                });
+                
+                block.addEventListener('mouseleave', () => {
+                    block.style.transform = 'scale(1.0)';
+                    block.style.boxShadow = 'none';
+                });
+            });
+        });
+
+        // Theorem Block Enhancement
+        const theoremBlocks = document.querySelectorAll('.theorem-block');
+        theoremBlocks.forEach(block => {
+            block.addEventListener('click', () => {
+                block.style.borderColor = 'var(--theorem-color)';
+                setTimeout(() => {
+                    block.style.borderColor = 'rgba(138, 43, 226, 0.3)';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

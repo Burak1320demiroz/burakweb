@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!--
+      Copyright © 2025 Burak Demiröz
+      All Rights Reserved. This page and its contents may not be copied,
+      distributed, or used without explicit written permission.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graf Teorisi | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon/graphfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon/graphfavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        :root {
+            /* Graph Theory Theme Colors */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(138, 43, 226, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #8a2be2;
+            --skin-color-hover: #7b1fa2;
+            --neon-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            --text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+            --node-color: #e91e63;
+            --edge-color: #2196f3;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Network Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(138, 43, 226, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 60% 40%, rgba(138, 43, 226, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px, 150px 150px, 80px 80px;
+            animation: network-float 15s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes network-float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        /* Graph Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: graph-pulse 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes graph-pulse {
+            0%, 100% { opacity: 0.2; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.1); }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-project-diagram {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(138, 43, 226, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(138, 43, 226, 0.1);
+            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-project-diagram {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.8));
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Graph Visualization */
+        .graph-viz {
+            background: #1a1a1a;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .graph-viz::before {
+            content: 'Graf Görselleştirme';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        /* Simple Graph Drawing */
+        .simple-graph {
+            display: inline-block;
+            position: relative;
+            width: 300px;
+            height: 200px;
+        }
+        
+        .node {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--node-color);
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 0 10px rgba(233, 30, 99, 0.5);
+        }
+        
+        .edge {
+            position: absolute;
+            height: 2px;
+            background: var(--edge-color);
+            transform-origin: left center;
+            box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+        }
+        
+        /* Algorithm Steps */
+        .algorithm-steps {
+            background: rgba(138, 43, 226, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        
+        .algorithm-steps::before {
+            content: '> Algoritma Adımları:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+            color: var(--skin-color);
+        }
+        
+        .algorithm-steps ol {
+            margin-left: 20px;
+            color: var(--text-black700);
+        }
+        
+        .algorithm-steps li {
+            margin-bottom: 8px;
+            list-style: decimal;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'Pseudocode';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #f8f8f2;
+        }
+        
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Syntax Highlighting */
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .number { color: #bd93f9; }
+        .function { color: #50fa7b; }
+        .comment { color: #6272a4; font-style: italic; }
+        .operator { color: #ff79c6; }
+        
+        /* Complexity Analysis */
+        .complexity-box {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .complexity-box::before {
+            content: '\f201';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .complexity-box-content {
+            padding-left: 40px;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Keyboard Shortcut Style */
+        .kbd {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--skin-color);
+            display: inline-block;
+        }
+        
+        /* Formula Display */
+        .formula {
+            background: rgba(138, 43, 226, 0.05);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--skin-color);
+            font-weight: 500;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .simple-graph {
+                width: 250px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-project-diagram"></i>
+                <span>Graf Teorisi</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#graf-nedir" class="active">Graf Nedir?</a></li>
+            <li><a href="#graf-turleri">Graf Türleri</a></li>
+            <li><a href="#temel-kavramlar">Temel Kavramlar</a></li>
+            <li><a href="#graf-gosterimi">Graf Gösterimi</a></li>
+            <li><a href="#graf-gezinme">Graf Gezinme</a></li>
+            <li><a href="#dfs-algoritma">DFS Algoritması</a></li>
+            <li><a href="#bfs-algoritma">BFS Algoritması</a></li>
+            <li><a href="#en-kisa-yol">En Kısa Yol</a></li>
+            <li><a href="#dijkstra">Dijkstra Algoritması</a></li>
+            <li><a href="#mst">Minimum Spanning Tree</a></li>
+            <li><a href="#topological-sort">Topolojik Sıralama</a></li>
+            <li><a href="#uygulama-alanlari">Uygulama Alanları</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-project-diagram"></i>
+                    Graf Teorisi
+                </h1>
+                <p class="hero-subtitle">
+                    Ağlar, bağlantılar ve algoritmaların matematiksel dünyası
+                </p>
+                <div class="hero-code">
+                    G = (V, E) // Graf = (Düğümler, Kenarlar)
+                </div>
+            </section>
+
+            <!-- Graf Nedir Section -->
+            <section id="graf-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    Graf Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Graf teorisi</strong>, matematikte nesneler arasındaki ilişkileri modellemek için kullanılan bir daldır. Graf, <strong>düğümler (vertices/nodes)</strong> ve bu düğümleri birbirine bağlayan <strong>kenarlardan (edges)</strong> oluşan bir matematiksel yapıdır.
+                    </p>
+                    
+                    <div class="formula">
+                        G = (V, E)
+                    </div>
+                    
+                    <p>
+                        Burada <strong>V</strong> düğüm kümesini, <strong>E</strong> ise kenar kümesini temsil eder. Graf teorisi, ağ analizi, bilgisayar bilimi, sosyoloji, biyoloji ve birçok alanda uygulama bulur.
+                    </p>
+
+                    <div class="graph-viz">
+                        <div class="simple-graph">
+                            <div class="node" style="top: 20px; left: 50px;">A</div>
+                            <div class="node" style="top: 20px; left: 200px;">B</div>
+                            <div class="node" style="top: 120px; left: 50px;">C</div>
+                            <div class="node" style="top: 120px; left: 200px;">D</div>
+                            <div class="edge" style="top: 35px; left: 80px; width: 120px;"></div>
+                            <div class="edge" style="top: 50px; left: 65px; width: 85px; transform: rotate(45deg);"></div>
+                            <div class="edge" style="top: 135px; left: 80px; width: 120px;"></div>
+                            <div class="edge" style="top: 35px; left: 215px; width: 85px; transform: rotate(90deg);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Graf Teorisinin Uygulama Alanları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Sosyal medya ağları analizi</li>
+                                <li>• Ulaşım ve lojistik optimizasyonu</li>
+                                <li>• İnternet ve web sayfası yapısı</li>
+                                <li>• Moleküler yapı analizi</li>
+                                <li>• Bilgisayar ağları ve güvenlik</li>
+                                <li>• Oyun teorisi ve strateji</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">Tarihçe</span>
+                        </div>
+                        <div class="note-card-content">
+                            Graf teorisi, 1736'da Leonhard Euler'in Königsberg köprüleri problemini çözmesiyle başladı. Bu problem, günümüz graf teorisinin temelini atan ilk çalışma olarak kabul edilir.
+                        </div>
+                    </div>
+                    
+                    <p>
+                        Modern bilgisayar biliminde graf teorisi, algoritma tasarımı, veri yapıları ve karmaşıklık analizinin temelini oluşturur. Günlük hayatta GPS navigasyon, sosyal medya algoritmaları ve arama motorları gibi teknolojilerde kullanılır.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Graf Türleri Section -->
+            <section id="graf-turleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-sitemap"></i>
+                    Graf Türleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Graflar, yapısal özelliklerine göre farklı türlere ayrılır. Her graf türü, belirli problem tiplerini çözmek için uygundur ve farklı algoritmaların kullanılmasını gerektirir.
+                    </p>
+                    
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Yönlü ve Yönsüz Graflar:</h3>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Yönsüz Graf (Undirected Graph):</strong> Kenarların yönü yoktur. A-B kenarı, B-A kenarı ile aynıdır.<br><br>
+                            <strong>Yönlü Graf (Directed Graph/Digraph):</strong> Kenarların belirli bir yönü vardır. A→B kenarı, B→A kenarından farklıdır.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Ağırlıklı Graflar:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Ağırlıklı graf örneği</span>
+<span class="keyword">Graf</span> G = {
+    <span class="string">"A"</span>: [(<span class="string">"B"</span>, <span class="number">5</span>), (<span class="string">"C"</span>, <span class="number">3</span>)],
+    <span class="string">"B"</span>: [(<span class="string">"D"</span>, <span class="number">7</span>)],
+    <span class="string">"C"</span>: [(<span class="string">"D"</span>, <span class="number">2</span>)]
+}</code></pre>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-weight note-card-icon"></i>
+                            <span class="note-card-title">Ağırlık Türleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Mesafe:</strong> Fiziksel uzaklık (km, mil)<br>
+                            <strong>Maliyet:</strong> Para birimi, zaman<br>
+                            <strong>Kapasite:</strong> Bant genişliği, trafik kapasitesi<br>
+                            <strong>Olasılık:</strong> Bağlantı güvenilirliği
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Özel Graf Türleri:</h3>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Tam Graf (Complete Graph):</strong> Her düğüm diğer tüm düğümlerle bağlıdır. n düğümlü tam grafta n(n-1)/2 kenar vardır.<br><br>
+                            <strong>Ağaç (Tree):</strong> n düğümlü, n-1 kenarlı, döngüsüz bağlantılı graf.<br><br>
+                            <strong>DAG (Directed Acyclic Graph):</strong> Yönlü ve döngüsüz graf.<br><br>
+                            <strong>Bipartite Graf:</strong> Düğümler iki gruba ayrılabilir ve kenarlar sadece gruplar arası bağlantı sağlar.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Seçim Kriteri:</strong> Problem türüne göre graf seçimi kritiktir. Yol bulma için ağırlıklı graf, sosyal ağ analizi için yönsüz graf, proje planlama için DAG tercih edilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Temel Kavramlar Section -->
+            <section id="temel-kavramlar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-atom"></i>
+                    Temel Kavramlar ve Terminoloji
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Graf teorisinde kullanılan temel kavramları anlamak, algoritmaları öğrenmek ve uygulamak için hayati önem taşır.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel Tanımlar:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Derece (Degree):</strong> Bir düğüme bağlı kenar sayısı</li>
+                                <li><strong>Yol (Path):</strong> Düğümler arası bağlantı dizisi</li>
+                                <li><strong>Döngü (Cycle):</strong> Başladığı noktaya dönen yol</li>
+                                <li><strong>Bağlantılılık:</strong> Düğümler arası erişilebilirlik</li>
+                                <li><strong>Bileşen:</strong> Birbirine bağlı düğüm alt kümesi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Derece Kavramı:</h3>
+                    
+                    <div class="formula">
+                        deg(v) = |{u ∈ V : (u,v) ∈ E}|
+                    </div>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-calculator note-card-icon"></i>
+                            <span class="note-card-title">Derece Hesaplama</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Yönsüz grafta:</strong> Bağlı kenar sayısı<br>
+                            <strong>Yönlü grafta:</strong> Gelen derece + Giden derece<br>
+                            <strong>Toplam derece:</strong> Her zaman çift sayıdır (Handshaking Lemma)
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Yol ve Döngü:</h3>
+                    
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li><strong>Basit Yol:</strong> Hiçbir düğüm tekrarlanmaz</li>
+                            <li><strong>Basit Döngü:</strong> Başlangıç hariç hiçbir düğüm tekrarlanmaz</li>
+                            <li><strong>Hamilton Yolu:</strong> Her düğümü tam bir kez ziyaret eder</li>
+                            <li><strong>Euler Yolu:</strong> Her kenarı tam bir kez kullanır</li>
+                        </ol>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Hamilton ve Euler problemleri NP-complete/NP-hard kategorisindedir. Büyük graflar için polinom zamanda çözüm bulunması zordur.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Graf Özellikleri:</h3>
+                    
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Yoğunluk (Density):</strong> |E| / |V|(|V|-1)/2<br>
+                            <strong>Çap (Diameter):</strong> En uzun en kısa yol<br>
+                            <strong>Yarıçap (Radius):</strong> En kısa maksimum uzaklık<br>
+                            <strong>Merkezilik:</strong> Düğümün ağdaki önemi
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Graf Gösterimi Section -->
+            <section id="graf-gosterimi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-table"></i>
+                    Graf Gösterimi ve Veri Yapıları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Grafların bilgisayar belleğinde nasıl saklanacağı, algoritmaların verimliliğini doğrudan etkiler. Üç ana gösterim yöntemi vardır.
+                    </p>
+                    
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">1. Komşuluk Matrisi (Adjacency Matrix):</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// n×n matrix, A[i][j] = 1 eğer (i,j) kenarı varsa</span>
+<span class="keyword">Matrix</span> A = {
+    <span class="comment">//   A  B  C  D</span>
+    A: [ <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span> ],  <span class="comment">// A düğümü</span>
+    B: [ <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span> ],  <span class="comment">// B düğümü</span>
+    C: [ <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span> ],  <span class="comment">// C düğümü</span>
+    D: [ <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span> ]   <span class="comment">// D düğümü</span>
+}</code></pre>
+                    </div>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Zaman Karmaşıklığı:</strong><br>
+                            • Kenar kontrolü: O(1)<br>
+                            • Kenar ekleme/silme: O(1)<br>
+                            • Komşu bulma: O(V)<br><br>
+                            <strong>Alan Karmaşıklığı:</strong> O(V²)
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">2. Komşuluk Listesi (Adjacency List):</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Her düğüm için komşularının listesi</span>
+<span class="keyword">AdjList</span> = {
+    <span class="string">"A"</span>: [<span class="string">"B"</span>, <span class="string">"C"</span>],
+    <span class="string">"B"</span>: [<span class="string">"A"</span>, <span class="string">"D"</span>],
+    <span class="string">"C"</span>: [<span class="string">"A"</span>, <span class="string">"D"</span>],
+    <span class="string">"D"</span>: [<span class="string">"B"</span>, <span class="string">"C"</span>]
+}</code></pre>
+                    </div>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Zaman Karmaşıklığı:</strong><br>
+                            • Kenar kontrolü: O(deg(v))<br>
+                            • Kenar ekleme: O(1)<br>
+                            • Komşu bulma: O(deg(v))<br><br>
+                            <strong>Alan Karmaşıklığı:</strong> O(V + E)
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">3. Kenar Listesi (Edge List):</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Tüm kenarların listesi</span>
+<span class="keyword">EdgeList</span> = [
+    (<span class="string">"A"</span>, <span class="string">"B"</span>),
+    (<span class="string">"A"</span>, <span class="string">"C"</span>),
+    (<span class="string">"B"</span>, <span class="string">"D"</span>),
+    (<span class="string">"C"</span>, <span class="string">"D"</span>)
+]</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Hangisini Seçmeli:</strong><br>
+                            • <strong>Sık kenar sorgusu:</strong> Komşuluk matrisi<br>
+                            • <strong>Seyrek graf:</strong> Komşuluk listesi<br>
+                            • <strong>Kenar işlemleri:</strong> Kenar listesi<br>
+                            • <strong>Bellek kısıtı:</strong> Komşuluk listesi
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-memory note-card-icon"></i>
+                            <span class="note-card-title">Bellek Kullanımı Karşılaştırması</span>
+                        </div>
+                        <div class="note-card-content">
+                            1000 düğümlü, 5000 kenarlı graf için:<br>
+                            • <strong>Matris:</strong> ~1MB (1000²)<br>
+                            • <strong>Liste:</strong> ~40KB (1000 + 2×5000)<br>
+                            • <strong>Kenar listesi:</strong> ~40KB (2×5000)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Graf Gezinme Section -->
+            <section id="graf-gezinme" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-route"></i>
+                    Graf Gezinme Algoritmaları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Graf gezinme algoritmaları, graf üzerindeki tüm erişilebilir düğümleri sistematik olarak ziyaret etmek için kullanılır. İki temel yaklaşım vardır: <strong>Derinlik İlk Arama (DFS)</strong> ve <strong>Genişlik İlk Arama (BFS)</strong>.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Gezinme Algoritması Kullanım Alanları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Bağlantılılık kontrolü</li>
+                                <li>• Döngü tespiti</li>
+                                <li>• Topolojik sıralama</li>
+                                <li>• En kısa yol bulma</li>
+                                <li>• Güçlü bağlantılı bileşenler</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Önemli Not:</strong> Her iki algoritma da O(V + E) zaman karmaşıklığına sahiptir, ancak kullanım alanları farklıdır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DFS Algoritması Section -->
+            <section id="dfs-algoritma" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-long-arrow-alt-down"></i>
+                    Derinlik İlk Arama (DFS)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        DFS, bir düğümden başlayarak mümkün olduğunca derine iner, geri dönüş yapar ve diğer dalları keşfeder. <strong>Stack</strong> veri yapısını (özyinelemeli veya açık) kullanır.
+                    </p>
+                    
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Başlangıç düğümünü ziyaret et ve işaretle</li>
+                            <li>Ziyaret edilmemiş komşu düğüm varsa, oraya git (adım 1'i tekrarla)</li>
+                            <li>Ziyaret edilmemiş komşu yoksa, geri dön</li>
+                            <li>Tüm erişilebilir düğümler ziyaret edilene kadar devam et</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">function</span> <span class="function">DFS</span>(graf, başlangıç):
+    visited = <span class="keyword">new</span> <span class="function">Set</span>()
+    stack = [başlangıç]
+    
+    <span class="keyword">while</span> stack <span class="keyword">is not empty</span>:
+        düğüm = stack.<span class="function">pop</span>()
+        
+        <span class="keyword">if</span> düğüm <span class="keyword">not in</span> visited:
+            visited.<span class="function">add</span>(düğüm)
+            <span class="function">process</span>(düğüm)  <span class="comment">// Düğümü işle</span>
+            
+            <span class="keyword">for</span> komşu <span class="keyword">in</span> graf[düğüm]:
+                <span class="keyword">if</span> komşu <span class="keyword">not in</span> visited:
+                    stack.<span class="function">append</span>(komşu)</code></pre>
+                    </div>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Zaman Karmaşıklığı:</strong> O(V + E)<br>
+                            <strong>Alan Karmaşıklığı:</strong> O(V) - stack için<br>
+                            <strong>Özyinelemeli versiyon:</strong> O(V) - call stack
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-tree note-card-icon"></i>
+                            <span class="note-card-title">DFS Ağacı</span>
+                        </div>
+                        <div class="note-card-content">
+                            DFS sırasında kullanılan kenarlar <strong>DFS ağacını</strong> oluşturur. Diğer kenarlar:<br>
+                            • <strong>Back edge:</strong> Döngü göstergesi<br>
+                            • <strong>Forward edge:</strong> Torun bağlantısı<br>
+                            • <strong>Cross edge:</strong> Farklı dallar arası
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">DFS Uygulamaları:</h3>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 DFS İdeal Kullanım Alanları:</strong><br>
+                            • <strong>Döngü tespiti:</strong> Back edge varlığı<br>
+                            • <strong>Topolojik sıralama:</strong> Bitirme zamanına göre<br>
+                            • <strong>Güçlü bağlantılı bileşenler:</strong> Kosaraju algoritması<br>
+                            • <strong>Labirent çözme:</strong> Bir yolu sonuna kadar takip
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Döngü tespiti için DFS</span>
+<span class="keyword">function</span> <span class="function">hasCycle</span>(graf):
+    renk = {} <span class="comment">// Beyaz=0, Gri=1, Siyah=2</span>
+    
+    <span class="keyword">for</span> düğüm <span class="keyword">in</span> graf:
+        <span class="keyword">if</span> renk[düğüm] == <span class="number">0</span>:
+            <span class="keyword">if</span> <span class="function">dfsVisit</span>(graf, düğüm, renk):
+                <span class="keyword">return</span> <span class="keyword">True</span>
+    <span class="keyword">return</span> <span class="keyword">False</span>
+
+<span class="keyword">function</span> <span class="function">dfsVisit</span>(graf, düğüm, renk):
+    renk[düğüm] = <span class="number">1</span>  <span class="comment">// Gri (işleniyor)</span>
+    
+    <span class="keyword">for</span> komşu <span class="keyword">in</span> graf[düğüm]:
+        <span class="keyword">if</span> renk[komşu] == <span class="number">1</span>:  <span class="comment">// Back edge</span>
+            <span class="keyword">return</span> <span class="keyword">True</span>
+        <span class="keyword">if</span> renk[komşu] == <span class="number">0</span> <span class="keyword">and</span> <span class="function">dfsVisit</span>(graf, komşu, renk):
+            <span class="keyword">return</span> <span class="keyword">True</span>
+    
+    renk[düğüm] = <span class="number">2</span>  <span class="comment">// Siyah (tamamlandı)</span>
+    <span class="keyword">return</span> <span class="keyword">False</span></code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BFS Algoritması Section -->
+            <section id="bfs-algoritma" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                    Genişlik İlk Arama (BFS)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        BFS, başlangıç düğümünden katman katman genişleyerek ilerler. Önce tüm komşular, sonra komşuların komşuları ziyaret edilir. <strong>Queue</strong> veri yapısını kullanır.
+                    </p>
+                    
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Başlangıç düğümünü kuyruğa ekle ve ziyaret et</li>
+                            <li>Kuyruktan düğüm çıkar</li>
+                            <li>Bu düğümün ziyaret edilmemiş komşularını kuyruğa ekle</li>
+                            <li>Kuyruk boşalana kadar 2-3 adımlarını tekrarla</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">function</span> <span class="function">BFS</span>(graf, başlangıç):
+    visited = <span class="keyword">new</span> <span class="function">Set</span>()
+    queue = <span class="keyword">new</span> <span class="function">Queue</span>()
+    distance = {}
+    
+    queue.<span class="function">enqueue</span>(başlangıç)
+    visited.<span class="function">add</span>(başlangıç)
+    distance[başlangıç] = <span class="number">0</span>
+    
+    <span class="keyword">while</span> queue <span class="keyword">is not empty</span>:
+        düğüm = queue.<span class="function">dequeue</span>()
+        <span class="function">process</span>(düğüm)
+        
+        <span class="keyword">for</span> komşu <span class="keyword">in</span> graf[düğüm]:
+            <span class="keyword">if</span> komşu <span class="keyword">not in</span> visited:
+                visited.<span class="function">add</span>(komşu)
+                distance[komşu] = distance[düğüm] + <span class="number">1</span>
+                queue.<span class="function">enqueue</span>(komşu)</code></pre>
+                    </div>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Zaman Karmaşıklığı:</strong> O(V + E)<br>
+                            <strong>Alan Karmaşıklığı:</strong> O(V) - queue için<br>
+                            <strong>Mesafe garantisi:</strong> En kısa yol (ağırlıksız graf)
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-layer-group note-card-icon"></i>
+                            <span class="note-card-title">BFS Katmanları</span>
+                        </div>
+                        <div class="note-card-content">
+                            BFS, düğümleri başlangıçtan uzaklıklarına göre katmanlar halinde ziyaret eder:<br>
+                            • <strong>Katman 0:</strong> Başlangıç düğümü<br>
+                            • <strong>Katman 1:</strong> Doğrudan komşular<br>
+                            • <strong>Katman k:</strong> k uzaklıktaki düğümler
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">BFS Uygulamaları:</h3>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 BFS İdeal Kullanım Alanları:</strong><br>
+                            • <strong>En kısa yol:</strong> Ağırlıksız graflarda<br>
+                            • <strong>Minimum adım problemi:</strong> Oyun çözme<br>
+                            • <strong>Seviye bazlı işlemler:</strong> Ağaç seviyesi<br>
+                            • <strong>Bağlantılılık testi:</strong> Erişilebilirlik kontrolü
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <pre><code><span class="comment">// En kısa yol bulma (ağırlıksız graf)</span>
+<span class="keyword">function</span> <span class="function">shortestPath</span>(graf, başlangıç, hedef):
+    <span class="keyword">if</span> başlangıç == hedef:
+        <span class="keyword">return</span> [başlangıç]
+    
+    visited = <span class="keyword">new</span> <span class="function">Set</span>()
+    queue = <span class="keyword">new</span> <span class="function">Queue</span>()
+    parent = {}
+    
+    queue.<span class="function">enqueue</span>(başlangıç)
+    visited.<span class="function">add</span>(başlangıç)
+    parent[başlangıç] = <span class="keyword">null</span>
+    
+    <span class="keyword">while</span> queue <span class="keyword">is not empty</span>:
+        düğüm = queue.<span class="function">dequeue</span>()
+        
+        <span class="keyword">for</span> komşu <span class="keyword">in</span> graf[düğüm]:
+            <span class="keyword">if</span> komşu <span class="keyword">not in</span> visited:
+                visited.<span class="function">add</span>(komşu)
+                parent[komşu] = düğüm
+                queue.<span class="function">enqueue</span>(komşu)
+                
+                <span class="keyword">if</span> komşu == hedef:
+                    <span class="keyword">return</span> <span class="function">reconstructPath</span>(parent, hedef)
+    
+    <span class="keyword">return</span> <span class="keyword">null</span>  <span class="comment">// Yol bulunamadı</span></code></pre>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>DFS vs BFS Seçimi:</strong> En kısa yol için BFS, bellek tasarrufu için DFS, döngü tespiti için DFS, seviye işlemleri için BFS tercih edilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- En Kısa Yol Section -->
+            <section id="en-kisa-yol" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-route"></i>
+                    En Kısa Yol Problemleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        En kısa yol problemleri, graf teorisinin en praktik uygulamalı alanlarından biridir. GPS navigasyon, ağ yönlendirme ve lojistik optimizasyonunda kritik öneme sahiptir.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>En Kısa Yol Problem Türleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Tek Kaynak (Single Source):</strong> Bir düğümden diğer tüm düğümlere</li>
+                                <li><strong>Tek Hedef (Single Destination):</strong> Tüm düğümlerden bir hedefe</li>
+                                <li><strong>Tek Çift (Single Pair):</strong> Belirli iki düğüm arası</li>
+                                <li><strong>Tüm Çiftler (All Pairs):</strong> Her düğüm çifti arası</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Algoritma Seçimi:</h3>
+                    
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Ağırlıksız Graf:</strong> BFS - O(V + E)<br>
+                            <strong>Pozitif Ağırlık:</strong> Dijkstra - O(V² + E) veya O((V + E) log V)<br>
+                            <strong>Negatif Ağırlık:</strong> Bellman-Ford - O(VE)<br>
+                            <strong>Tüm Çiftler:</strong> Floyd-Warshall - O(V³)
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-exclamation-triangle note-card-icon"></i>
+                            <span class="note-card-title">Negatif Döngü Problemi</span>
+                        </div>
+                        <div class="note-card-content">
+                            Negatif ağırlıklı döngü varsa, en kısa yol tanımsızdır çünkü döngüyü ne kadar çok dönerseniz toplam maliyet o kadar azalır.
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Pratik İpucu:</strong> Gerçek uygulamalarda Dijkstra algoritması genellikle yeterlidir çünkü mesafe, zaman, maliyet gibi ağırlıklar doğal olarak pozitiftir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dijkstra Algoritması Section -->
+            <section id="dijkstra" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Dijkstra Algoritması
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Dijkstra algoritması, pozitif ağırlıklı graflarda tek kaynak en kısa yol problemini çözer. Greedy yaklaşım kullanarak optimal sonuç garanti eder.
+                    </p>
+                    
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Tüm düğümlerin mesafesini ∞ olarak başlat (kaynak = 0)</li>
+                            <li>Ziyaret edilmemiş en kısa mesafeli düğümü seç</li>
+                            <li>Bu düğümün komşularının mesafelerini güncelle</li>
+                            <li>Düğümü ziyaret edildi olarak işaretle</li>
+                            <li>Tüm düğümler ziyaret edilene kadar 2-4 adımlarını tekrarla</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">function</span> <span class="function">dijkstra</span>(graf, kaynak):
+    distance = {}
+    visited = <span class="keyword">new</span> <span class="function">Set</span>()
+    parent = {}
+    priorityQueue = <span class="keyword">new</span> <span class="function">MinHeap</span>()
+    
+    <span class="comment">// Başlangıç değerleri</span>
+    <span class="keyword">for</span> düğüm <span class="keyword">in</span> graf:
+        distance[düğüm] = <span class="number">∞</span>
+        parent[düğüm] = <span class="keyword">null</span>
+    
+    distance[kaynak] = <span class="number">0</span>
+    priorityQueue.<span class="function">insert</span>((kaynak, <span class="number">0</span>))
+    
+    <span class="keyword">while</span> priorityQueue <span class="keyword">is not empty</span>:
+        (düğüm, dist) = priorityQueue.<span class="function">extractMin</span>()
+        
+        <span class="keyword">if</span> düğüm <span class="keyword">in</span> visited:
+            <span class="keyword">continue</span>
+        
+        visited.<span class="function">add</span>(düğüm)
+        
+        <span class="keyword">for</span> (komşu, ağırlık) <span class="keyword">in</span> graf[düğüm]:
+            newDistance = distance[düğüm] + ağırlık
+            
+            <span class="keyword">if</span> newDistance < distance[komşu]:
+                distance[komşu] = newDistance
+                parent[komşu] = düğüm
+                priorityQueue.<span class="function">insert</span>((komşu, newDistance))
+    
+    <span class="keyword">return</span> distance, parent</code></pre>
+                    </div>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Binary Heap ile:</strong> O((V + E) log V)<br>
+                            <strong>Fibonacci Heap ile:</strong> O(E + V log V)<br>
+                            <strong>Basit dizi ile:</strong> O(V²)<br>
+                            <strong>Alan Karmaşıklığı:</strong> O(V)
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Optimizasyon İpuçları</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Erken durma:</strong> Hedefe ulaşınca dur<br>
+                            <strong>İki yönlü arama:</strong> Kaynak ve hedeften eş zamanlı<br>
+                            <strong>A* algoritması:</strong> Heuristik fonksiyon ekle<br>
+                            <strong>Potansiyel fonksiyonu:</strong> Johnson algoritması
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Uygulama Örnekleri:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Yol yeniden oluşturma</span>
+<span class="keyword">function</span> <span class="function">getPath</span>(parent, kaynak, hedef):
+    <span class="keyword">if</span> parent[hedef] == <span class="keyword">null</span> <span class="keyword">and</span> hedef != kaynak:
+        <span class="keyword">return</span> <span class="keyword">null</span>  <span class="comment">// Yol yok</span>
+    
+    path = []
+    current = hedef
+    
+    <span class="keyword">while</span> current != <span class="keyword">null</span>:
+        path.<span class="function">prepend</span>(current)
+        current = parent[current]
+    
+    <span class="keyword">return</span> path</code></pre>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Gerçek Dünya Uygulaması:</strong> GPS navigasyon sistemleri, ağ yönlendirme protokolleri (OSPF), oyun AI'ları (pathfinding), sosyal ağ analizi.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MST Section -->
+            <section id="mst" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    Minimum Spanning Tree (MST)
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Minimum Spanning Tree, ağırlıklı bağlantılı bir grafın tüm düğümlerini en az maliyetle birbirine bağlayan ağaç yapısıdır. V düğümlü grafta V-1 kenar içerir ve döngü barındırmaz.
+                    </p>
+                    
+                    <div class="formula">
+                        MST Özellikleri: |V| düğüm, |V|-1 kenar, döngüsüz, bağlantılı
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>MST Uygulamaları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Ağ tasarımı (elektrik, internet, su)</li>
+                                <li>• Kümeleme algoritmalarında</li>
+                                <li>• Devre tasarımında</li>
+                                <li>• Yaklaşık TSP çözümünde</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Kruskal Algoritması:</h3>
+                    
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Tüm kenarları ağırlığa göre artan sırada sırala</li>
+                            <li>En hafif kenardan başlayarak:</li>
+                            <li>Kenar döngü oluşturmuyorsa MST'ye ekle</li>
+                            <li>V-1 kenar seçilene kadar devam et</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">function</span> <span class="function">kruskal</span>(graf):
+    mst = []
+    edges = <span class="function">getAllEdges</span>(graf)
+    edges.<span class="function">sort</span>()  <span class="comment">// Ağırlığa göre sırala</span>
+    
+    unionFind = <span class="keyword">new</span> <span class="function">UnionFind</span>(graf.vertices)
+    
+    <span class="keyword">for</span> (u, v, weight) <span class="keyword">in</span> edges:
+        <span class="keyword">if</span> unionFind.<span class="function">find</span>(u) != unionFind.<span class="function">find</span>(v):
+            mst.<span class="function">append</span>((u, v, weight))
+            unionFind.<span class="function">union</span>(u, v)
+            
+            <span class="keyword">if</span> mst.<span class="function">length</span> == |V| - <span class="number">1</span>:
+                <span class="keyword">break</span>
+    
+    <span class="keyword">return</span> mst</code></pre>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Prim Algoritması:</h3>
+                    
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Rastgele bir düğümle başla</li>
+                            <li>MST'ye bağlı en hafif kenarı seç</li>
+                            <li>Yeni düğümü MST'ye ekle</li>
+                            <li>Tüm düğümler eklenene kadar 2-3 adımlarını tekrarla</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">function</span> <span class="function">prim</span>(graf, start):
+    mst = []
+    visited = <span class="keyword">new</span> <span class="function">Set</span>([start])
+    priorityQueue = <span class="keyword">new</span> <span class="function">MinHeap</span>()
+    
+    <span class="comment">// Başlangıç düğümünün kenarlarını ekle</span>
+    <span class="keyword">for</span> (neighbor, weight) <span class="keyword">in</span> graf[start]:
+        priorityQueue.<span class="function">insert</span>((weight, start, neighbor))
+    
+    <span class="keyword">while</span> priorityQueue <span class="keyword">is not empty</span> <span class="keyword">and</span> visited.<span class="function">size</span> < |V|:
+        (weight, u, v) = priorityQueue.<span class="function">extractMin</span>()
+        
+        <span class="keyword">if</span> v <span class="keyword">in</span> visited:
+            <span class="keyword">continue</span>
+        
+        mst.<span class="function">append</span>((u, v, weight))
+        visited.<span class="function">add</span>(v)
+        
+        <span class="keyword">for</span> (neighbor, edgeWeight) <span class="keyword">in</span> graf[v]:
+            <span class="keyword">if</span> neighbor <span class="keyword">not in</span> visited:
+                priorityQueue.<span class="function">insert</span>((edgeWeight, v, neighbor))
+    
+    <span class="keyword">return</span> mst</code></pre>
+                    </div>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Kruskal:</strong> O(E log E) - sıralama dominates<br>
+                            <strong>Prim (Binary Heap):</strong> O((V + E) log V)<br>
+                            <strong>Prim (Fibonacci Heap):</strong> O(E + V log V)<br>
+                            <strong>Alan:</strong> Her ikisi de O(V)
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-balance-scale note-card-icon"></i>
+                            <span class="note-card-title">Kruskal vs Prim</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Kruskal:</strong> Seyrek graflar için ideal, kenar odaklı<br>
+                            <strong>Prim:</strong> Yoğun graflar için ideal, düğüm odaklı<br>
+                            <strong>Her ikisi de:</strong> Optimal sonuç garanti eder
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Topolojik Sıralama Section -->
+            <section id="topological-sort" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-sort-amount-down"></i>
+                    Topolojik Sıralama
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Topolojik sıralama, yönlü asiklik graflarda (DAG) düğümlerin, her kenar (u,v) için u'nun v'den önce geldiği doğrusal bir sıralamasıdır. Öncelik bağımlılıklarının çözümünde kritiktir.
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Topolojik Sıralama Uygulamaları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Proje görev sıralaması</li>
+                                <li>• Ders önkoşul sistemi</li>
+                                <li>• Makefile bağımlılıkları</li>
+                                <li>• Spreadsheet formül hesaplama</li>
+                                <li>• İş akışı yönetimi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Kahn Algoritması (BFS Tabanlı):</h3>
+                    
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Her düğümün gelen derece sayısını hesapla</li>
+                            <li>Gelen derecesi 0 olan düğümleri kuyruğa ekle</li>
+                            <li>Kuyruktan düğüm çıkar ve sonuca ekle</li>
+                            <li>Bu düğümün komşularının gelen derecelerini azalt</li>
+                            <li>Gelen derecesi 0 olanları kuyruğa ekle</li>
+                            <li>Kuyruk boşalana kadar 3-5 adımlarını tekrarla</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">function</span> <span class="function">topologicalSort</span>(graf):
+    inDegree = {}
+    result = []
+    queue = <span class="keyword">new</span> <span class="function">Queue</span>()
+    
+    <span class="comment">// Gelen dereceleri hesapla</span>
+    <span class="keyword">for</span> düğüm <span class="keyword">in</span> graf:
+        inDegree[düğüm] = <span class="number">0</span>
+    
+    <span class="keyword">for</span> düğüm <span class="keyword">in</span> graf:
+        <span class="keyword">for</span> komşu <span class="keyword">in</span> graf[düğüm]:
+            inDegree[komşu]++
+    
+    <span class="comment">// Gelen derecesi 0 olanları bul</span>
+    <span class="keyword">for</span> düğüm <span class="keyword">in</span> graf:
+        <span class="keyword">if</span> inDegree[düğüm] == <span class="number">0</span>:
+            queue.<span class="function">enqueue</span>(düğüm)
+    
+    <span class="keyword">while</span> queue <span class="keyword">is not empty</span>:
+        düğüm = queue.<span class="function">dequeue</span>()
+        result.<span class="function">append</span>(düğüm)
+        
+        <span class="keyword">for</span> komşu <span class="keyword">in</span> graf[düğüm]:
+            inDegree[komşu]--
+            <span class="keyword">if</span> inDegree[komşu] == <span class="number">0</span>:
+                queue.<span class="function">enqueue</span>(komşu)
+    
+    <span class="keyword">if</span> result.<span class="function">length</span> != |V|:
+        <span class="keyword">return</span> <span class="keyword">null</span>  <span class="comment">// Döngü var</span>
+    
+    <span class="keyword">return</span> result</code></pre>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">DFS Tabanlı Yaklaşım:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="keyword">function</span> <span class="function">topologicalSortDFS</span>(graf):
+    visited = <span class="keyword">new</span> <span class="function">Set</span>()
+    stack = []
+    
+    <span class="keyword">for</span> düğüm <span class="keyword">in</span> graf:
+        <span class="keyword">if</span> düğüm <span class="keyword">not in</span> visited:
+            <span class="function">dfsVisit</span>(graf, düğüm, visited, stack)
+    
+    <span class="keyword">return</span> stack.<span class="function">reverse</span>()
+
+<span class="keyword">function</span> <span class="function">dfsVisit</span>(graf, düğüm, visited, stack):
+    visited.<span class="function">add</span>(düğüm)
+    
+    <span class="keyword">for</span> komşu <span class="keyword">in</span> graf[düğüm]:
+        <span class="keyword">if</span> komşu <span class="keyword">not in</span> visited:
+            <span class="function">dfsVisit</span>(graf, komşu, visited, stack)
+    
+    stack.<span class="function">append</span>(düğüm)  <span class="comment">// Bitirme sırasına göre</span></code></pre>
+                    </div>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Kahn Algoritması:</strong> O(V + E)<br>
+                            <strong>DFS Tabanlı:</strong> O(V + E)<br>
+                            <strong>Alan Karmaşıklığı:</strong> O(V)<br>
+                            <strong>Döngü Tespiti:</strong> Her ikisi de destekler
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Önemli:</strong> Topolojik sıralama sadece DAG'larda (Directed Acyclic Graph) mümkündür. Döngü varsa sıralama yapılamaz.
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-project-diagram note-card-icon"></i>
+                            <span class="note-card-title">Praktik Örnek</span>
+                        </div>
+                        <div class="note-card-content">
+                            Üniversite ders sistemi: "Algoritma" dersi için "Veri Yapıları" ön koşuldur. "Veri Yapıları" için de "Programlama" ön koşuldur. Topolojik sıralama: Programlama → Veri Yapıları → Algoritma
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Uygulama Alanları Section -->
+            <section id="uygulama-alanlari" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-globe"></i>
+                    Graf Teorisinin Uygulama Alanları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Graf teorisi, modern teknoloji ve bilimin birçok alanında temel bir araçtır. Sosyal ağlardan biyoinformatiğe, ulaştırmadan yapay zekaya kadar geniş bir yelpazede kullanılır.
+                    </p>
+                    
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Bilgisayar Ağları:</h3>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Ağ Protokolleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>OSPF:</strong> En kısa yol yönlendirme</li>
+                                <li>• <strong>BGP:</strong> İnternet omurga yönlendirme</li>
+                                <li>• <strong>STP:</strong> Köprü döngü önleme</li>
+                                <li>• <strong>Load Balancing:</strong> Trafik dağıtımı</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Sosyal Ağ Analizi:</h3>
+                    
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-users note-card-icon"></i>
+                            <span class="note-card-title">Sosyal Ağ Metrikleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Derece Merkeziliği:</strong> Bağlantı sayısı<br>
+                            <strong>Betweenness:</strong> Köprü rolü<br>
+                            <strong>Closeness:</strong> Diğerlerine yakınlık<br>
+                            <strong>PageRank:</strong> Önem puanı
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Biyoinformatik:</h3>
+                    
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Protein Etkileşim Ağları:</strong> Protein-protein etkileşimlerinin modellenmesi<br>
+                            <strong>Gen Düzenleme Ağları:</strong> Gen ekspresyon kontrolü<br>
+                            <strong>Metabolik Yolaklar:</strong> Biyokimyasal reaksiyon zincirleri<br>
+                            <strong>Filogenetik Ağaçlar:</strong> Evrimsel ilişkiler
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Oyun ve AI:</h3>
+                    
+                    <div class="code-block">
+                        <pre><code><span class="comment">// Oyun haritasında pathfinding</span>
+<span class="keyword">function</span> <span class="function">gamePathfinding</span>(harita, başlangıç, hedef):
+    <span class="comment">// A* algoritması ile heuristik arama</span>
+    openSet = <span class="keyword">new</span> <span class="function">PriorityQueue</span>()
+    closedSet = <span class="keyword">new</span> <span class="function">Set</span>()
+    
+    gScore = {başlangıç: <span class="number">0</span>}
+    fScore = {başlangıç: <span class="function">heuristic</span>(başlangıç, hedef)}
+    
+    openSet.<span class="function">enqueue</span>((fScore[başlangıç], başlangıç))
+    
+    <span class="keyword">while</span> openSet <span class="keyword">is not empty</span>:
+        current = openSet.<span class="function">dequeue</span>().<span class="function">second</span>
+        
+        <span class="keyword">if</span> current == hedef:
+            <span class="keyword">return</span> <span class="function">reconstructPath</span>(current)
+        
+        closedSet.<span class="function">add</span>(current)
+        
+        <span class="keyword">for</span> komşu <span class="keyword">in</span> <span class="function">getNeighbors</span>(current):
+            <span class="keyword">if</span> komşu <span class="keyword">in</span> closedSet:
+                <span class="keyword">continue</span>
+            
+            tentativeG = gScore[current] + <span class="function">distance</span>(current, komşu)
+            
+            <span class="keyword">if</span> tentativeG < gScore.<span class="function">get</span>(komşu, <span class="number">∞</span>):
+                gScore[komşu] = tentativeG
+                fScore[komşu] = tentativeG + <span class="function">heuristic</span>(komşu, hedef)
+                openSet.<span class="function">enqueue</span>((fScore[komşu], komşu))</code></pre>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Makine Öğrenmesi:</h3>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Graf Neural Networks (GNN):</strong><br>
+                            • <strong>GraphSAGE:</strong> Büyük graflar için örnekleme<br>
+                            • <strong>GCN:</strong> Graf konvolüsyonel ağlar<br>
+                            • <strong>GraphTransformer:</strong> Attention mekanizması<br>
+                            • <strong>Knowledge Graphs:</strong> Bilgi representation
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Finansal Sistemler:</h3>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Risk Analizi ve Fraud Detection:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Transaction Networks:</strong> Şüpheli para transferleri</li>
+                                <li>• <strong>Credit Risk:</strong> Borç verme ağları</li>
+                                <li>• <strong>Market Analysis:</strong> Şirket ilişki ağları</li>
+                                <li>• <strong>Algorithmic Trading:</strong> Piyasa korelasyonları</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Ulaştırma ve Lojistik:</h3>
+                    
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Araç Rotalama Problemi (VRP):</strong> Çoklu araç optimizasyonu<br>
+                            <strong>Kapasiteli Ağ Tasarımı:</strong> Trafik akış optimizasyonu<br>
+                            <strong>Hub Location:</strong> Merkez lokasyon seçimi<br>
+                            <strong>Last Mile Delivery:</strong> Son kilometre dağıtım
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-truck note-card-icon"></i>
+                            <span class="note-card-title">Gerçek Dünya Örneği</span>
+                        </div>
+                        <div class="note-card-content">
+                            Amazon'un dağıtım ağı, Uber'in sürücü-yolcu eşleştirmesi, Google Maps'in rota optimizasyonu - hepsi graf teorisi algoritmalarına dayanır.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Gelecek Trendler:</h3>
+                    
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Emerging Areas:</strong><br>
+                            • <strong>Quantum Graphs:</strong> Kuantum hesaplama uygulamaları<br>
+                            • <strong>Dynamic Graphs:</strong> Zamanla değişen ağlar<br>
+                            • <strong>Multilayer Networks:</strong> Çok katmanlı graf analizi<br>
+                            • <strong>Graph Databases:</strong> Neo4j, Amazon Neptune
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- İleri Düzey Konular Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-rocket"></i>
+                    İleri Düzey Graf Algoritmaları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Graf teorisinin daha karmaşık problemleri için geliştirilmiş algoritmalar ve teknikler.
+                    </p>
+
+                    <div class="complexity-box">
+                        <div class="complexity-box-content">
+                            <strong>Network Flow:</strong><br>
+                            • <strong>Max Flow Min Cut:</strong> Ford-Fulkerson, Edmonds-Karp<br>
+                            • <strong>Min Cost Flow:</strong> Maliyet optimizasyonu<br>
+                            • <strong>Multi-commodity Flow:</strong> Çoklu kaynak-hedef<br><br>
+                            <strong>Matching Problems:</strong><br>
+                            • <strong>Maximum Bipartite Matching:</strong> Hungarian algoritması<br>
+                            • <strong>Stable Marriage:</strong> Gale-Shapley<br>
+                            • <strong>Maximum Weight Matching:</strong> Blossom algoritması
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Karmaşıklık Sınıfları:</strong><br>
+                            • <strong>P:</strong> Polinom zamanda çözülebilir<br>
+                            • <strong>NP:</strong> Non-deterministic polinom<br>
+                            • <strong>NP-Complete:</strong> Hamilton Path, TSP<br>
+                            • <strong>NP-Hard:</strong> Approximation algoritmaları gerekli
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performans ve Optimizasyon Section -->
+            <section class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Performans Optimizasyonu ve Pratik İpuçları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Büyük ölçekli graf problemlerinde performans kritiktir. Doğru veri yapısı ve algoritma seçimi önemlidir.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Büyük Graf Optimizasyonları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Parallelization:</strong> Multi-threading, GPU</li>
+                                <li>• <strong>Approximation:</strong> Heuristic yaklaşımlar</li>
+                                <li>• <strong>Sampling:</strong> Monte Carlo yöntemleri</li>
+                                <li>• <strong>Preprocessing:</strong> Graf sıkıştırma</li>
+                                <li>• <strong>Caching:</strong> Sonuç önbellekleme</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-memory note-card-icon"></i>
+                            <span class="note-card-title">Bellek Yönetimi</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Büyük graflar için:</strong><br>
+                            • Komşuluk listesi kullanın (seyrek graflar)<br>
+                            • Bit manipulation (boolean operasyonlar)<br>
+                            • Streaming algorithms (sınırlı bellek)<br>
+                            • External memory algorithms (disk tabanlı)
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Yaygın Hatalar:</strong><br>
+                            • Yanlış veri yapısı seçimi<br>
+                            • Gereksiz graf kopyalama<br>
+                            • Etkisiz döngü tespiti<br>
+                            • Bellek sızıntıları (memory leaks)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(138, 43, 226, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Graf Teorisi Yolculuğunuz Başlasın!
+                </h2>
+                <div class="section-content">
+                    <p style="margin-bottom: 30px;">
+                        Graf teorisi, modern bilgisayar biliminin temel taşlarından biridir. Bu kapsamlı rehberle algoritmaları anladınız, uygulamaları keşfettiniz.
+                    </p>
+
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">Öğrenmeyi Sürdürme Tavsiyeleri</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Pratik yapın:</strong> LeetCode, HackerRank graf problemleri çözün<br>
+                            <strong>Projeler geliştirin:</strong> Sosyal ağ analizi, pathfinding oyunu<br>
+                            <strong>Kütüphaneler öğrenin:</strong> NetworkX (Python), JGraphT (Java)<br>
+                            <strong>İleri konular:</strong> Graph Neural Networks, Quantum graphs<br>
+                            <strong>Topluluk:</strong> Akademik makaleler, konferanslar takip edin
+                        </div>
+                    </div>
+
+                    <div class="complexity-box" style="margin-top: 30px; text-align: left;">
+                        <div class="complexity-box-content">
+                            <strong>Önemli Kaynaklar:</strong><br>
+                            • <strong>Kitaplar:</strong> "Introduction to Algorithms" (CLRS)<br>
+                            • <strong>Online:</strong> Coursera Graph Theory courses<br>
+                            • <strong>Visualizer:</strong> Graph Online, D3.js<br>
+                            • <strong>Implementasyon:</strong> GitHub graph algorithm repos
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 40px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-project-diagram"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            "Bağlantıların gücünü keşfedin!" 🚀
+                        </p>
+                        <p style="margin-top: 15px; color: var(--text-black700); font-size: 14px;">
+                            Graf teorisi ile problemleri çözme yetkiniz artık gelişti. Algoritmaları uygulayın, ağları analiz edin!
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Graph Node Animation
+        const nodes = document.querySelectorAll('.node');
+        nodes.forEach((node, index) => {
+            node.addEventListener('mouseenter', () => {
+                node.style.transform = 'scale(1.2)';
+                node.style.boxShadow = '0 0 20px rgba(233, 30, 99, 0.8)';
+            });
+            
+            node.addEventListener('mouseleave', () => {
+                node.style.transform = 'scale(1.0)';
+                node.style.boxShadow = '0 0 10px rgba(233, 30, 99, 0.5)';
+            });
+        });
+
+        // Console Easter Egg
+        console.log('%c🔗 Graf Teorisi Portal', 'color: #8a2be2; font-size: 20px; font-weight: bold;');
+        console.log('%c> Graph algorithms loaded', 'color: #8a2be2; font-family: monospace;');
+        console.log('%c> Visualization engine active', 'color: #8a2be2; font-family: monospace;');
+        console.log('%c> Enhanced learning features initialized', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> G = (V, E) // Ready for exploration!', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(138, 43, 226, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Interactive Algorithm Demo
+        function demonstrateAlgorithm(algorithmType) {
+            console.log(`Demonstrating ${algorithmType} algorithm...`);
+            // Bu fonksiyon gelecekteki interaktif demo özelliği için hazır
+        }
+
+        // Graph complexity calculator
+        function calculateComplexity(vertices, edges, algorithm) {
+            const complexities = {
+                'dfs': `O(${vertices} + ${edges})`,
+                'bfs': `O(${vertices} + ${edges})`,
+                'dijkstra': `O((${vertices} + ${edges}) log ${vertices})`,
+                'kruskal': `O(${edges} log ${edges})`,
+                'prim': `O((${vertices} + ${edges}) log ${vertices})`
+            };
+            return complexities[algorithm] || 'Algorithm not found';
+        }
+
+        // Performance monitor for large graphs
+        const performanceMonitor = {
+            startTime: null,
+            
+            start() {
+                this.startTime = performance.now();
+                console.log('🚀 Algorithm execution started...');
+            },
+            
+            end(algorithmName) {
+                if (this.startTime) {
+                    const duration = performance.now() - this.startTime;
+                    console.log(`⏱️ ${algorithmName} completed in ${duration.toFixed(2)}ms`);
+                    this.startTime = null;
+                }
+            }
+        };
+
+        // Export performance monitor for external use
+        window.graphPerformance = performanceMonitor;
+    </script>
+</body>
+</html>

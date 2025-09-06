@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!--
+      Copyright © 2025 Burak Demiröz
+      All Rights Reserved. This page and its contents may not be copied,
+      distributed, or used without explicit written permission.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olasılık | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon/mathfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon/mathfavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors - Mathematics */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(255, 215, 0, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #ffd700;
+            --skin-color-hover: #ffed4e;
+            --neon-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            --text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 215, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-infinity {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--text-black700);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--skin-color);
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--skin-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 215, 0, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(255, 215, 0, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(255, 215, 0, 0.1);
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-infinity {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+            animation: rotate 8s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-black700);
+            line-height: 1.8;
+        }
+        
+        .hero-formula {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-formula::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* Formula Blocks */
+        .formula-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            color: var(--skin-color);
+        }
+        
+        .formula-block::before {
+            content: 'Formula';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        /* Example Blocks */
+        .example-block {
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text-black900);
+        }
+        
+        .example-block::before {
+            content: '> Örnek:';
+            display: block;
+            font-size: 12px;
+            color: var(--skin-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .note-card-content {
+            color: var(--text-black700);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Calculator Style */
+        .calculator {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .calc-input {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--skin-color);
+            border-radius: 5px;
+            padding: 10px;
+            color: var(--text-black900);
+            margin: 5px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .calc-button {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .calc-button:hover {
+            background: var(--skin-color-hover);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: var(--skin-color);
+            color: var(--bg-black900);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+        }
+
+        /* Dice Animation */
+        .dice {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--skin-color);
+            border-radius: 8px;
+            margin: 10px;
+            position: relative;
+            animation: roll 2s infinite;
+        }
+
+        @keyframes roll {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            50% { transform: rotateX(180deg) rotateY(180deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* Probability Tree */
+        .prob-tree {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 2;
+            color: var(--skin-color);
+            background: rgba(10, 10, 10, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-infinity"></i>
+                <span>Olasılık</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">İçerik</div>
+        <ul class="sidebar-menu">
+            <li><a href="#olasilik-nedir" class="active">Olasılık Nedir?</a></li>
+            <li><a href="#temel-kavramlar">Temel Kavramlar</a></li>
+            <li><a href="#olasilik-kurallari">Olasılık Kuralları</a></li>
+            <li><a href="#kombinatorik">Kombinatorik</a></li>
+            <li><a href="#kosullu-olasilik">Koşullu Olasılık</a></li>
+            <li><a href="#bayes-teoremi">Bayes Teoremi</a></li>
+            <li><a href="#dagilimlar">Olasılık Dağılımları</a></li>
+            <li><a href="#ornekler">Pratik Örnekler</a></li>
+            <li><a href="#hesaplayici">Olasılık Hesaplayıcı</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-infinity"></i>
+                    Olasılık
+                </h1>
+                <p class="hero-subtitle">
+                    Belirsizliğin matematiği ve şansın bilimiyle tanışın
+                </p>
+                <div class="hero-formula">
+                    P(A) = n(A) / n(S)
+                </div>
+            </section>
+
+            <!-- Olasılık Nedir Section -->
+            <section id="olasilik-nedir" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    Olasılık Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Olasılık</strong>, bir olayın gerçekleşme şansını sayısal olarak ifade eden matematik dalıdır. 
+                        0 ile 1 arasında bir değer alır ve belirsizliği ölçmenin matematiksel yoludur.
+                    </p>
+                    
+                    <div class="formula-block">
+                        P(A) = Olumlu Sonuç Sayısı / Toplam Mümkün Sonuç Sayısı
+                    </div>
+
+                    <div class="example-block">
+                        Bir zarın 6 gelme olasılığı: P(6) = 1/6 ≈ 0.167
+                        <br>Çünkü: 1 olumlu sonuç (6 gelmesi) / 6 toplam sonuç
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Olasılık Değerleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• P = 0: Olay kesinlikle gerçekleşmez</li>
+                                <li>• P = 0.5: Olay %50 şansla gerçekleşir</li>
+                                <li>• P = 1: Olay kesinlikle gerçekleşir</li>
+                                <li>• P = 0.25: Olay %25 şansla gerçekleşir</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-history note-card-icon"></i>
+                            <span class="note-card-title">Tarihçe</span>
+                        </div>
+                        <div class="note-card-content">
+                            Olasılık teorisi 17. yüzyılda Blaise Pascal ve Pierre de Fermat'ın kumar problemleri üzerine 
+                            yaptıkları çalışmalarla başlamıştır. Günümüzde finans, mühendislik, tıp ve teknolojide yaygın kullanılır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Temel Kavramlar Section -->
+            <section id="temel-kavramlar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cube"></i>
+                    Temel Kavramlar
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Olasılık teorisini anlamak için bazı temel kavramları bilmemiz gerekir:
+                    </p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel Tanımlar:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Deney:</strong> Sonucu belirsiz olan işlem</li>
+                                <li><strong>Örnek Uzay (S):</strong> Tüm mümkün sonuçların kümesi</li>
+                                <li><strong>Olay (A, B, C...):</strong> Örnek uzayın alt kümesi</li>
+                                <li><strong>Basit Olay:</strong> Tek sonuçlu olay</li>
+                                <li><strong>Bileşik Olay:</strong> Birden fazla sonuçlu olay</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        Zar Atma Deneyi:
+                        <br>• Deney: Bir zar atmak
+                        <br>• Örnek Uzay: S = {1, 2, 3, 4, 5, 6}
+                        <br>• Basit Olay: A = {3} (3 gelmesi)
+                        <br>• Bileşik Olay: B = {2, 4, 6} (çift sayı gelmesi)
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-coins note-card-icon"></i>
+                            <span class="note-card-title">Yazı-Tura Örneği</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Deney:</strong> Madeni para atma<br>
+                            <strong>Örnek Uzay:</strong> S = {Yazı, Tura}<br>
+                            <strong>P(Yazı) = P(Tura) = 1/2 = 0.5</strong>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Hatırlatma:</strong> Tüm olasılıkların toplamı her zaman 1'e eşittir.
+                            <br>P(A₁) + P(A₂) + ... + P(Aₙ) = 1
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Olasılık Kuralları Section -->
+            <section id="olasilik-kurallari" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-balance-scale"></i>
+                    Olasılık Kuralları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Olasılık hesaplamalarında kullanılan temel kurallar:
+                    </p>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">1. Toplama Kuralı</h3>
+                    
+                    <div class="formula-block">
+                        P(A ∪ B) = P(A) + P(B) - P(A ∩ B)
+                    </div>
+
+                    <div class="example-block">
+                        Bir öğrencinin matematik (M) veya fizik (F) sınavından geçme olasılığı:
+                        <br>P(M) = 0.7, P(F) = 0.6, P(M ∩ F) = 0.4
+                        <br>P(M ∪ F) = 0.7 + 0.6 - 0.4 = 0.9
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">2. Çarpma Kuralı</h3>
+                    
+                    <div class="formula-block">
+                        P(A ∩ B) = P(A) × P(B|A) = P(B) × P(A|B)
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-link note-card-icon"></i>
+                            <span class="note-card-title">Bağımsız Olaylar</span>
+                        </div>
+                        <div class="note-card-content">
+                            Eğer A ve B bağımsızsa: P(A ∩ B) = P(A) × P(B)
+                            <br>Örnek: İki zar atımında sonuçlar birbirinden bağımsızdır.
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">3. Tamamlayıcı Olay Kuralı</h3>
+                    
+                    <div class="formula-block">
+                        P(A') = 1 - P(A)
+                    </div>
+
+                    <div class="example-block">
+                        Yağmur yağma olasılığı 0.3 ise, yağmur yağmama olasılığı:
+                        <br>P(Yağmur Yok) = 1 - 0.3 = 0.7
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Ayrık (Mutually Exclusive) olaylarda P(A ∩ B) = 0 olduğu için
+                            P(A ∪ B) = P(A) + P(B) şeklinde basitleşir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kombinatorik Section -->
+            <section id="kombinatorik" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-layer-group"></i>
+                    Kombinatorik
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Kombinatorik, sayma işlemlerini sistematik hale getiren matematik dalıdır ve olasılık hesaplamalarında kritik rol oynar.
+                    </p>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Permütasyon (Sıralı Seçim)</h3>
+                    
+                    <div class="formula-block">
+                        P(n,r) = n! / (n-r)!
+                    </div>
+
+                    <div class="example-block">
+                        5 kişiden 3'ünün sıralaması kaç şekilde yapılabilir?
+                        <br>P(5,3) = 5! / (5-3)! = 5! / 2! = 120 / 2 = 60
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">Kombinasyon (Sırasız Seçim)</h3>
+                    
+                    <div class="formula-block">
+                        C(n,r) = n! / (r!(n-r)!)
+                    </div>
+
+                    <div class="example-block">
+                        10 kişiden 4'ünün seçilmesi kaç şekilde yapılabilir?
+                        <br>C(10,4) = 10! / (4! × 6!) = 3628800 / (24 × 720) = 210
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Ne Zaman Hangi Formül?</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Permütasyon:</strong> Sıra önemli (1. 2. 3. farklı)<br>
+                            <strong>Kombinasyon:</strong> Sıra önemsiz (ABC = BAC = CAB)
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Faktöriyel (n!):</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>0! = 1 (tanım gereği)</li>
+                                <li>1! = 1</li>
+                                <li>2! = 2 × 1 = 2</li>
+                                <li>3! = 3 × 2 × 1 = 6</li>
+                                <li>4! = 4 × 3 × 2 × 1 = 24</li>
+                                <li>5! = 5 × 4 × 3 × 2 × 1 = 120</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Koşullu Olasılık Section -->
+            <section id="kosullu-olasilik" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-filter"></i>
+                    Koşullu Olasılık
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Koşullu olasılık, bir olayın gerçekleşme olasılığının başka bir olayın gerçekleştiği bilgisi ışığında hesaplanmasıdır.
+                    </p>
+                    
+                    <div class="formula-block">
+                        P(A|B) = P(A ∩ B) / P(B)
+                    </div>
+
+                    <p>Bu formül "B olayı gerçekleştiği bilindiğinde A olayının gerçekleşme olasılığı" anlamına gelir.</p>
+
+                    <div class="example-block">
+                        Bir sınıfta 30 öğrenci var. 18'i kız, 12'si erkek.
+                        <br>Kızların 12'si, erkeklerin 8'i matematik seviyorsa:
+                        <br>• Rastgele seçilen bir öğrencinin kız olduğu bilindiğinde matematik sevme olasılığı:
+                        <br>P(Mat Seviyor | Kız) = 12/18 = 2/3 ≈ 0.67
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-tree note-card-icon"></i>
+                            <span class="note-card-title">Olasılık Ağacı Diyagramı</span>
+                        </div>
+                        <div class="note-card-content">
+                            Koşullu olasılıkları görselleştirmek için ağaç diyagramları kullanılır. 
+                            Her dal bir olayı, dalların sonundaki değerler olasılıkları gösterir.
+                        </div>
+                    </div>
+
+                    <div class="prob-tree">
+                        Hastalık Testi Örneği:
+                        <br>├─ Hasta (0.01)
+                        <br>│  ├─ Test Pozitif (0.95) → P = 0.01 × 0.95 = 0.0095
+                        <br>│  └─ Test Negatif (0.05) → P = 0.01 × 0.05 = 0.0005
+                        <br>└─ Sağlam (0.99)
+                        <br>   ├─ Test Pozitif (0.02) → P = 0.99 × 0.02 = 0.0198
+                        <br>   └─ Test Negatif (0.98) → P = 0.99 × 0.98 = 0.9702
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Yaygın Hata:</strong> P(A|B) ≠ P(B|A) olduğunu unutmayın! 
+                            <br>Örnek: P(Hasta|Test Pozitif) ≠ P(Test Pozitif|Hasta)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bayes Teoremi Section -->
+            <section id="bayes-teoremi" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-exchange-alt"></i>
+                    Bayes Teoremi
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Bayes Teoremi, koşullu olasılıkları "tersine çevirmeye" yarayan güçlü bir araçtır. 
+                        Makine öğrenmesi, tıbbi teşhis ve istatistiksel çıkarımda yaygın kullanılır.
+                    </p>
+                    
+                    <div class="formula-block">
+                        P(A|B) = P(B|A) × P(A) / P(B)
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Bayes Teoremi Bileşenleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>P(A|B):</strong> Sonsal olasılık (posterior)</li>
+                                <li><strong>P(B|A):</strong> Olabilirlik (likelihood)</li>
+                                <li><strong>P(A):</strong> Önsel olasılık (prior)</li>
+                                <li><strong>P(B):</strong> Kanıt olasılığı (evidence)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="example-block">
+                        Spam E-posta Filtresi Örneği:
+                        <br>• P(Spam) = 0.3 (e-postaların %30'u spam)
+                        <br>• P("Bedava"|Spam) = 0.8 (spam'ların %80'inde "bedava" kelimesi var)
+                        <br>• P("Bedava"|Normal) = 0.05 (normal e-postaların %5'inde var)
+                        <br><br>P("Bedava") = 0.8 × 0.3 + 0.05 × 0.7 = 0.24 + 0.035 = 0.275
+                        <br><br>P(Spam|"Bedava") = (0.8 × 0.3) / 0.275 ≈ 0.87 (87%)
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Gerçek Hayat Uygulamaları:</strong>
+                            <br>• Tıbbi tanılar (test sonuçlarına göre hastalık olasılığı)
+                            <br>• Spam filtreleme (kelime bazlı sınıflandırma)
+                            <br>• Finansal risk analizi
+                            <br>• Yapay zeka ve makine öğrenmesi
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-user-md note-card-icon"></i>
+                            <span class="note-card-title">Tıbbi Test Örneği</span>
+                        </div>
+                        <div class="note-card-content">
+                            Nadir bir hastalık (prevalans %1) için %95 doğru test sonucu alan bir hasta 
+                            için gerçek hastalık olasılığı sadece yaklaşık %32'dir. Bu, yanlış pozitif 
+                            oranının etkisini gösterir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dağılımlar Section -->
+            <section id="dagilimlar" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Olasılık Dağılımları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Olasılık dağılımları, rastgele değişkenlerin alabileceği değerler ve bu değerlerin olasılıklarını tanımlar.
+                    </p>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">1. Bernoulli Dağılımı</h3>
+                    
+                    <div class="formula-block">
+                        P(X = 1) = p, P(X = 0) = 1-p
+                    </div>
+
+                    <div class="example-block">
+                        Yazı-tura atışı: p = 0.5
+                        <br>• Yazı gelirse X = 1, Tura gelirse X = 0
+                        <br>• P(Yazı) = 0.5, P(Tura) = 0.5
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">2. Binom Dağılımı</h3>
+                    
+                    <div class="formula-block">
+                        P(X = k) = C(n,k) × p^k × (1-p)^(n-k)
+                    </div>
+
+                    <div class="example-block">
+                        10 para atışında 7 yazı gelme olasılığı:
+                        <br>P(X = 7) = C(10,7) × (0.5)^7 × (0.5)^3
+                        <br>= 120 × 0.0078125 × 0.125 ≈ 0.117
+                    </div>
+
+                    <h3 style="color: var(--skin-color); margin: 20px 0;">3. Normal Dağılım</h3>
+                    
+                    <div class="formula-block">
+                        f(x) = (1/σ√(2π)) × e^(-(x-μ)²/(2σ²))
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Normal Dağılım Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• Çan şeklinde simetrik dağılım</li>
+                                <li>• μ (mu): ortalama, σ (sigma): standart sapma</li>
+                                <li>• %68'i μ±σ aralığında</li>
+                                <li>• %95'i μ±2σ aralığında</li>
+                                <li>• %99.7'si μ±3σ aralığında</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-ruler note-card-icon"></i>
+                            <span class="note-card-title">Standart Normal Dağılım</span>
+                        </div>
+                        <div class="note-card-content">
+                            μ = 0, σ = 1 olan normal dağılıma standart normal dağılım denir.
+                            <br>Z = (X - μ) / σ dönüşümü ile standartlaştırılır.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pratik Örnekler Section -->
+            <section id="ornekler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    Pratik Örnekler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Günlük hayattan olasılık örnekleri ile konuyu pekiştirelim:
+                    </p>
+
+                    <div class="example-block">
+                        <strong>Örnek 1: Kart Çekme</strong>
+                        <br>52 kartlık desteden:
+                        <br>• Kız çekme olasılığı: P(Kız) = 4/52 = 1/13
+                        <br>• Kırmızı kart çekme: P(Kırmızı) = 26/52 = 1/2
+                        <br>• As veya Kral çekme: P(As ∪ Kral) = 8/52 = 2/13
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek 2: Zar Atma</strong>
+                        <br>İki zar atıldığında:
+                        <br>• Toplamın 7 olma olasılığı: 6/36 = 1/6
+                        <br>• En az birinde 6 gelme: 1 - P(hiçbirinde 6 yok) = 1 - (5/6)² = 11/36
+                        <br>• Çift toplam gelme: 18/36 = 1/2
+                    </div>
+
+                    <div class="example-block">
+                        <strong>Örnek 3: Doğum Günü Paradoksu</strong>
+                        <br>23 kişilik grupta en az 2 kişinin aynı günde doğmuş olma olasılığı:
+                        <br>P ≈ 0.507 (yaklaşık %50.7)
+                        <br>Bu sonuç çoğu kişi için şaşırtıcıdır!
+                    </div>
+
+                    <div class="dice"></div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Sık Yapılan Hatalar:</strong>
+                            <br>• "Sıcak el" yanılgısı: Geçmiş sonuçlar gelecek sonuçları etkilemez
+                            <br>• Kumar yanılgısı: Bağımsız olaylarda geçmiş etkili değildir
+                            <br>• Temel oran ihmal: Nadir olayların yanlış değerlendirilmesi
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>Problem Çözme İpuçları:</strong>
+                            <br>• Önce örnek uzayı belirleyin
+                            <br>• Olayları net tanımlayın
+                            <br>• Bağımsızlık durumunu kontrol edin
+                            <br>• Uygun formülü seçin ve dikkatli hesaplayın
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hesaplayıcı Section -->
+            <section id="hesaplayici" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    Olasılık Hesaplayıcı
+                </h2>
+                <div class="section-content">
+                    <p>Temel olasılık hesaplamalarını yapabileceğiniz basit hesaplayıcılar:</p>
+
+                    <div class="calculator">
+                        <h4>Basit Olasılık Hesaplayıcı</h4>
+                        <div>
+                            <input type="number" id="favorable" class="calc-input" placeholder="Olumlu Sonuç Sayısı" min="0">
+                            <input type="number" id="total" class="calc-input" placeholder="Toplam Sonuç Sayısı" min="1">
+                            <button class="calc-button" onclick="calculateProbability()">Hesapla</button>
+                        </div>
+                        <div id="prob-result" style="margin-top: 15px; color: var(--skin-color); font-weight: bold;"></div>
+                    </div>
+
+                    <div class="calculator">
+                        <h4>Kombinasyon Hesaplayıcı</h4>
+                        <div>
+                            <input type="number" id="n-value" class="calc-input" placeholder="n değeri" min="0">
+                            <input type="number" id="r-value" class="calc-input" placeholder="r değeri" min="0">
+                            <button class="calc-button" onclick="calculateCombination()">C(n,r) Hesapla</button>
+                        </div>
+                        <div id="comb-result" style="margin-top: 15px; color: var(--skin-color); font-weight: bold;"></div>
+                    </div>
+
+                    <div class="calculator">
+                        <h4>Binom Olasılık Hesaplayıcı</h4>
+                        <div>
+                            <input type="number" id="n-trials" class="calc-input" placeholder="Deneme sayısı (n)" min="1">
+                            <input type="number" id="k-success" class="calc-input" placeholder="Başarı sayısı (k)" min="0">
+                            <input type="number" id="p-success" class="calc-input" placeholder="Başarı olasılığı (p)" min="0" max="1" step="0.01">
+                            <button class="calc-button" onclick="calculateBinomial()">Binom Hesapla</button>
+                        </div>
+                        <div id="binom-result" style="margin-top: 15px; color: var(--skin-color); font-weight: bold;"></div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-lightbulb note-card-icon"></i>
+                            <span class="note-card-title">Hesaplayıcı Kullanım İpuçları</span>
+                        </div>
+                        <div class="note-card-content">
+                            • Olasılık değerleri 0 ile 1 arasında olmalıdır<br>
+                            • Kombinasyonda r ≤ n olmalıdır<br>
+                            • Binom dağılımında k ≤ n olmalıdır<br>
+                            • Sonuçları yüzde olarak da düşünebilirsiniz (×100)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Özet Section -->
+            <section class="content-section" style="text-align: center; background: rgba(255, 215, 0, 0.05);">
+                <h2 class="section-title" style="justify-content: center;">
+                    <i class="fas fa-graduation-cap"></i>
+                    Öğrenmeye Devam Et!
+                </h2>
+                <div class="section-content">
+                    <div class="note-card" style="margin-top: 30px; text-align: left;">
+                        <div class="note-card-header">
+                            <i class="fas fa-star note-card-icon"></i>
+                            <span class="note-card-title">İleri Seviye Konular</span>
+                        </div>
+                        <div class="note-card-content">
+                            <strong>Stokastik Süreçler:</strong> Zaman içinde değişen rastgele olaylar<br>
+                            <strong>Markov Zincirleri:</strong> Gelecek sadece şu ana bağlı süreçler<br>
+                            <strong>Monte Carlo Simülasyonu:</strong> Bilgisayar destekli olasılık<br>
+                            <strong>İstatistiksel Çıkarım:</strong> Örneklemden evrene genelleme
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <span style="color: var(--skin-color); font-size: 48px;">
+                            <i class="fas fa-infinity"></i>
+                        </span>
+                        <p style="margin-top: 15px; color: var(--skin-color); font-family: 'JetBrains Mono', monospace;">
+                            P(Başarı | Çalışma) = 1.0
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Menu Item
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Calculator Functions
+        function calculateProbability() {
+            const favorable = document.getElementById('favorable').value;
+            const total = document.getElementById('total').value;
+            
+            if (favorable && total && total > 0 && favorable >= 0 && favorable <= total) {
+                const probability = binomCoeff * Math.pow(p, k) * Math.pow(1 - p, n - k);
+                const percentage = (probability * 100).toFixed(4);
+                document.getElementById('binom-result').innerHTML = 
+                    `P(X = ${k}) = ${probability.toFixed(6)} = ${percentage}%`;
+            } else {
+                document.getElementById('binom-result').innerHTML = 
+                    'Lütfen geçerli değerler girin (0 ≤ k ≤ n ≤ 50, 0 ≤ p ≤ 1)';
+            }
+        }
+
+        // Interactive Note Cards
+        const noteCards = document.querySelectorAll('.note-card');
+        noteCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-2px) scale(1.0)';
+            });
+        });
+
+        // Console Easter Egg
+        console.log('%c∞ Olasılık Öğrenme Portalı', 'color: #ffd700; font-size: 20px; font-weight: bold;');
+        console.log('%c> Probability engine initialized', 'color: #ffd700; font-family: monospace;');
+        console.log('%c> Mathematical functions loaded', 'color: #ffd700; font-family: monospace;');
+        console.log('%c> Interactive calculators activated', 'color: #50fa7b; font-family: monospace;');
+        console.log('%c> P(Success|Learning) = 1.0', 'color: #00ff00; font-family: monospace; font-weight: bold;');
+
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
+        });
+
+        // Add scroll progress CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            html::after {
+                content: '';
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--scroll-progress, 0%);
+                height: 2px;
+                background: linear-gradient(90deg, var(--skin-color), rgba(255, 215, 0, 0.5));
+                z-index: 9999;
+                transition: width 0.1s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Dice animation enhancement
+        const dice = document.querySelector('.dice');
+        if (dice) {
+            dice.addEventListener('click', () => {
+                dice.style.animation = 'none';
+                setTimeout(() => {
+                    dice.style.animation = 'roll 1s ease-in-out';
+                }, 10);
+                
+                // Show random result
+                setTimeout(() => {
+                    const result = Math.floor(Math.random() * 6) + 1;
+                    dice.innerHTML = result;
+                    dice.style.background = 'var(--skin-color)';
+                    dice.style.color = 'var(--bg-black900)';
+                    dice.style.display = 'flex';
+                    dice.style.alignItems = 'center';
+                    dice.style.justifyContent = 'center';
+                    dice.style.fontSize = '20px';
+                    dice.style.fontWeight = 'bold';
+                }, 1000);
+            });
+        }
+
+        // Add keyboard shortcuts for calculators
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                // Calculate probability if inputs are focused
+                if (document.activeElement.id === 'favorable' || document.activeElement.id === 'total') {
+                    calculateProbability();
+                }
+                // Calculate combination if inputs are focused
+                else if (document.activeElement.id === 'n-value' || document.activeElement.id === 'r-value') {
+                    calculateCombination();
+                }
+                // Calculate binomial if inputs are focused
+                else if (document.activeElement.id === 'n-trials' || 
+                         document.activeElement.id === 'k-success' || 
+                         document.activeElement.id === 'p-success') {
+                    calculateBinomial();
+                }
+            }
+        });
+
+        // Input validation and real-time feedback
+        const inputs = document.querySelectorAll('.calc-input');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.value < 0) {
+                    input.style.borderColor = 'var(--error-color)';
+                } else {
+                    input.style.borderColor = 'var(--skin-color)';
+                }
+            });
+        });
+
+        // Add helpful tooltips
+        const buttons = document.querySelectorAll('.calc-button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                button.title = 'Ctrl + Enter ile de hesaplayabilirsiniz';
+            });
+        });
+
+        // Generate random probability examples
+        function generateRandomExample() {
+            const examples = [
+                "Zar atımında 6 gelme olasılığı: 1/6 ≈ 0.167",
+                "Yazı-tura'da yazı gelme olasılığı: 1/2 = 0.5",
+                "52 karttan as çekme olasılığı: 4/52 ≈ 0.077",
+                "Lotoda büyük ikramiye kazanma: ~1/14,000,000",
+                "Doğum günü aynı olan 2 kişi (23 kişide): ~0.507"
+            ];
+            
+            return examples[Math.floor(Math.random() * examples.length)];
+        }
+
+        // Show random example every 30 seconds
+        setInterval(() => {
+            const exampleDiv = document.createElement('div');
+            exampleDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(255, 215, 0, 0.9);
+                color: var(--bg-black900);
+                padding: 15px;
+                border-radius: 8px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 12px;
+                z-index: 1001;
+                animation: slideIn 0.5s ease;
+                max-width: 300px;
+            `;
+            
+            exampleDiv.innerHTML = `<strong>💡 İpucu:</strong><br>${generateRandomExample()}`;
+            document.body.appendChild(exampleDiv);
+            
+            setTimeout(() => {
+                exampleDiv.style.animation = 'slideOut 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(exampleDiv);
+                }, 500);
+            }, 5000);
+        }, 30000);
+
+        // Add CSS for tip animations
+        const tipStyle = document.createElement('style');
+        tipStyle.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(tipStyle);
+    </script>
+</body>
+</html> = favorable / total;
+                const percentage = (probability * 100).toFixed(2);
+                document.getElementById('prob-result').innerHTML = 
+                    `P = ${probability.toFixed(4)} = ${percentage}%`;
+            } else {
+                document.getElementById('prob-result').innerHTML = 
+                    'Lütfen geçerli değerler girin (0 ≤ olumlu ≤ toplam)';
+            }
+        }
+
+        function factorial(n) {
+            if (n === 0 || n === 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        function combination(n, r) {
+            if (r > n || r < 0 || n < 0) return 0;
+            return factorial(n) / (factorial(r) * factorial(n - r));
+        }
+
+        function calculateCombination() {
+            const n = parseInt(document.getElementById('n-value').value);
+            const r = parseInt(document.getElementById('r-value').value);
+            
+            if (n >= 0 && r >= 0 && r <= n && n <= 20) { // Limit to prevent overflow
+                const result = combination(n, r);
+                document.getElementById('comb-result').innerHTML = 
+                    `C(${n}, ${r}) = ${result}`;
+            } else {
+                document.getElementById('comb-result').innerHTML = 
+                    'Lütfen geçerli değerler girin (0 ≤ r ≤ n ≤ 20)';
+            }
+        }
+
+        function calculateBinomial() {
+            const n = parseInt(document.getElementById('n-trials').value);
+            const k = parseInt(document.getElementById('k-success').value);
+            const p = parseFloat(document.getElementById('p-success').value);
+            
+            if (n > 0 && k >= 0 && k <= n && p >= 0 && p <= 1 && n <= 50) {
+                const binomCoeff = combination(n, k);
+                const probability

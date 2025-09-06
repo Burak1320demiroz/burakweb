@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lineer Cebir | Burak Demiröz</title>
+    <link rel="icon" type="image/png" href="favicon/pythonfavicon.png" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="favicon/pythonfavicon.png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Grok Theme Colors - Green Variant */
+            --bg-black900: #000000;
+            --bg-black100: #0a0a0a;
+            --bg-black50: rgba(57, 255, 20, 0.1);
+            --text-black900: #ffffff;
+            --text-black700: rgba(255, 255, 255, 0.7);
+            --skin-color: #39FF14; /* Neon Green */
+            --skin-color-hover: #33cc11;
+            --neon-shadow: 0 0 20px rgba(57, 255, 20, 0.5);
+            --text-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+            --warning-color: #ff9500;
+            --success-color: #50fa7b;
+            --error-color: #ff5555;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            outline: none; 
+            text-decoration: none; 
+            box-sizing: border-box; 
+        }
+        
+        ::before, ::after { 
+            box-sizing: border-box; 
+        }
+        
+        ul { 
+            list-style: none; 
+        }
+        
+        body { 
+            line-height: 1.5; 
+            font-size: 16px; 
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-black900);
+            color: var(--text-black900);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(57, 255, 20, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57, 255, 20, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Glow Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(57, 255, 20, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+            z-index: 1000;
+            padding: 15px 30px;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-black900);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo .fa-vector-square {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5));
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(57, 255, 20, 0.2);
+            overflow-y: auto;
+            padding: 30px 20px;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            color: var(--skin-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+            text-shadow: var(--text-shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            color: var(--text-black700);
+            font-size: 14px;
+            display: block;
+            padding: 10px 15px;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .sidebar-menu a:hover {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(57, 255, 20, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a.active {
+            color: var(--skin-color);
+            border-left-color: var(--skin-color);
+            background: rgba(57, 255, 20, 0.1);
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+        
+        .content-wrapper {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 30px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            text-shadow: var(--text-shadow);
+            position: relative;
+        }
+        
+        .hero-title .fa-vector-square {
+            color: var(--skin-color);
+            margin-right: 15px;
+            filter: drop-shadow(0 0 20px rgba(57, 255, 20, 0.8));
+        }
+        
+        .hero-code {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--skin-color);
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.3);
+            border: 1px solid rgba(57, 255, 20, 0.1);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+            animation: scan-line 4s infinite;
+        }
+        
+        @keyframes scan-line {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--text-black900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--skin-color);
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5));
+        }
+        
+        .section-content {
+            color: var(--text-black700);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        .section-content p {
+            margin-bottom: 15px;
+        }
+        
+        .section-content strong {
+            color: var(--text-black900);
+            font-weight: 600;
+        }
+        
+        /* LaTeX Blocks */
+        .latex-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #f8f8f2;
+        }
+        
+        .latex-block::before {
+            content: 'LaTeX';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--skin-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        /* Output Blocks */
+        .output-block {
+            background: rgba(57, 255, 20, 0.05);
+            border-left: 3px solid var(--skin-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--skin-color);
+        }
+        
+        .output-block::before {
+            content: '> Sonuç:';
+            display: block;
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: rgba(57, 255, 20, 0.1);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--skin-color);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5));
+        }
+        
+        .info-box-content {
+            padding-left: 40px;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--warning-color);
+            font-size: 20px;
+        }
+        
+        .warning-box-content {
+            padding-left: 40px;
+            color: var(--warning-color);
+        }
+
+        /* Pro Tip Boxes */
+        .pro-tip-box {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid rgba(80, 250, 123, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .pro-tip-box::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--success-color);
+            font-size: 20px;
+        }
+        
+        .pro-tip-box-content {
+            padding-left: 40px;
+            color: var(--success-color);
+        }
+
+        /* Interactive Note Cards */
+        .note-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(57, 255, 20, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .note-card:hover {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .note-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-card-icon {
+            color: var(--skin-color);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .note-card-title {
+            color: var(--text-black900);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--skin-color);
+            color: var(--skin-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 36px; }
+            .content-wrapper { padding: 20px; }
+            .content-section { padding: 20px; }
+            .section-title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-vector-square"></i>
+                <span>Lineer Cebir</span>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Konular</div>
+        <ul class="sidebar-menu">
+            <li><a href="#giris" class="active">Lineer Cebir Nedir?</a></li>
+            <li><a href="#vektorler">Vektörler</a></li>
+            <li><a href="#matrisler">Matrisler</a></li>
+            <li><a href="#denklem-sistemleri">Lineer Denklem Sistemleri</a></li>
+            <li><a href="#determinant">Determinant</a></li>
+            <li><a href="#vektor-uzaylari">Vektör Uzayları</a></li>
+            <li><a href="#ozdeger-ozvektor">Özdeğer ve Özvektörler</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    <i class="fas fa-vector-square"></i>
+                    Lineer Cebir
+                </h1>
+                <div class="hero-code">
+                    Amathbf{x} = \mathbf{b}
+                </div>
+            </section>
+
+            <section id="giris" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Lineer Cebir Nedir?
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Lineer Cebir</strong>, vektörler, matrisler, vektör uzayları ve lineer denklemler gibi matematiksel yapıları inceleyen bir alandır. Geometrik nesneleri ve bu nesneler arasındaki simetrileri cebirsel bir dille ifade etmemizi sağlar.
+                    </p>
+                    <p>
+                        Bilgisayar bilimlerinden mühendisliğe, fizikten ekonomiye kadar birçok modern bilim dalının temelini oluşturur. Veri bilimi, makine öğrenmesi ve bilgisayar grafikleri gibi alanlarda vazgeçilmez bir araçtır.
+                    </p>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                            <strong>💡 Yaklaşım:</strong> Lineer cebir, soyut kavramlarla geometrik sezgiyi birleştirir. Bir matrisi sadece sayılardan oluşan bir tablo olarak değil, aynı zamanda bir vektörü döndüren, ölçekleyen veya dönüştüren bir operasyon olarak düşünmek ufkunuzu genişletecektir.
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Lineer Cebirin Temel Uygulama Alanları:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>• <strong>Bilgisayar Grafikleri:</strong> 3D modellerin döndürülmesi, ölçeklenmesi.</li>
+                                <li>• <strong>Makine Öğrenmesi:</strong> Veri setlerinin analizi, boyut azaltma (PCA).</li>
+                                <li>• <strong>Kuantum Mekaniği:</strong> Kuantum durumlarının vektörlerle temsili.</li>
+                                <li>• <strong>Ağ Teorisi:</strong> Google'ın PageRank algoritması.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="vektorler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-ruler-combined"></i>
+                    Vektörler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Vektör</strong>, hem büyüklüğü (şiddeti) hem de yönü olan bir geometrik nesnedir. Genellikle bir ok ile temsil edilir ve sıralı sayılar listesi olarak ifade edilir.
+                    </p>
+                    
+                    <div class="latex-block">
+                        $ \mathbf{v} = \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} \in \mathbb{R}^2 $ (2-boyutlu sütun vektörü) <br>
+                        $ \mathbf{u} = \begin{bmatrix} 3 & -1 & 4 \end{bmatrix} \in \mathbb{R}^3 $ (3-boyutlu satır vektörü)
+                    </div>
+                    
+                    <p><strong>Temel Vektör İşlemleri:</strong></p>
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <ul>
+                                <li><strong>Toplama:</strong> $ \begin{bmatrix} a \\ b \end{bmatrix} + \begin{bmatrix} c \\ d \end{bmatrix} = \begin{bmatrix} a+c \\ b+d \end{bmatrix} $</li>
+                                <li><strong>Skalerle Çarpma:</strong> $ k \cdot \begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} k \cdot a \\ k \cdot b \end{bmatrix} $</li>
+                                <li><strong>Nokta Çarpım (Dot Product):</strong> $ \mathbf{v} \cdot \mathbf{u} = v_1 u_1 + v_2 u_2 + \dots + v_n u_n $</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <i class="fas fa-square-root-alt note-card-icon"></i>
+                            <span class="note-card-title">Vektörün Normu (Uzunluğu)</span>
+                        </div>
+                        <div class="note-card-content">
+                           Bir $\mathbf{v}$ vektörünün Öklid normu (uzunluğu), $ \| \mathbf{v} \| = \sqrt{v_1^2 + v_2^2 + \dots + v_n^2} $ formülüyle hesaplanır. Bu, Pisagor teoreminin genelleştirilmiş halidir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="matrisler" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-border-all"></i>
+                    Matrisler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Matris</strong>, sayıların veya sembollerin satır ve sütunlardan oluşan dikdörtgen bir düzenlemesidir. Lineer cebirde matrisler, lineer dönüşümleri temsil etmek ve lineer denklem sistemlerini çözmek için kullanılır.
+                    </p>
+                    
+                    <div class="latex-block">
+                        $ A = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix} $ (2x3 boyutlu bir matris) <br>
+                        $ I_3 = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $ (3x3 Birim Matris)
+                    </div>
+                    
+                    <p><strong>Matris Çarpımı:</strong> İki matrisin çarpımı, "satır-sütun" kuralına göre yapılır. $A$ matrisinin sütun sayısı, $B$ matrisinin satır sayısına eşit olmalıdır.</p>
+
+                    <div class="latex-block">
+                        $ A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}, B = \begin{bmatrix} e & f \\ g & h \end{bmatrix} \implies AB = \begin{bmatrix} ae+bg & af+bh \\ ce+dg & cf+dh \end{bmatrix} $
+                    </div>
+
+                    <div class="warning-box">
+                        <div class="warning-box-content">
+                            <strong>Dikkat:</strong> Matris çarpımı genellikle değişmeli değildir, yani $AB \neq BA$.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="denklem-sistemleri" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-equals"></i>
+                    Lineer Denklem Sistemleri
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Lineer denklem sistemleri, birden çok lineer denklemin bir araya geldiği sistemlerdir. Bu sistemler matris ve vektörler kullanılarak $A\mathbf{x} = \mathbf{b}$ formunda kompakt bir şekilde ifade edilebilir.
+                    </p>
+                    
+                    <div class="latex-block">
+                        $ 2x + 3y = 7 $ <br>
+                        $ x - 4y = -2 $
+                    </div>
+                    <p>Yukarıdaki sistemin matris formu:</p>
+                    <div class="latex-block">
+                        $ \begin{bmatrix} 2 & 3 \\ 1 & -4 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 7 \\ -2 \end{bmatrix} $
+                    </div>
+                    
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                           <strong>💡 Çözüm Yöntemleri:</strong> Bu tür sistemler <strong>Gauss eliminasyonu</strong>, <strong>Cramer kuralı</strong> veya matrisin <strong>tersini (inverse)</strong> bularak ($ \mathbf{x} = A^{-1}\mathbf{b} $) çözülebilir.
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="determinant" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    Determinant
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Determinant</strong>, bir kare matrise atanan özel bir skaler değerdir. Matrisin temsil ettiği lineer dönüşümün "hacmi" ne kadar değiştirdiğini ölçer. $det(A)$ veya $|A|$ ile gösterilir.
+                    </p>
+                    
+                    <div class="latex-block">
+                        $ A = \begin{bmatrix} a & b \\ c & d \end{bmatrix} \implies det(A) = ad - bc $
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Determinantın Özellikleri:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Eğer $det(A) \neq 0$ ise, matrisin tersi vardır (tekil değildir).</li>
+                                <li>Eğer $det(A) = 0$ ise, matrisin tersi yoktur (tekildir).</li>
+                                <li>$det(AB) = det(A) \cdot det(B)$</li>
+                                <li>Geometrik olarak 2x2 matrisin determinantının mutlak değeri, matrisin sütun vektörlerinin oluşturduğu paralelkenarın alanını verir.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="vektor-uzaylari" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas-project-diagram fa"></i>
+                    Vektör Uzayları
+                </h2>
+                <div class="section-content">
+                    <p>
+                        <strong>Vektör uzayı</strong>, vektörlerin bulunduğu ve vektör toplama ile skaler çarpma işlemlerinin belirli aksiyomları sağladığı bir kümedir. $\mathbb{R}^2$ ve $\mathbb{R}^3$ en bilinen örnekleridir.
+                    </p>
+                     <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Temel Kavramlar:</strong>
+                             <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li><strong>Lineer Bağımsızlık:</strong> Bir vektör setindeki hiçbir vektörün, diğerlerinin lineer kombinasyonu olarak yazılamaması durumudur.</li>
+                                <li><strong>Germe (Span):</strong> Bir vektör setinin tüm lineer kombinasyonlarının oluşturduğu uzaydır.</li>
+                                <li><strong>Taban (Basis):</strong> Bir vektör uzayını geren ve lineer bağımsız olan vektör setidir.</li>
+                                <li><strong>Boyut (Dimension):</strong> Bir vektör uzayının tabanındaki vektör sayısıdır.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ozdeger-ozvektor" class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bullseye"></i>
+                    Özdeğer ve Özvektörler
+                </h2>
+                <div class="section-content">
+                    <p>
+                        Bir $A$ kare matrisi için, $A\mathbf{v} = \lambda\mathbf{v}$ denklemini sağlayan sıfırdan farklı $\mathbf{v}$ vektörüne $A$'nın bir <strong>özvektörü</strong>, karşılık gelen $\lambda$ skalerine ise bir <strong>özdeğeri</strong> denir.
+                    </p>
+                    <p>
+                        Geometrik olarak, bir matrisin özvektörleri, matris dönüşümü uygulandığında yönü değişmeyen (sadece ölçeklenen) vektörlerdir. Özdeğer ise bu ölçeklenme faktörüdür.
+                    </p>
+                    <div class="latex-block">
+                        $A\mathbf{v} = \lambda\mathbf{v} \iff (A - \lambda I)\mathbf{v} = \mathbf{0}$ <br>
+                        Bu denklemin sıfırdan farklı bir $\mathbf{v}$ çözümünün olması için $det(A - \lambda I) = 0$ olmalıdır. Bu denkleme <strong>karakteristik denklem</strong> denir.
+                    </div>
+                    <div class="pro-tip-box">
+                        <div class="pro-tip-box-content">
+                           <strong>💡 Uygulama:</strong> Özdeğerler ve özvektörler, bir sistemin kararlılığını analiz etmede, titreşim modlarını bulmada ve Principal Component Analysis (PCA) gibi veri bilimi tekniklerinde temel bir rol oynar.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        const menuItems = document.querySelectorAll('.sidebar-menu a');
+        const sections = document.querySelectorAll('.content-section');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

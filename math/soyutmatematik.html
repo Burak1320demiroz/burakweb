@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soyut Matematik | Burak Demiröz</title>
+<link rel="icon" type="image/png" href="favicon/pythonfavicon.png" sizes="32x32">
+<link rel="shortcut icon" type="image/png" href="favicon/pythonfavicon.png" sizes="32x32">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+<style>
+    :root {
+        /* Grok Theme Colors */
+        --bg-black900: #000000;
+        --bg-black100: #0a0a0a;
+        --bg-black50: rgba(128, 0, 128, 0.1);
+        --text-black900: #ffffff;
+        --text-black700: rgba(255, 255, 255, 0.7);
+        --skin-color: #9400D3;
+        --skin-color-hover: #8A2BE2;
+        --neon-shadow: 0 0 20px rgba(148, 0, 211, 0.5);
+        --text-shadow: 0 0 10px rgba(148, 0, 211, 0.8);
+        --warning-color: #ff9500;
+        --success-color: #50fa7b;
+        --error-color: #ff5555;
+    }
+
+    * { 
+        margin: 0; 
+        padding: 0; 
+        outline: none; 
+        text-decoration: none; 
+        box-sizing: border-box; 
+    }
+    
+    ::before, ::after { 
+        box-sizing: border-box; 
+    }
+    
+    ul { 
+        list-style: none; 
+    }
+    
+    body { 
+        line-height: 1.5; 
+        font-size: 16px; 
+        font-family: 'Space Grotesk', sans-serif;
+        background: var(--bg-black900);
+        color: var(--text-black900);
+        position: relative;
+        overflow-x: hidden;
+    }
+    
+    /* Animated Grid Background */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(148, 0, 211, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 0, 211, 0.02) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: grid-move 20s linear infinite;
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    @keyframes grid-move {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+    
+    /* Glow Effect */
+    body::after {
+        content: '';
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(148, 0, 211, 0.15) 0%, transparent 70%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: pulse-glow 4s ease-in-out infinite;
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    @keyframes pulse-glow {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.6; }
+    }
+    
+    /* Header */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(148, 0, 211, 0.2);
+        z-index: 1000;
+        padding: 15px 30px;
+    }
+    
+    .header-content {
+        max-width: 1400px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-black900);
+        display: flex;
+        align-items: center;
+    }
+    
+    .logo .fa-infinity {
+        color: var(--skin-color);
+        margin-right: 10px;
+        font-size: 30px;
+        filter: drop-shadow(0 0 10px rgba(148, 0, 211, 0.5));
+    }
+    
+    .nav-menu {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+    }
+    
+    .nav-menu a {
+        color: var(--text-black700);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .nav-menu a:hover {
+        color: var(--skin-color);
+        text-shadow: 0 0 5px rgba(148, 0, 211, 0.5);
+    }
+    
+    .nav-menu a::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--skin-color);
+        transition: width 0.3s ease;
+    }
+    
+    .nav-menu a:hover::after {
+        width: 100%;
+    }
+    
+    /* Sidebar Navigation */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 70px;
+        width: 280px;
+        height: calc(100vh - 70px);
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        border-right: 1px solid rgba(148, 0, 211, 0.2);
+        overflow-y: auto;
+        padding: 30px 20px;
+        z-index: 100;
+    }
+    
+    .sidebar-title {
+        color: var(--skin-color);
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(148, 0, 211, 0.2);
+        text-shadow: var(--text-shadow);
+    }
+    
+    .sidebar-menu {
+        list-style: none;
+    }
+    
+    .sidebar-menu li {
+        margin-bottom: 10px;
+    }
+    
+    .sidebar-menu a {
+        color: var(--text-black700);
+        font-size: 14px;
+        display: block;
+        padding: 10px 15px;
+        border-left: 2px solid transparent;
+        transition: all 0.3s ease;
+        font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .sidebar-menu a:hover {
+        color: var(--skin-color);
+        border-left-color: var(--skin-color);
+        background: rgba(148, 0, 211, 0.05);
+        transform: translateX(5px);
+    }
+    
+    .sidebar-menu a.active {
+        color: var(--skin-color);
+        border-left-color: var(--skin-color);
+        background: rgba(148, 0, 211, 0.1);
+        text-shadow: 0 0 5px rgba(148, 0, 211, 0.5);
+    }
+    
+    /* Main Content */
+    .main-content {
+        margin-left: 280px;
+        padding-top: 70px;
+        min-height: 100vh;
+    }
+    
+    .content-wrapper {
+        max-width: 1000px;
+        margin: auto;
+        padding: 40px 30px;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        text-align: center;
+        padding: 60px 0;
+        margin-bottom: 50px;
+        position: relative;
+    }
+    
+    .hero-title {
+        font-size: 48px;
+        font-weight: 700;
+        color: var(--text-black900);
+        margin-bottom: 20px;
+        text-shadow: var(--text-shadow);
+        position: relative;
+    }
+    
+    .hero-title .fa-infinity {
+        color: var(--skin-color);
+        margin-right: 15px;
+        filter: drop-shadow(0 0 20px rgba(148, 0, 211, 0.8));
+    }
+    
+    .hero-subtitle {
+        font-size: 20px;
+        color: var(--text-black700);
+        line-height: 1.8;
+    }
+    
+    .hero-code {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 20px 40px;
+        background: rgba(10, 10, 10, 0.8);
+        border: 1px solid rgba(148, 0, 211, 0.3);
+        border-radius: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--skin-color);
+        font-size: 18px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-code::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(148, 0, 211, 0.2), transparent);
+        animation: sweep 3s infinite;
+    }
+    
+    @keyframes sweep {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+    
+    /* Content Sections */
+    .content-section {
+        margin-bottom: 50px;
+        padding: 30px;
+        background: rgba(10, 10, 10, 0.3);
+        border: 1px solid rgba(148, 0, 211, 0.1);
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .content-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--skin-color), transparent);
+        animation: scan-line 4s infinite;
+    }
+    
+    @keyframes scan-line {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    
+    .section-title {
+        font-size: 28px;
+        color: var(--text-black900);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+    }
+    
+    .section-title i {
+        color: var(--skin-color);
+        margin-right: 15px;
+        font-size: 24px;
+        filter: drop-shadow(0 0 10px rgba(148, 0, 211, 0.5));
+    }
+    
+    .section-content {
+        color: var(--text-black700);
+        line-height: 1.8;
+        font-size: 16px;
+    }
+    
+    .section-content p {
+        margin-bottom: 15px;
+    }
+    
+    .section-content strong {
+        color: var(--text-black900);
+        font-weight: 600;
+    }
+    
+    /* LaTeX Blocks */
+    .latex-block {
+        background: #1a1a1a;
+        border: 1px solid rgba(148, 0, 211, 0.2);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        overflow-x: auto;
+        position: relative;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        line-height: 1.8;
+        color: #f8f8f2;
+    }
+    
+    .latex-block::before {
+        content: 'LaTeX';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: var(--skin-color);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.5;
+    }
+    
+    /* Output Blocks */
+    .output-block {
+        background: rgba(148, 0, 211, 0.05);
+        border-left: 3px solid var(--skin-color);
+        padding: 15px;
+        margin: 15px 0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        color: var(--skin-color);
+    }
+    
+    .output-block::before {
+        content: '> Sonuç:';
+        display: block;
+        font-size: 12px;
+        opacity: 0.7;
+        margin-bottom: 10px;
+    }
+    
+    /* Info Boxes */
+    .info-box {
+        background: rgba(148, 0, 211, 0.1);
+        border: 1px solid rgba(148, 0, 211, 0.3);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        position: relative;
+    }
+    
+    .info-box::before {
+        content: '\f05a';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: var(--skin-color);
+        font-size: 20px;
+        filter: drop-shadow(0 0 10px rgba(148, 0, 211, 0.5));
+    }
+    
+    .info-box-content {
+        padding-left: 40px;
+    }
+
+    /* Warning Boxes */
+    .warning-box {
+        background: rgba(255, 149, 0, 0.1);
+        border: 1px solid rgba(255, 149, 0, 0.3);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        position: relative;
+    }
+    
+    .warning-box::before {
+        content: '\f071';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: var(--warning-color);
+        font-size: 20px;
+        filter: drop-shadow(0 0 10px rgba(255, 149, 0, 0.5));
+    }
+    
+    .warning-box-content {
+        padding-left: 40px;
+        color: var(--warning-color);
+    }
+
+    /* Pro Tip Boxes */
+    .pro-tip-box {
+        background: rgba(80, 250, 123, 0.1);
+        border: 1px solid rgba(80, 250, 123, 0.3);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        position: relative;
+    }
+    
+    .pro-tip-box::before {
+        content: '\f0eb';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: var(--success-color);
+        font-size: 20px;
+        filter: drop-shadow(0 0 10px rgba(80, 250, 123, 0.5));
+    }
+    
+    .pro-tip-box-content {
+        padding-left: 40px;
+        color: var(--success-color);
+    }
+
+    /* Interactive Note Cards */
+    .note-card {
+        background: rgba(10, 10, 10, 0.6);
+        border: 1px solid rgba(148, 0, 211, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 15px 0;
+        position: relative;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .note-card:hover {
+        border-color: var(--skin-color);
+        box-shadow: 0 0 20px rgba(148, 0, 211, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .note-card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .note-card-icon {
+        color: var(--skin-color);
+        margin-right: 10px;
+        font-size: 16px;
+    }
+
+    .note-card-title {
+        color: var(--text-black900);
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .note-card-content {
+        color: var(--text-black700);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Keyboard Shortcut Style */
+    .kbd {
+        background: rgba(148, 0, 211, 0.1);
+        border: 1px solid rgba(148, 0, 211, 0.3);
+        border-radius: 4px;
+        padding: 2px 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--skin-color);
+        display: inline-block;
+    }
+    
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+        display: none;
+        background: transparent;
+        border: 1px solid var(--skin-color);
+        color: var(--skin-color);
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .menu-toggle:hover {
+        background: var(--skin-color);
+        color: var(--bg-black900);
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .main-content {
+            margin-left: 0;
+        }
+        
+        .menu-toggle {
+            display: block;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 36px;
+        }
+        
+        .hero-subtitle {
+            font-size: 16px;
+        }
+        
+        .nav-menu {
+            display: none;
+        }
+        
+        .content-wrapper {
+            padding: 20px;
+        }
+        
+        .content-section {
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+        }
+    }
+</style>
+</head>
+<body>
+<header class="header">
+<div class="header-content">
+<div class="logo">
+<i class="fas fa-infinity"></i>
+<span>Soyut Matematik</span>
+</div>
+<button class="menu-toggle" onclick="toggleSidebar()">
+<i class="fas fa-bars"></i>
+</button>
+</div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-title">Konular</div>
+    <ul class="sidebar-menu">
+        <li><a href="#giris" class="active">Soyut Matematik Nedir?</a></li>
+        <li><a href="#mantik">Mantık ve Önermeler</a></li>
+        <li><a href="#kumeler">Kümeler Teorisi</a></li>
+        <li><a href="#bagintilar">Bağıntılar</a></li>
+        <li><a href="#fonksiyonlar">Fonksiyonlar</a></li>
+        <li><a href="#cebirsel-yapilar">Cebirsel Yapılar</a></li>
+        <li><a href="#gruplar">Gruplar</a></li>
+        <li><a href="#halkalar">Halkalar ve Cisimler</a></li>
+    </ul>
+</aside>
+
+<main class="main-content">
+    <div class="content-wrapper">
+        <section class="hero-section">
+            <h1 class="hero-title">
+                <i class="fas fa-infinity"></i>
+                Soyut Matematik
+            </h1>
+            <div class="hero-code">
+                ∀x ∈ ℝ, ∃y ∈ ℝ, x + y = 0
+            </div>
+        </section>
+
+        <section id="giris" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Soyut Matematik Nedir?
+            </h2>
+            <div class="section-content">
+                <p>
+                    <strong>Soyut Matematik</strong>, matematiğin temel yapılarını ve bu yapılar arasındaki ilişkileri inceleyen bir dalıdır. Sayıların kendisinden ziyade, sayı sistemlerinin altında yatan genel kuralları ve aksiyomları araştırır.
+                </p>
+                <p>
+                    Bu alan, matematiğin dilini ve ispat tekniklerini öğrenmek için bir temel oluşturur. Mantık, kümeler teorisi, bağıntılar ve fonksiyonlar gibi temel konular üzerine inşa edilen gruplar, halkalar ve cisimler gibi cebirsel yapıları inceler.
+                </p>
+                
+                <div class="pro-tip-box">
+                    <div class="pro-tip-box-content">
+                        <strong>💡 Yaklaşım:</strong> Soyut matematikte ezber yerine, tanımları anlama ve bu tanımlardan mantıksal çıkarımlar yapma becerisi ön plandadır. Her tanım ve teorem, bir sonraki konunun temelini oluşturur.
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-box-content">
+                        <strong>Soyut Matematiğin Temel Taşları:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>• <strong>Aksiyom:</strong> Doğruluğu ispatsız kabul edilen temel önerme.</li>
+                            <li>• <strong>Tanım:</strong> Bir kavramı kesin ve açık bir şekilde belirten ifade.</li>
+                            <li>• <strong>Teorem:</strong> Aksiyom ve tanımlar kullanılarak doğruluğu ispatlanan önerme.</li>
+                            <li>• <strong>İspat:</strong> Bir teoremin doğruluğunu mantıksal adımlarla gösterme süreci.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mantik" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb"></i>
+                Mantık ve Önermeler
+            </h2>
+            <div class="section-content">
+                <p>
+                    Matematiksel mantık, doğru veya yanlış olduğu kesin olarak bilinen ifadeler olan <strong>önermeler</strong> üzerine kuruludur. Önermeler, mantıksal bağlaçlar kullanılarak birleştirilebilir.
+                </p>
+                
+                <div class="latex-block">
+                    $p$: "7 bir asal sayıdır." (Doğru önerme) <br>
+                    $q$: "İstanbul Türkiye'nin başkentidir." (Yanlış önerme)
+                </div>
+                
+                <p><strong>Temel Mantık Bağlaçları:</strong></p>
+                <div class="info-box">
+                    <div class="info-box-content">
+                        <ul>
+                            <li><strong>Ve (∧):</strong> $p \land q$ (p ve q'nun her ikisi de doğruysa doğru)</li>
+                            <li><strong>Veya (∨):</strong> $p \lor q$ (p veya q'dan en az biri doğruysa doğru)</li>
+                            <li><strong>Değil (¬ veya '):</strong> $\neg p$ (p'nin doğruluk değerinin tersi)</li>
+                            <li><strong>İse (⇒):</strong> $p \Rightarrow q$ (p doğru iken q yanlış ise yanlış, diğer durumlarda doğru)</li>
+                            <li><strong>Ancak ve Ancak (⇔):</strong> $p \Leftrightarrow q$ (p ve q aynı doğruluk değerine sahipse doğru)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-content">
+                        <strong>İspat Yöntemleri:</strong> Matematiksel iddiaları kanıtlamak için <strong>doğrudan ispat</strong>, <strong>çelişki ile ispat</strong> ve <strong>tümevarım</strong> gibi çeşitli yöntemler kullanılır.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="kumeler" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-shapes"></i>
+                Kümeler Teorisi
+            </h2>
+            <div class="section-content">
+                <p>
+                    <strong>Küme</strong>, iyi tanımlanmış nesneler topluluğudur. Soyut matematiğin en temel kavramlarından biridir. Bir nesnenin bir kümeye ait olup olmadığı kesin olarak belirlenebilmelidir.
+                </p>
+                
+                <div class="latex-block">
+                    $A = \{1, 2, 3\}$ <br>
+                    $B = \{x \mid x \text{ bir çift sayıdır}\}$ <br>
+                    $x \in A$ (x, A kümesinin bir elemanıdır) <br>
+                    $4 \notin A$ (4, A kümesinin bir elemanı değildir)
+                </div>
+                
+                <p><strong>Temel Küme İşlemleri:</strong></p>
+                <div class="info-box">
+                    <div class="info-box-content">
+                        <ul>
+                            <li><strong>Birleşim (∪):</strong> $A \cup B = \{x \mid x \in A \text{ veya } x \in B\}$</li>
+                            <li><strong>Kesişim (∩):</strong> $A \cap B = \{x \mid x \in A \text{ ve } x \in B\}$</li>
+                            <li><strong>Fark (\):</strong> $A \setminus B = \{x \mid x \in A \text{ ve } x \notin B\}$</li>
+                            <li><strong>Tümleyen ('):</strong> $A' = \{x \in E \mid x \notin A\}$ (E evrensel küme)</li>
+                            <li><strong>Alt Küme (⊆):</strong> $A \subseteq B \iff (\forall x, x \in A \Rightarrow x \in B)$</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <div class="pro-tip-box">
+                    <div class="pro-tip-box-content">
+                        <strong>💡 De Morgan Kuralları:</strong> Küme işlemlerinde sıkça kullanılan önemli bir özelliktir: <br>
+                        $(A \cup B)' = A' \cap B'$ <br>
+                        $(A \cap B)' = A' \cup B'$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="bagintilar" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-link"></i>
+                Bağıntılar
+            </h2>
+            <div class="section-content">
+                <p>
+                    <strong>Bağıntı</strong>, iki kümenin elemanları arasında bir ilişki kurar. Matematiksel olarak, bir bağıntı kartezyen çarpım kümesinin bir alt kümesidir.
+                </p>
+                
+                 <div class="latex-block">
+                    $A = \{1, 2\}$, $B = \{a, b\}$ <br>
+                    $A \times B = \{(1, a), (1, b), (2, a), (2, b)\}$ (Kartezyen Çarpım) <br>
+                    $\beta \subseteq A \times B$ bir bağıntıdır. Örnek: $\beta = \{(1, a), (2, b)\}$
+                </div>
+                
+                <p><strong>Bağıntı Özellikleri (A kümesinde tanımlı bir β bağıntısı için):</strong></p>
+                <div class="info-box">
+                    <div class="info-box-content">
+                         <ul>
+                            <li><strong>Yansıma:</strong> $\forall a \in A, (a, a) \in \beta$</li>
+                            <li><strong>Simetri:</strong> $\forall a, b \in A, (a, b) \in \beta \Rightarrow (b, a) \in \beta$</li>
+                            <li><strong>Ters Simetri:</strong> $\forall a, b \in A, [(a, b) \in \beta \text{ ve } (b, a) \in \beta] \Rightarrow a=b$</li>
+                            <li><strong>Geçişme:</strong> $\forall a, b, c \in A, [(a, b) \in \beta \text{ ve } (b, c) \in \beta] \Rightarrow (a, c) \in \beta$</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="note-card">
+                    <div class="note-card-header">
+                        <i class="fas fa-equals note-card-icon"></i>
+                        <span class="note-card-title">Denklik ve Sıralama Bağıntıları</span>
+                    </div>
+                    <div class="note-card-content">
+                       • <strong>Denklik Bağıntısı:</strong> Yansıma, simetri ve geçişme özelliklerini sağlayan bağıntıdır. Eşitlik gibi davranır. <br>
+                       • <strong>Sıralama Bağıntısı:</strong> Yansıma, ters simetri ve geçişme özelliklerini sağlayan bağıntıdır. Büyüklük/küçüklük ilişkisi kurar.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fonksiyonlar" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-arrows-alt-h"></i>
+                Fonksiyonlar
+            </h2>
+            <div class="section-content">
+                <p>
+                    <strong>Fonksiyon</strong>, bir kümenin her bir elemanını, ikinci bir kümenin yalnızca bir elemanıyla eşleyen özel bir bağıntı türüdür.
+                </p>
+                
+                <div class="latex-block">
+                    $f: A \to B$ şeklinde gösterilir. <br>
+                    $A$: Tanım Kümesi <br>
+                    $B$: Değer Kümesi
+                </div>
+
+                <p><strong>Fonksiyon Çeşitleri:</strong></p>
+                <div class="info-box">
+                    <div class="info-box-content">
+                         <ul>
+                            <li><strong>Birebir (Injective):</strong> Tanım kümesindeki farklı elemanların görüntüleri de farklıdır. <br>
+                            $\forall a_1, a_2 \in A, f(a_1) = f(a_2) \Rightarrow a_1=a_2$</li>
+                            <li><strong>Örten (Surjective):</strong> Değer kümesinde boşta eleman kalmaz. <br>
+                            $\forall b \in B, \exists a \in A \text{ öyle ki } f(a)=b$</li>
+                            <li><strong>Birebir ve Örten (Bijective):</strong> Hem birebir hem de örten olan fonksiyondur. Bu tür fonksiyonların tersi de bir fonksiyondur.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="note-card">
+                    <div class="note-card-header">
+                        <i class="fas fa-circle-notch note-card-icon"></i>
+                        <span class="note-card-title">Bileşke Fonksiyon</span>
+                    </div>
+                    <div class="note-card-content">
+                       $f: A \to B$ ve $g: B \to C$ fonksiyonları için, $(g \circ f)(x) = g(f(x))$ ile tanımlanan $g \circ f: A \to C$ fonksiyonuna bileşke fonksiyon denir.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cebirsel-yapilar" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-cogs"></i>
+                Cebirsel Yapılar
+            </h2>
+            <div class="section-content">
+                <p>
+                    <strong>Cebirsel yapı</strong>, bir küme ve bu küme üzerinde tanımlanmış bir veya daha fazla ikili işlemden oluşur. Bu yapıların sağladığı aksiyomlar, onların özelliklerini belirler.
+                </p>
+                
+                <p>
+                    Bir $A$ kümesi üzerinde tanımlı bir ikili işlem $(\star)$, $A \times A$'dan $A$'ya bir fonksiyondur: $\star: A \times A \to A$.
+                </p>
+
+                <div class="info-box">
+                    <div class="info-box-content">
+                         <strong>İkili İşlem Özellikleri:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li><strong>Kapalılık:</strong> $\forall a, b \in A, a \star b \in A$ (Tanım gereği sağlanır)</li>
+                            <li><strong>Birleşme:</strong> $\forall a, b, c \in A, (a \star b) \star c = a \star (b \star c)$</li>
+                            <li><strong>Birim (Etkisiz) Eleman:</strong> $\exists e \in A, \forall a \in A, a \star e = e \star a = a$</li>
+                            <li><strong>Ters Eleman:</strong> $\forall a \in A, \exists a^{-1} \in A, a \star a^{-1} = a^{-1} \star a = e$</li>
+                            <li><strong>Değişme:</strong> $\forall a, b \in A, a \star b = b \star a$</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="gruplar" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-object-group"></i>
+                Gruplar
+            </h2>
+            <div class="section-content">
+                <p>
+                    <strong>Grup</strong>, soyut cebirin en temel yapılarından biridir. Boş olmayan bir $G$ kümesi ve üzerinde tanımlı bir $\star$ işlemiyle $(G, \star)$ ikilisi, aşağıdaki aksiyomları sağlıyorsa bir gruptur:
+                </p>
+                
+                <div class="info-box">
+                    <div class="info-box-content">
+                         <ol>
+                            <li>İşlem $G$ üzerinde kapalıdır.</li>
+                            <li>Birleşme özelliği vardır.</li>
+                            <li>Birim eleman mevcuttur.</li>
+                            <li>Her elemanın tersi mevcuttur.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="latex-block">
+                    Örnek: $(\mathbb{Z}, +)$ tam sayılar kümesi toplama işlemine göre bir gruptur. <br>
+                    - Kapalılık: $\forall a, b \in \mathbb{Z}, a+b \in \mathbb{Z}$ <br>
+                    - Birleşme: $(a+b)+c = a+(b+c)$ <br>
+                    - Birim Eleman: $0$ ($a+0=a$) <br>
+                    - Ters Eleman: Her $a \in \mathbb{Z}$ için $-a$ ($a+(-a)=0$)
+                </div>
+                
+                 <div class="note-card">
+                    <div class="note-card-header">
+                        <i class="fas fa-random note-card-icon"></i>
+                        <span class="note-card-title">Abelyen (Değişmeli) Grup</span>
+                    </div>
+                    <div class="note-card-content">
+                       Bir grup, ek olarak değişme özelliğini de sağlıyorsa (yani $\forall a,b \in G, a \star b = b \star a$), bu gruba <strong>Abelyen grup</strong> denir. $(\mathbb{Z}, +)$ bir Abelyen gruptur.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="halkalar" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-ring"></i>
+                Halkalar ve Cisimler
+            </h2>
+            <div class="section-content">
+                <p>
+                    Gruplara ikinci bir işlem eklenerek daha zengin yapılar olan <strong>halkalar</strong> ve <strong>cisimler</strong> elde edilir.
+                </p>
+                
+                <h3 style="color: var(--skin-color); margin: 20px 0;">Halka (Ring):</h3>
+                <p>
+                    Boş olmayan bir $R$ kümesi, üzerinde tanımlı toplama $(+)$ ve çarpma $(\cdot)$ işlemleriyle $(R, +, \cdot)$ üçlüsü, aşağıdaki koşulları sağlıyorsa bir halkadır:
+                </p>
+                
+                <div class="info-box">
+                    <div class="info-box-content">
+                         <ol>
+                            <li>$(R, +)$ bir Abelyen gruptur.</li>
+                            <li>Çarpma işlemi birleşme özelliğine sahiptir.</li>
+                            <li>Çarpma işleminin toplama işlemi üzerine dağılma özelliği vardır. <br>
+                            $a \cdot (b+c) = a \cdot b + a \cdot c$ <br>
+                            $(a+b) \cdot c = a \cdot c + b \cdot c$</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <h3 style="color: var(--skin-color); margin: 20px 0;">Cisim (Field):</h3>
+                <p>
+                    Bir halka, ek özellikler sağladığında bir <strong>cisim</strong> olur. Cisimler, dört temel aritmetik işlemin (toplama, çıkarma, çarpma, bölme) yapılabildiği cebirsel yapılardır.
+                </p>
+
+                <div class="latex-block">
+                    $(F, +, \cdot)$ bir cisimdir eğer: <br>
+                    - Bir halkadır. <br>
+                    - Çarpma işlemi değişmelidir. <br>
+                    - Çarpma işleminin birim elemanı vardır ($1_F \neq 0_F$). <br>
+                    - Sıfır hariç her elemanın çarpma işlemine göre tersi vardır.
+                </div>
+
+                <div class="pro-tip-box">
+                    <div class="pro-tip-box-content">
+                       <strong>💡 Örnekler:</strong> <br>
+                       • $(\mathbb{Z}, +, \cdot)$ bir halkadır, ancak cisim değildir (çarpımsal ters yoktur).<br>
+                       • $(\mathbb{Q}, +, \cdot)$, $(\mathbb{R}, +, \cdot)$ ve $(\mathbb{C}, +, \cdot)$ rasyonel, reel ve karmaşık sayılar kümeleri birer cisimdir.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<script>
+    // Sidebar Toggle
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+
+    // Active Menu Item
+    const menuItems = document.querySelectorAll('.sidebar-menu a');
+    const sections = document.querySelectorAll('.content-section');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= sectionTop - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        menuItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href').includes(current)) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // Smooth Scroll
+    menuItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = item.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 1024) {
+                toggleSidebar();
+            }
+        });
+    });
+
+    // Interactive Note Cards
+    const noteCards = document.querySelectorAll('.note-card');
+    noteCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-3px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(-2px) scale(1.0)';
+        });
+    });
+</script>
+</body>
+</html>
